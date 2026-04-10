@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VistaChantier — Administration</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0F0F0F;
+  --surface: #181818;
+  --surface2: #212121;
+  --surface3: #2A2A2A;
+  --border: #2E2E2E;
+  --border2: #3A3A3A;
+  --text: #F0EDE8;
+  --text-muted: #888;
+  --text-dim: #555;
+  --accent: #C4A882;
+  --accent-dim: rgba(196,168,130,0.15);
+  --accent-bright: #E8C99A;
+  --green: #4CAF7D;
+  --green-dim: rgba(76,175,125,0.12);
+  --red: #E05A4A;
+  --red-dim: rgba(224,90,74,0.12);
+  --blue: #5B8FD4;
+  --blue-dim: rgba(91,143,212,0.12);
+  --yellow: #D4A84B;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 240px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 50;
+}
+
+.sidebar-logo {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo .brand {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+
+.sidebar-logo .admin-tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 3px;
+  font-family: 'DM Mono', monospace;
+}
+
+nav { padding: 16px 12px; flex: 1; }
+
+.nav-section {
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  padding: 16px 12px 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  transition: all 0.15s;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+}
+
+.nav-item:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-item.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-color: rgba(196,168,130,0.2);
+}
+
+.nav-icon { font-size: 1rem; width: 20px; text-align: center; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-family: 'DM Mono', monospace;
+}
+
+.sidebar-footer {
+  padding: 16px 12px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--surface2);
+}
+
+.user-avatar {
+  width: 30px; height: 30px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(196,168,130,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+
+.user-info { flex: 1; }
+.user-name { font-size: 0.82rem; color: var(--text); }
+.user-role { font-size: 0.68rem; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+
+/* ─── MAIN ─── */
+.main {
+  margin-left: 240px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Top bar */
+.topbar {
+  height: 60px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  gap: 16px;
+  background: var(--surface);
+  position: sticky; top: 0; z-index: 40;
+}
+
+.topbar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.topbar-breadcrumb {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+}
+
+.topbar-breadcrumb span { color: var(--accent); }
+
+.topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.83rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+.btn-primary:hover { background: var(--accent-bright); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border2);
+}
+.btn-ghost:hover { background: var(--surface2); color: var(--text); }
+
+/* ─── CONTENT AREA ─── */
+.content { padding: 32px; }
+
+/* ─── STATS ROW ─── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 22px;
+  transition: border-color 0.2s;
+}
+
+.stat-card:hover { border-color: var(--border2); }
+
+.stat-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+}
+
+.stat-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.stat-accent { color: var(--accent); }
+.stat-green { color: var(--green); }
+.stat-blue { color: var(--blue); }
+
+/* ─── TWO COLUMNS ─── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* ─── CHANTIERS LIST ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.chantier-list { }
+
+.chantier-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.chantier-row:last-child { border-bottom: none; }
+.chantier-row:hover { background: var(--surface2); }
+.chantier-row.selected { background: var(--accent-dim); border-left: 2px solid var(--accent); }
+
+.chantier-avatar {
+  width: 38px; height: 38px;
+  border-radius: 6px;
+  background: var(--surface3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  border: 1px solid var(--border2);
+}
+
+.chantier-info { flex: 1; min-width: 0; }
+
+.chantier-name {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chantier-client {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-family: 'DM Mono', monospace;
+}
+
+.chantier-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.progress-mini {
+  width: 80px;
+  height: 3px;
+  background: var(--surface3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-mini-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.progress-pct {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+}
+
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-dot.active { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.status-dot.paused { background: var(--yellow); }
+.status-dot.done { background: var(--text-dim); }
+
+/* ─── ACTIVITE RECENTE ─── */
+.activity-list { }
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.83rem;
+}
+
+.activity-item:last-child { border-bottom: none; }
+
+.activity-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.activity-text { color: var(--text-muted); line-height: 1.5; }
+.activity-text strong { color: var(--text); font-weight: 500; }
+.activity-time {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  flex-shrink: 0;
+}
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { opacity:0; transform: scale(0.97) translateY(10px); }
+  to { opacity:1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+.modal-close:hover { background: var(--surface2); color: var(--text); }
+
+.modal-body { padding: 28px; }
+
+.modal-footer {
+  padding: 16px 28px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Form elements */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-row.full { grid-template-columns: 1fr; }
+
+.form-group { display: flex; flex-direction: column; gap: 7px; }
+
+.form-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+}
+
+.form-input, .form-select, .form-textarea {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent);
+}
+
+.form-textarea { resize: vertical; min-height: 90px; }
+.form-select { cursor: pointer; }
+
+/* Upload zone */
+.upload-zone {
+  border: 1.5px dashed var(--border2);
+  border-radius: 8px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.upload-zone:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.upload-icon { font-size: 2rem; margin-bottom: 10px; opacity: 0.5; }
+.upload-label { font-size: 0.85rem; color: var(--text-muted); }
+.upload-sub { font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; font-family: 'DM Mono', monospace; }
+
+/* File chips */
+.file-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.file-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.file-chip .chip-icon { font-size: 0.85rem; }
+.file-chip .chip-remove {
+  color: var(--red);
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* Steps editor */
+.steps-editor { display: flex; flex-direction: column; gap: 8px; }
+.step-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+.step-edit-check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.step-edit-check.done {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+.step-edit-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  outline: none;
+}
+.step-edit-date {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  width: 100px;
+  outline: none;
+}
+.step-remove-btn {
+  background: none; border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 4px;
+  transition: color 0.15s;
+}
+.step-remove-btn:hover { color: var(--red); }
+
+.add-step-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 14px;
+  background: none;
+  border: 1px dashed var(--border2);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+}
+.add-step-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Progress input */
+.progress-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--surface3);
+  border-radius: 2px;
+  outline: none;
+  margin-top: 6px;
+}
+.progress-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Notification toast */
+.toast {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  background: var(--surface2);
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  padding: 14px 20px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 0.85rem;
+  color: var(--text);
+  z-index: 200;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-icon { color: var(--green); font-size: 1.1rem; }
+
+/* Passage detail panel */
+.detail-section {
+  margin-bottom: 32px;
+}
+
+.detail-section-title {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Client access table */
+.access-table { width: 100%; border-collapse: collapse; }
+.access-table th {
+  text-align: left;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.access-table td {
+  padding: 12px 14px;
+  font-size: 0.84rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.access-table tr:last-child td { border-bottom: none; }
+.access-table tr:hover td { background: var(--surface2); }
+
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-family: 'DM Mono', monospace;
+}
+.tag-green { background: var(--green-dim); color: var(--green); }
+.tag-yellow { background: rgba(212,168,75,0.12); color: var(--yellow); }
+.tag-blue { background: var(--blue-dim); color: var(--blue); }
+.tag-red { background: var(--red-dim); color: var(--red); }
+
+/* Animations */
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+.content { animation: fadeIn 0.3s ease; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* Divider */
+.modal-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">VistaChantier</div>
+    <div class="admin-tag">Espace administration</div>
+  </div>
+  <nav>
+    <div class="nav-section">Principal</div>
+    <div class="nav-item active" onclick="setView('dashboard')">
+      <span class="nav-icon">⬛</span> Tableau de bord
+    </div>
+    <div class="nav-item" onclick="setView('chantiers')">
+      <span class="nav-icon">🏗</span> Chantiers
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="setView('clients')">
+      <span class="nav-icon">👤</span> Clients
+    </div>
+
+    <div class="nav-section">Médias</div>
+    <div class="nav-item" onclick="showToast('Gestionnaire de médias — bientôt disponible')">
+      <span class="nav-icon">🎬</span> Vidéothèque
+    </div>
+    <div class="nav-item" onclick="showToast('Vues 360° — bientôt disponible')">
+      <span class="nav-icon">⬤</span> Panoramas 360°
+    </div>
+
+    <div class="nav-section">Compte</div>
+    <div class="nav-item" onclick="showToast('Paramètres — bientôt disponible')">
+      <span class="nav-icon">⚙</span> Paramètres
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-pill">
+      <div class="user-avatar">VC</div>
+      <div class="user-info">
+        <div class="user-name">VistaDrone</div>
+        <div class="user-role">Administrateur</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="topbar-title">Tableau de bord</div>
+      <div class="topbar-breadcrumb">VistaChantier › <span id="topbar-sub">Overview</span></div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost" onclick="openNewChantier()">+ Nouveau chantier</button>
+      <button class="btn btn-primary" onclick="openNewPassage()">+ Ajouter un passage</button>
+    </div>
+  </div>
+
+  <!-- ─── VIEW : DASHBOARD ─── -->
+  <div class="content" id="view-dashboard">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Chantiers actifs</div>
+        <div class="stat-value stat-accent">3</div>
+        <div class="stat-sub">sur 5 chantiers total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Passages ce mois</div>
+        <div class="stat-value stat-green">2</div>
+        <div class="stat-sub">Prochain : 18 avril</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Vidéos hébergées</div>
+        <div class="stat-value stat-blue">34</div>
+        <div class="stat-sub">12.4 Go utilisés</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Clients connectés</div>
+        <div class="stat-value">7</div>
+        <div class="stat-sub">cette semaine</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- Chantiers -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Chantiers en cours</div>
+          <button class="btn btn-ghost" style="font-size:0.78rem; padding:6px 12px" onclick="setView('chantiers')">Voir tout</button>
+        </div>
+        <div class="chantier-list">
+          <div class="chantier-row selected" onclick="openChantierDetail(0)">
+            <div class="chantier-avatar">🏡</div>
+            <div class="chantier-info">
+              <div class="chantier-name">12 Chemin des Vignes — Ayguesvives</div>
+              <div class="chantier-client">Martin Pierre & Sophie</div>
+            </div>
+            <div class="chantier-progress">
+              <div class="progress-mini"><div class="progress-mini-fill" style="width:42%"></div></div>
+              <div class="progress-pct">42%</div>
+            </div>
+            <div class="status-dot active"></div>
+          </div>
+          <div class="chantier-row" onclick="openChantierDetail(1)">
+            <div class="chantier-avatar">🏘</div>
+            <div class="chantier-info">
+              <div class="chantier-name">8 Rue des Érables — Castanet</div>
+              <div class="chantier-client">Dupont Jean-Luc & Marie</div>
+            </div>
+            <div class="chantier-progress">
+              <div class="progress-mini"><div class="progress-mini-fill" style="width:78%"></div></div>
+              <div class="progress-pct">78%</div>
+            </div>
+            <div class="status-dot active"></div>
+          </div>
+          <div class="chantier-row" onclick="openChantierDetail(2)">
+            <div class="chantier-avatar">🏠</div>
+            <div class="chantier-info">
+              <div class="chantier-name">3 Allée des Pins — Ramonville</div>
+              <div class="chantier-client">Leblanc Camille</div>
+            </div>
+            <div class="chantier-progress">
+              <div class="progress-mini"><div class="progress-mini-fill" style="width:15%"></div></div>
+              <div class="progress-pct">15%</div>
+            </div>
+            <div class="status-dot active"></div>
+          </div>
+          <div class="chantier-row" onclick="openChantierDetail(3)">
+            <div class="chantier-avatar">✅</div>
+            <div class="chantier-info">
+              <div class="chantier-name">45 Avenue du Moulin — Labège</div>
+              <div class="chantier-client">Renaud Fabrice & Inès</div>
+            </div>
+            <div class="chantier-progress">
+              <div class="progress-mini"><div class="progress-mini-fill" style="width:100%"></div></div>
+              <div class="progress-pct">100%</div>
+            </div>
+            <div class="status-dot done"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activité récente -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Activité récente</div>
+        </div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--green)"></div>
+            <div class="activity-text"><strong>Passage 5</strong> ajouté — Ayguesvives</div>
+            <div class="activity-time">il y a 2h</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--blue)"></div>
+            <div class="activity-text"><strong>Martin Pierre</strong> s'est connecté</div>
+            <div class="activity-time">il y a 4h</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--accent)"></div>
+            <div class="activity-text">3 vidéos uploadées — Castanet</div>
+            <div class="activity-time">hier</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--green)"></div>
+            <div class="activity-text"><strong>Passage 8</strong> ajouté — Castanet</div>
+            <div class="activity-time">hier</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--blue)"></div>
+            <div class="activity-text"><strong>Dupont Jean-Luc</strong> s'est connecté</div>
+            <div class="activity-time">il y a 2j</div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--accent)"></div>
+            <div class="activity-text">Nouveau chantier créé — Ramonville</div>
+            <div class="activity-time">il y a 3j</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accès clients -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Accès clients</div>
+        <button class="btn btn-ghost" style="font-size:0.78rem; padding:6px 12px" onclick="openNewClient()">+ Nouveau client</button>
+      </div>
+      <table class="access-table">
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Chantier</th>
+            <th>Identifiant</th>
+            <th>Dernier accès</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--text); font-weight:500">Martin Pierre & Sophie</td>
+            <td>12 Chemin des Vignes</td>
+            <td style="font-family:'DM Mono',monospace; font-size:0.78rem">martin.pierre</td>
+            <td>Aujourd'hui, 14h32</td>
+            <td><span class="tag tag-green">Actif</span></td>
+            <td><button class="btn btn-ghost" style="font-size:0.75rem; padding:4px 10px" onclick="showToast('Lien copié dans le presse-papiers')">🔗 Lien</button></td>
+          </tr>
+          <tr>
+            <td style="color:var(--text); font-weight:500">Dupont Jean-Luc & Marie</td>
+            <td>8 Rue des Érables</td>
+            <td style="font-family:'DM Mono',monospace; font-size:0.78rem">dupont.jl</td>
+            <td>Il y a 2 jours</td>
+            <td><span class="tag tag-green">Actif</span></td>
+            <td><button class="btn btn-ghost" style="font-size:0.75rem; padding:4px 10px" onclick="showToast('Lien copié dans le presse-papiers')">🔗 Lien</button></td>
+          </tr>
+          <tr>
+            <td style="color:var(--text); font-weight:500">Leblanc Camille</td>
+            <td>3 Allée des Pins</td>
+            <td style="font-family:'DM Mono',monospace; font-size:0.78rem">leblanc.c</td>
+            <td>Jamais connecté</td>
+            <td><span class="tag tag-yellow">En attente</span></td>
+            <td><button class="btn btn-ghost" style="font-size:0.75rem; padding:4px 10px" onclick="showToast('Email de bienvenue renvoyé ✓')">✉ Renvoyer</button></td>
+          </tr>
+          <tr>
+            <td style="color:var(--text); font-weight:500">Renaud Fabrice & Inès</td>
+            <td>45 Av. du Moulin</td>
+            <td style="font-family:'DM Mono',monospace; font-size:0.78rem">renaud.fi</td>
+            <td>Il y a 12 jours</td>
+            <td><span class="tag tag-blue">Archivé</span></td>
+            <td><button class="btn btn-ghost" style="font-size:0.75rem; padding:4px 10px" onclick="showToast('Lien copié dans le presse-papiers')">🔗 Lien</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /view-dashboard -->
+
+</div><!-- /main -->
+
+<!-- ═══════════════════ MODAL : NOUVEAU PASSAGE ═══════════════════ -->
+<div class="modal-overlay" id="modal-passage">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Ajouter un passage</div>
+      <button class="modal-close" onclick="closeModal('modal-passage')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="detail-section">
+        <div class="detail-section-title">Informations générales</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Chantier</label>
+            <select class="form-select">
+              <option>12 Chemin des Vignes — Ayguesvives</option>
+              <option>8 Rue des Érables — Castanet</option>
+              <option>3 Allée des Pins — Ramonville</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date du passage</label>
+            <input type="date" class="form-input" value="2025-02-20">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Titre du passage</label>
+            <input type="text" class="form-input" placeholder="ex : Isolation & cloisons">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Avancement global (%)</label>
+            <input type="number" class="form-input" value="55" min="0" max="100" id="progress-input" oninput="document.getElementById('progress-slider').value=this.value">
+            <input type="range" class="progress-slider" id="progress-slider" value="55" min="0" max="100" oninput="document.getElementById('progress-input').value=this.value">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="detail-section">
+        <div class="detail-section-title">Note du passage</div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label class="form-label">Commentaire visible par le client</label>
+            <textarea class="form-textarea" placeholder="Décrivez l'avancement des travaux, les points notables, les prochaines étapes..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="detail-section">
+        <div class="detail-section-title">Médias</div>
+
+        <div class="upload-zone" onclick="showToast('Sélecteur de fichiers — connecter à Bunny.net ou Cloudflare Stream')">
+          <div class="upload-icon">🎬</div>
+          <div class="upload-label">Cliquez pour uploader des vidéos 360° et drone</div>
+          <div class="upload-sub">MP4 · MOV · max 2 Go par fichier</div>
+        </div>
+
+        <div class="file-chips">
+          <div class="file-chip">
+            <span class="chip-icon">⬤</span>
+            360_fev2025_interieur.mp4
+            <span class="chip-remove">✕</span>
+          </div>
+          <div class="file-chip">
+            <span class="chip-icon">🚁</span>
+            drone_fev2025_nord.mp4
+            <span class="chip-remove">✕</span>
+          </div>
+          <div class="file-chip">
+            <span class="chip-icon">🚁</span>
+            drone_fev2025_ensemble.mp4
+            <span class="chip-remove">✕</span>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-passage')">Annuler</button>
+      <button class="btn btn-primary" onclick="savePassage()">Enregistrer le passage →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL : NOUVEAU CHANTIER ═══════════════════ -->
+<div class="modal-overlay" id="modal-chantier">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Créer un nouveau chantier</div>
+      <button class="modal-close" onclick="closeModal('modal-chantier')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="detail-section">
+        <div class="detail-section-title">Adresse du chantier</div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label class="form-label">Adresse complète</label>
+            <input type="text" class="form-input" placeholder="ex : 12 Chemin des Vignes">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Code postal</label>
+            <input type="text" class="form-input" placeholder="31000">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Commune</label>
+            <input type="text" class="form-input" placeholder="Toulouse">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="detail-section">
+        <div class="detail-section-title">Informations projet</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Constructeur</label>
+            <input type="text" class="form-input" placeholder="ex : Maisons Pyrénées">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nombre de passages prévus</label>
+            <input type="number" class="form-input" value="13">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Début des travaux</label>
+            <input type="date" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Livraison prévue</label>
+            <input type="date" class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="detail-section">
+        <div class="detail-section-title">Accès client</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nom du client</label>
+            <input type="text" class="form-input" placeholder="ex : Martin Pierre & Sophie">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email du client</label>
+            <input type="email" class="form-input" placeholder="client@email.com">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Identifiant de connexion</label>
+            <input type="text" class="form-input" placeholder="ex : martin.pierre">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mot de passe initial</label>
+            <input type="text" class="form-input" placeholder="Généré automatiquement" value="ch@ntier-2025!">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-chantier')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveChantier()">Créer le chantier →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL : NOUVEAU CLIENT ═══════════════════ -->
+<div class="modal-overlay" id="modal-client">
+  <div class="modal" style="width:480px">
+    <div class="modal-header">
+      <div class="modal-title">Ajouter un accès client</div>
+      <button class="modal-close" onclick="closeModal('modal-client')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Nom complet</label>
+          <input type="text" class="form-input" placeholder="Prénom Nom">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="client@email.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Identifiant</label>
+          <input type="text" class="form-input" placeholder="prenom.nom">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Chantier associé</label>
+          <select class="form-select">
+            <option>12 Chemin des Vignes</option>
+            <option>8 Rue des Érables</option>
+            <option>3 Allée des Pins</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-client')">Annuler</button>
+      <button class="btn btn-primary" onclick="saveClient()">Créer l'accès →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✓</span>
+  <span id="toast-text">Enregistré avec succès</span>
+</div>
+
+<script>
+  // ─── Navigation ───
+  function setView(view) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    event.target.closest('.nav-item').classList.add('active');
+    // In a real app: switch content views
+    showToast('Vue "' + view + '" — navigation complète bientôt disponible');
+  }
+
+  // ─── Modals ───
+  function openNewPassage() { document.getElementById('modal-passage').classList.add('open'); }
+  function openNewChantier() { document.getElementById('modal-chantier').classList.add('open'); }
+  function openNewClient() { document.getElementById('modal-client').classList.add('open'); }
+
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); });
+  });
+
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  });
+
+  // ─── Save actions ───
+  function savePassage() {
+    closeModal('modal-passage');
+    showToast('Passage enregistré et publié pour le client ✓');
+  }
+
+  function saveChantier() {
+    closeModal('modal-chantier');
+    showToast('Chantier créé · Email envoyé au client ✓');
+  }
+
+  function saveClient() {
+    closeModal('modal-client');
+    showToast('Accès client créé · Invitation envoyée ✓');
+  }
+
+  // ─── Steps editor ───
+  function toggleStep(el) {
+    el.classList.toggle('done');
+    el.textContent = el.classList.contains('done') ? '✓' : '';
+  }
+
+  function removeStep(btn) {
+    btn.closest('.step-edit-row').remove();
+  }
+
+  function addStep() {
+    const editor = document.getElementById('steps-editor');
+    const row = document.createElement('div');
+    row.className = 'step-edit-row';
+    row.innerHTML = `
+      <div class="step-edit-check" onclick="toggleStep(this)"></div>
+      <input class="step-edit-input" placeholder="Nouvelle étape..." />
+      <input class="step-edit-date" placeholder="date..." />
+      <button class="step-remove-btn" onclick="removeStep(this)">✕</button>
+    `;
+    editor.appendChild(row);
+    row.querySelector('input').focus();
+  }
+
+  // ─── Chantier detail ───
+  function openChantierDetail(idx) {
+    document.querySelectorAll('.chantier-row').forEach((r,i) => r.classList.toggle('selected', i === idx));
+    showToast('Vue détaillée chantier — disponible dans la version complète');
+  }
+
+  // ─── Toast ───
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toast-text').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
