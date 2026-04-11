@@ -639,14 +639,10 @@ async function openChantierDetail(id) {
   if (!passages?.length) { el.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Aucun passage. Ajoutez-en un !</div></div>`; return; }
   el.innerHTML = passages.map(p => {
     const date = new Date(p.date_passage).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'});
-<<<<<<< HEAD
     const medias = (p.medias||[]).map(m => {
       const icon = m.type==='360' ? '⬤' : m.type==='photo' ? '📷' : '🚁';
       return `<div class="media-chip"><span>${icon}</span>${m.nom||m.url_youtube||m.url_photo||''}</div>`;
     }).join('');
-=======
-    const medias = (p.medias||[]).map(m => `<div class="media-chip"><span>${m.type==='360'?'⬤':'🚁'}</span>${m.nom||m.url_youtube}</div>`).join('');
->>>>>>> 844adba306a77671f6ec8359a5e79710160a48df
     return `
       <div class="passage-card">
         <div class="passage-card-header">
