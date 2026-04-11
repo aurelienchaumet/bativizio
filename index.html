@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BatiVizIØ — Suivi de chantier</title>
+<title>BativizIØ — Suivi de chantier</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -21,536 +21,129 @@
     --foam:       #EAF3F8;
     --shadow:     rgba(17,28,39,0.15);
   }
-
   * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--white-sand); font-family:'DM Sans',sans-serif; color:var(--navy); min-height:100vh; overflow-x:hidden; }
 
-  body {
-    background: var(--white-sand);
-    font-family: 'DM Sans', sans-serif;
-    color: var(--navy);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  /* LOGIN */
+  #login-screen { position:fixed; inset:0; z-index:100; display:flex; transition:opacity 0.8s ease, transform 0.8s ease; }
+  .login-visual { flex:1; background:linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 45%, var(--wave) 100%); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .login-visual::before { content:''; position:absolute; inset:0; background:repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px); }
+  .login-visual::after { content:''; position:absolute; bottom:0; left:0; right:0; height:180px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z' fill='rgba(44,107,138,0.3)'/%3E%3Cpath d='M0,80 C200,40 400,100 600,80 C800,60 1000,100 1200,80 L1200,120 L0,120 Z' fill='rgba(17,28,39,0.4)'/%3E%3C/svg%3E") no-repeat bottom; background-size:cover; }
+  .login-brand { position:relative; z-index:1; text-align:center; color:var(--white); }
+  .login-logo { display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:28px; }
+  .logo-icon { width:56px; height:56px; border:1.5px solid rgba(184,200,212,0.4); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; background:rgba(255,255,255,0.05); backdrop-filter:blur(8px); }
+  .login-brand h1 { font-family:'Cormorant Garamond',serif; font-size:3.2rem; font-weight:600; letter-spacing:0.06em; line-height:1; }
+  .login-brand h1 span { color:var(--wave-light); }
+  .login-brand p { margin-top:14px; font-size:0.78rem; letter-spacing:0.2em; text-transform:uppercase; opacity:0.45; font-family:'DM Mono',monospace; }
+  .login-form-panel { width:420px; background:var(--white); display:flex; flex-direction:column; justify-content:center; padding:64px 48px; border-left:1px solid var(--mist); }
+  .login-form-panel h2 { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:400; color:var(--navy); margin-bottom:6px; }
+  .login-form-panel .subtitle { font-size:0.85rem; color:var(--slate-light); margin-bottom:36px; }
+  .form-group { margin-bottom:18px; }
+  .form-group label { display:block; font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--slate); font-family:'DM Mono',monospace; margin-bottom:8px; }
+  .form-group input { width:100%; padding:13px 16px; border:1.5px solid var(--mist); background:var(--white-sand); border-radius:6px; font-family:'DM Sans',sans-serif; font-size:0.92rem; color:var(--navy); outline:none; transition:border-color 0.2s, background 0.2s; }
+  .form-group input:focus { border-color:var(--wave); background:var(--white); }
+  .btn-login { width:100%; padding:14px; background:var(--navy); color:var(--white); border:none; border-radius:6px; font-family:'DM Sans',sans-serif; font-size:0.88rem; letter-spacing:0.06em; cursor:pointer; margin-top:8px; transition:background 0.2s; }
+  .btn-login:hover:not(:disabled) { background:var(--wave); }
+  .btn-login:disabled { opacity:0.6; cursor:not-allowed; }
+  .login-error { display:none; margin-bottom:14px; padding:10px 14px; background:#FEE; border:1px solid #FCC; border-radius:6px; font-size:0.82rem; color:#C00; }
+  #login-screen.hidden { opacity:0; pointer-events:none; transform:translateY(-16px); }
 
-  /* ── LOGIN ── */
-  #login-screen {
-    position: fixed; inset:0; z-index:100;
-    display: flex;
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-
-  .login-visual {
-    flex: 1;
-    background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 45%, var(--wave) 100%);
-    display: flex; align-items: center; justify-content: center;
-    position: relative; overflow: hidden;
-  }
-
-  /* Vagues SVG en arrière-plan */
-  .login-visual::before {
-    content: '';
-    position: absolute; inset: 0;
-    background:
-      repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 40px,
-        rgba(255,255,255,0.02) 40px,
-        rgba(255,255,255,0.02) 41px
-      );
-  }
-
-  .login-visual::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 180px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z' fill='rgba(44,107,138,0.3)'/%3E%3Cpath d='M0,80 C200,40 400,100 600,80 C800,60 1000,100 1200,80 L1200,120 L0,120 Z' fill='rgba(17,28,39,0.4)'/%3E%3C/svg%3E") no-repeat bottom;
-    background-size: cover;
-  }
-
-  .login-brand {
-    position: relative; z-index:1;
-    text-align: center; color: var(--white);
-  }
-
-  .login-logo {
-    display: flex; align-items: center; justify-content: center;
-    gap: 14px; margin-bottom: 28px;
-  }
-
-  .logo-icon {
-    width: 56px; height: 56px;
-    border: 1.5px solid rgba(184,200,212,0.4);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(8px);
-  }
-
-  .login-brand h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3.2rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    line-height: 1;
-  }
-
-  .login-brand h1 span { color: var(--wave-light); }
-
-  .login-brand p {
-    margin-top: 14px;
-    font-size: 0.78rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    opacity: 0.45;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .login-form-panel {
-    width: 420px;
-    background: var(--white);
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 64px 48px;
-    border-left: 1px solid var(--mist);
-  }
-
-  .login-form-panel h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2rem; font-weight: 400;
-    color: var(--navy); margin-bottom: 6px;
-  }
-
-  .login-form-panel .subtitle {
-    font-size: 0.85rem; color: var(--slate-light);
-    margin-bottom: 36px;
-  }
-
-  .form-group { margin-bottom: 18px; }
-
-  .form-group label {
-    display: block;
-    font-size: 0.7rem; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--slate);
-    font-family: 'DM Mono', monospace;
-    margin-bottom: 8px;
-  }
-
-  .form-group input {
-    width: 100%; padding: 13px 16px;
-    border: 1.5px solid var(--mist);
-    background: var(--white-sand);
-    border-radius: 6px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.92rem; color: var(--navy);
-    outline: none; transition: border-color 0.2s, background 0.2s;
-  }
-
-  .form-group input:focus {
-    border-color: var(--wave);
-    background: var(--white);
-  }
-
-  .btn-login {
-    width: 100%; padding: 14px;
-    background: var(--navy);
-    color: var(--white);
-    border: none; border-radius: 6px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem; letter-spacing: 0.06em;
-    cursor: pointer; margin-top: 8px;
-    transition: background 0.2s;
-  }
-
-  .btn-login:hover { background: var(--wave); }
-
-  .login-hint {
-    margin-top: 22px; padding: 13px;
-    background: var(--foam);
-    border: 1px solid var(--mist);
-    border-radius: 6px;
-    font-size: 0.78rem; color: var(--slate);
-    text-align: center; line-height: 1.6;
-    font-family: 'DM Mono', monospace;
-  }
-
-  #login-screen.hidden { opacity:0; pointer-events:none; transform: translateY(-16px); }
-
-  /* ── APP ── */
+  /* APP */
   #app { display:none; }
   #app.visible { display:block; }
 
+  /* Skeleton */
+  .skeleton { background:linear-gradient(90deg, var(--mist) 25%, var(--fog) 50%, var(--mist) 75%); background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:6px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
   /* Header */
-  .app-header {
-    background: var(--navy-deep);
-    padding: 0 48px; height: 64px;
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top:0; z-index:50;
-    border-bottom: 1px solid rgba(74,96,112,0.3);
-  }
-
-  .header-brand {
-    display: flex; align-items: center; gap: 12px;
-  }
-
-  .header-logo {
-    width: 32px; height: 32px;
-    border: 1px solid rgba(184,200,212,0.3);
-    border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px;
-    background: rgba(255,255,255,0.04);
-  }
-
-  .header-brand .brand-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.3rem; font-weight: 600;
-    color: var(--white); letter-spacing: 0.06em;
-  }
-
-  .brand-name span { color: var(--wave-light); }
-
+  .app-header { background:var(--navy-deep); padding:0 48px; height:64px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; border-bottom:1px solid rgba(74,96,112,0.3); }
+  .header-brand { display:flex; align-items:center; gap:12px; }
+  .header-logo { width:32px; height:32px; border:1px solid rgba(184,200,212,0.3); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:13px; background:rgba(255,255,255,0.04); }
+  .header-brand .brand-name { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:var(--white); letter-spacing:0.06em; }
+  .brand-name span { color:var(--wave-light); }
   .header-right { display:flex; align-items:center; gap:16px; }
-
-  .client-badge {
-    font-size: 0.78rem; color: var(--fog);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.04em;
-  }
-
-  .btn-logout {
-    background: none;
-    border: 1px solid rgba(184,200,212,0.25);
-    color: var(--fog);
-    padding: 7px 16px; border-radius: 20px;
-    font-size: 0.78rem; cursor: pointer;
-    transition: all 0.2s; font-family: 'DM Sans', sans-serif;
-  }
-
-  .btn-logout:hover { background: rgba(255,255,255,0.07); border-color: var(--fog); }
+  .client-badge { font-size:0.78rem; color:var(--fog); font-family:'DM Mono',monospace; letter-spacing:0.04em; }
+  .btn-logout { background:none; border:1px solid rgba(184,200,212,0.25); color:var(--fog); padding:7px 16px; border-radius:20px; font-size:0.78rem; cursor:pointer; transition:all 0.2s; font-family:'DM Sans',sans-serif; }
+  .btn-logout:hover { background:rgba(255,255,255,0.07); border-color:var(--fog); }
 
   /* Hero */
-  .project-hero {
-    background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy-mid) 55%, var(--wave) 100%);
-    color: var(--white);
-    padding: 52px 48px 44px;
-    position: relative; overflow: hidden;
-  }
-
-  .project-hero::before {
-    content: '';
-    position: absolute; bottom:0; left:0; right:0; height:120px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,40 C300,90 600,10 900,50 C1050,70 1150,30 1200,40 L1200,120 L0,120 Z' fill='rgba(242,246,248,0.06)'/%3E%3C/svg%3E") no-repeat bottom;
-    background-size: cover;
-  }
-
-  .hero-label {
-    font-size: 0.68rem; letter-spacing: 0.22em;
-    text-transform: uppercase; color: var(--wave-light);
-    margin-bottom: 10px; font-family: 'DM Mono', monospace;
-  }
-
-  .hero-address {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.6rem; font-weight: 400; line-height: 1.1;
-    margin-bottom: 28px; position: relative; z-index:1;
-  }
-
+  .project-hero { background:linear-gradient(160deg, var(--navy-deep) 0%, var(--navy-mid) 55%, var(--wave) 100%); color:var(--white); padding:52px 48px 44px; position:relative; overflow:hidden; }
+  .project-hero::before { content:''; position:absolute; bottom:0; left:0; right:0; height:120px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,40 C300,90 600,10 900,50 C1050,70 1150,30 1200,40 L1200,120 L0,120 Z' fill='rgba(242,246,248,0.06)'/%3E%3C/svg%3E") no-repeat bottom; background-size:cover; }
+  .hero-label { font-size:0.68rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--wave-light); margin-bottom:10px; font-family:'DM Mono',monospace; }
+  .hero-address { font-family:'Cormorant Garamond',serif; font-size:2.6rem; font-weight:400; line-height:1.1; margin-bottom:28px; position:relative; z-index:1; }
   .hero-meta { display:flex; gap:36px; position:relative; z-index:1; flex-wrap:wrap; }
-
   .meta-item { display:flex; flex-direction:column; gap:4px; }
-
-  .meta-label {
-    font-size: 0.65rem; letter-spacing: 0.16em;
-    text-transform: uppercase; opacity: 0.45;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .meta-value { font-size: 0.9rem; color: var(--mist); }
+  .meta-label { font-size:0.65rem; letter-spacing:0.16em; text-transform:uppercase; opacity:0.45; font-family:'DM Mono',monospace; }
+  .meta-value { font-size:0.9rem; color:var(--mist); }
 
   /* Progress */
-  .progress-section {
-    padding: 24px 48px;
-    background: var(--white);
-    border-bottom: 1px solid var(--mist);
-    display: flex; align-items: center; gap: 32px;
-  }
-
-  .progress-label {
-    font-size: 0.7rem; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--slate);
-    font-family: 'DM Mono', monospace;
-    white-space: nowrap;
-  }
-
-  .progress-track {
-    flex: 1; height: 3px;
-    background: var(--mist); border-radius: 2px; overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--wave), var(--wave-light));
-    border-radius: 2px; width: 0%;
-    transition: width 1.4s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  .progress-pct {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.6rem; color: var(--navy); font-weight: 600;
-    white-space: nowrap;
-  }
+  .progress-section { padding:24px 48px; background:var(--white); border-bottom:1px solid var(--mist); display:flex; align-items:center; gap:32px; }
+  .progress-label { font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--slate); font-family:'DM Mono',monospace; white-space:nowrap; }
+  .progress-track { flex:1; height:3px; background:var(--mist); border-radius:2px; overflow:hidden; }
+  .progress-fill { height:100%; background:linear-gradient(90deg, var(--wave), var(--wave-light)); border-radius:2px; width:0%; transition:width 1.4s cubic-bezier(0.4,0,0.2,1); }
+  .progress-pct { font-family:'Cormorant Garamond',serif; font-size:1.6rem; color:var(--navy); font-weight:600; white-space:nowrap; }
 
   /* Passages */
-  .passages-section { padding: 36px 48px; }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem; font-weight: 400;
-    margin-bottom: 22px; color: var(--navy);
-    display: flex; align-items: center; gap: 14px;
-  }
-
-  .section-title::after {
-    content: ''; flex:1; height:1px; background: var(--mist);
-  }
-
-  /* Timeline tabs */
-  .timeline-tabs {
-    display: flex; gap:0;
-    overflow-x: auto; margin-bottom: 28px;
-    border-bottom: 2px solid var(--mist);
-    scrollbar-width: none;
-  }
-
+  .passages-section { padding:36px 48px; }
+  .section-title { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:400; margin-bottom:22px; color:var(--navy); display:flex; align-items:center; gap:14px; }
+  .section-title::after { content:''; flex:1; height:1px; background:var(--mist); }
+  .timeline-tabs { display:flex; gap:0; overflow-x:auto; margin-bottom:28px; border-bottom:2px solid var(--mist); scrollbar-width:none; }
   .timeline-tabs::-webkit-scrollbar { display:none; }
-
-  .tab-btn {
-    flex-shrink: 0;
-    padding: 12px 22px;
-    background: none; border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.84rem; color: var(--slate-light);
-    transition: all 0.2s;
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-  }
-
-  .tab-btn:hover:not(.active) { color: var(--navy); background: var(--foam); }
-
-  .tab-btn.active { color: var(--navy); border-bottom-color: var(--wave); }
-
-  .tab-month { font-weight: 500; }
-
-  .tab-year {
-    font-size: 0.68rem; opacity: 0.55;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .tab-dot {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--mist); margin-bottom: 1px;
-  }
-
-  .tab-btn.active .tab-dot { background: var(--wave); }
-
-  /* Panels */
+  .tab-btn { flex-shrink:0; padding:12px 22px; background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-2px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:0.84rem; color:var(--slate-light); transition:all 0.2s; display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .tab-btn:hover:not(.active) { color:var(--navy); background:var(--foam); }
+  .tab-btn.active { color:var(--navy); border-bottom-color:var(--wave); }
+  .tab-month { font-weight:500; }
+  .tab-year { font-size:0.68rem; opacity:0.55; font-family:'DM Mono',monospace; }
+  .tab-dot { width:5px; height:5px; border-radius:50%; background:var(--mist); margin-bottom:1px; }
+  .tab-btn.active .tab-dot { background:var(--wave); }
   .content-panel { display:none; }
   .content-panel.active { display:block; }
-
-  .passage-header {
-    display: flex; justify-content: space-between;
-    align-items: flex-start; margin-bottom: 24px;
-  }
-
-  .passage-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.7rem; font-weight: 400; color: var(--navy);
-  }
-
-  .passage-subtitle { font-size: 0.82rem; color: var(--slate-light); margin-top: 4px; }
-
-  .passage-badge {
-    background: var(--navy);
-    color: var(--fog);
-    padding: 6px 14px; border-radius: 20px;
-    font-size: 0.72rem; letter-spacing: 0.08em;
-    text-transform: uppercase; font-family: 'DM Mono', monospace;
-  }
-
-  .passage-badge.latest { background: var(--wave); color: var(--white); }
-
-  /* Media grid */
-  .media-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px; margin-bottom: 24px;
-  }
-
-  .media-card {
-    background: var(--navy);
-    border-radius: 8px; overflow: hidden;
-    aspect-ratio: 16/9; position: relative;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid rgba(74,96,112,0.2);
-  }
-
-  .media-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 36px var(--shadow);
-  }
-
-  .media-card.featured {
-    grid-column: 1 / -1;
-    aspect-ratio: 21/9;
-  }
-
-  /* Thumbs maritimes */
-  .thumb-360 {
-    background: linear-gradient(135deg, #0D1B2A 0%, #1C3A50 50%, #2E6B8A 100%);
-    width:100%; height:100%;
-    display: flex; align-items: center; justify-content: center;
-    position: relative; overflow: hidden;
-  }
-
-  .thumb-360::after {
-    content: '';
-    position: absolute; inset:0;
-    background: repeating-conic-gradient(rgba(255,255,255,0.03) 0% 25%, transparent 0% 50%) 0 0 / 20px 20px;
-  }
-
-  .thumb-drone {
-    background: linear-gradient(160deg, #0A1520 0%, #1A3045 50%, #1E4D6B 100%);
-    width:100%; height:100%;
-    display: flex; align-items: center; justify-content: center;
-    position: relative; overflow: hidden;
-  }
-
-  .thumb-drone::after {
-    content: '';
-    position: absolute; bottom:0; left:0; right:0; height:60%;
-    background: linear-gradient(to top, rgba(46,107,138,0.2), transparent);
-  }
-
-  .media-overlay {
-    position: absolute; inset:0;
-    background: linear-gradient(to top, rgba(17,28,39,0.7) 0%, transparent 55%);
-    display: flex; align-items: flex-end; padding: 14px;
-  }
-
-  .media-type {
-    font-size: 0.62rem; letter-spacing: 0.18em;
-    text-transform: uppercase; opacity: 0.65;
-    color: var(--fog); margin-bottom: 2px;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .media-name { font-size: 0.88rem; color: var(--white); font-weight: 500; }
-
-  .play-btn {
-    position: absolute; top:50%; left:50%;
-    transform: translate(-50%,-50%);
-    width: 50px; height: 50px;
-    background: rgba(255,255,255,0.12);
-    border: 1.5px solid rgba(255,255,255,0.5);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; color: var(--white);
-    backdrop-filter: blur(4px);
-    transition: all 0.2s; padding-left: 3px;
-  }
-
-  .media-card:hover .play-btn {
-    background: rgba(46,107,138,0.5);
-    border-color: var(--wave-light);
-    transform: translate(-50%,-50%) scale(1.08);
-  }
-
-  /* Notes */
-  .notes-card {
-    background: var(--white);
-    border: 1px solid var(--mist);
-    border-left: 3px solid var(--wave);
-    border-radius: 6px; padding: 22px 24px;
-    margin-bottom: 14px;
-  }
-
-  .notes-title {
-    font-size: 0.68rem; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--wave);
-    font-family: 'DM Mono', monospace; margin-bottom: 10px;
-  }
-
-  .notes-text {
-    font-size: 0.91rem; line-height: 1.75;
-    color: var(--slate);
-  }
+  .passage-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:24px; }
+  .passage-title { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:400; color:var(--navy); }
+  .passage-subtitle { font-size:0.82rem; color:var(--slate-light); margin-top:4px; }
+  .passage-badge { background:var(--navy); color:var(--fog); padding:6px 14px; border-radius:20px; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; font-family:'DM Mono',monospace; }
+  .passage-badge.latest { background:var(--wave); color:var(--white); }
+  .media-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px; }
+  .media-card { background:var(--navy); border-radius:8px; overflow:hidden; aspect-ratio:16/9; position:relative; cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; border:1px solid rgba(74,96,112,0.2); }
+  .media-card:hover { transform:translateY(-3px); box-shadow:0 14px 36px var(--shadow); }
+  .media-card.featured { grid-column:1/-1; aspect-ratio:21/9; cursor:default; }
+  .media-card.solo { grid-column:1/-1; aspect-ratio:16/9; cursor:default; }
+  .thumb-360 { background:linear-gradient(135deg, #0D1B2A 0%, #1C3A50 50%, #2E6B8A 100%); width:100%; height:100%; position:relative; overflow:hidden; }
+  .thumb-360::after { content:''; position:absolute; inset:0; background:repeating-conic-gradient(rgba(255,255,255,0.03) 0% 25%, transparent 0% 50%) 0 0/20px 20px; }
+  .thumb-drone { background:linear-gradient(160deg, #0A1520 0%, #1A3045 50%, #1E4D6B 100%); width:100%; height:100%; }
+  .media-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(17,28,39,0.7) 0%, transparent 55%); display:flex; align-items:flex-end; padding:14px; }
+  .media-type { font-size:0.62rem; letter-spacing:0.18em; text-transform:uppercase; opacity:0.65; color:var(--fog); margin-bottom:2px; font-family:'DM Mono',monospace; }
+  .media-name { font-size:0.88rem; color:var(--white); font-weight:500; }
+  .play-btn { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:50px; height:50px; background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.5); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--white); backdrop-filter:blur(4px); transition:all 0.2s; padding-left:3px; }
+  .media-card:hover .play-btn { background:rgba(46,107,138,0.5); border-color:var(--wave-light); transform:translate(-50%,-50%) scale(1.08); }
+  .notes-card { background:var(--white); border:1px solid var(--mist); border-left:3px solid var(--wave); border-radius:6px; padding:22px 24px; margin-bottom:14px; }
+  .notes-title { font-size:0.68rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--wave); font-family:'DM Mono',monospace; margin-bottom:10px; }
+  .notes-text { font-size:0.91rem; line-height:1.75; color:var(--slate); }
+  .empty-state { text-align:center; padding:60px 20px; color:var(--slate-light); }
+  .empty-icon { font-size:2.5rem; opacity:0.3; margin-bottom:16px; }
 
   /* Lightbox */
-  #lightbox {
-    position: fixed; inset:0; z-index:200;
-    background: rgba(17,28,39,0.96);
-    display: none; align-items: center; justify-content: center;
-    backdrop-filter: blur(10px);
-  }
-
+  #lightbox { position:fixed; inset:0; z-index:200; background:rgba(17,28,39,0.96); display:none; align-items:center; justify-content:center; backdrop-filter:blur(10px); }
   #lightbox.open { display:flex; }
-
-  .lightbox-inner {
-    position: relative;
-    display: flex; flex-direction: column; align-items: center;
-  }
-
-  .lightbox-close {
-    position: absolute; top:-44px; right:0;
-    background: none; border: none;
-    color: var(--fog); font-size: 1.4rem;
-    cursor: pointer; opacity: 0.6; transition: opacity 0.2s;
-  }
-
+  .lightbox-inner { position:relative; display:flex; flex-direction:column; align-items:center; }
+  .lightbox-close { position:absolute; top:-44px; right:0; background:none; border:none; color:var(--fog); font-size:1.4rem; cursor:pointer; opacity:0.6; transition:opacity 0.2s; }
   .lightbox-close:hover { opacity:1; }
+  #lightbox-title { margin-top:12px; font-size:0.82rem; color:var(--fog); font-family:'DM Mono',monospace; letter-spacing:0.08em; }
 
-  .lightbox-content {
-    background: var(--navy-mid);
-    border: 1px solid rgba(74,96,112,0.4);
-    border-radius: 10px;
-    width: 800px; height: 450px;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 14px;
-    color: var(--fog);
-  }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  .content-panel.active > * { animation:fadeInUp 0.32s ease both; }
+  .content-panel.active > *:nth-child(1){animation-delay:0.00s}
+  .content-panel.active > *:nth-child(2){animation-delay:0.06s}
+  .content-panel.active > *:nth-child(3){animation-delay:0.12s}
 
-  .lightbox-label {
-    font-size: 0.75rem; letter-spacing: 0.15em;
-    text-transform: uppercase; opacity: 0.4;
-    margin-top: 6px; font-family: 'DM Mono', monospace;
-  }
-
-  /* Animations */
-  @keyframes fadeInUp {
-    from { opacity:0; transform: translateY(14px); }
-    to   { opacity:1; transform: translateY(0); }
-  }
-
-  .content-panel.active > * { animation: fadeInUp 0.32s ease both; }
-  .content-panel.active > *:nth-child(1) { animation-delay: 0.00s; }
-  .content-panel.active > *:nth-child(2) { animation-delay: 0.06s; }
-  .content-panel.active > *:nth-child(3) { animation-delay: 0.12s; }
-
-  @media (max-width: 700px) {
-    .login-visual { display:none; }
-    .login-form-panel { width:100%; padding: 44px 24px; }
-    .app-header { padding: 0 20px; }
-    .project-hero { padding: 32px 20px 28px; }
-    .hero-address { font-size: 1.7rem; }
-    .passages-section { padding: 24px 20px; }
-    .progress-section { padding: 18px 20px; gap:16px; }
-    .media-grid { grid-template-columns: 1fr; }
-    .media-card.featured { aspect-ratio: 16/9; }
+  @media (max-width:700px) {
+    .login-visual{display:none} .login-form-panel{width:100%;padding:44px 24px}
+    .app-header{padding:0 20px} .project-hero{padding:32px 20px 28px}
+    .hero-address{font-size:1.7rem} .passages-section{padding:24px 20px}
+    .progress-section{padding:18px 20px;gap:16px}
+    .media-grid{grid-template-columns:1fr}
+    .media-card.featured,.media-card.solo{aspect-ratio:16/9}
   }
 </style>
 </head>
@@ -560,16 +153,15 @@
 <div id="login-screen">
   <div class="login-visual">
     <div class="login-brand">
-      <div class="login-logo">
-        <div class="logo-icon">🔭</div>
-      </div>
-      <h1>BatiViz<span>IØ</span></h1>
+      <div class="login-logo"><div class="logo-icon">🔭</div></div>
+      <h1>Bativiz<span>IØ</span></h1>
       <p>Suivi de chantier · Île d'Oléron</p>
     </div>
   </div>
   <div class="login-form-panel">
     <h2>Bienvenue</h2>
     <p class="subtitle">Accédez au suivi de votre chantier</p>
+    <div id="login-error" class="login-error"></div>
     <div class="form-group">
       <label>Email</label>
       <input type="email" id="login-email" placeholder="votre@email.com">
@@ -578,322 +170,46 @@
       <label>Mot de passe</label>
       <input type="password" id="login-pass" placeholder="••••••••">
     </div>
-    <div id="login-error" style="display:none; margin-bottom:12px; padding:10px 14px; background:#fee; border:1px solid #fcc; border-radius:6px; font-size:0.82rem; color:#c00;"></div>
     <button class="btn-login" id="btn-login" onclick="doLogin()">Accéder à mon suivi →</button>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
-
   <header class="app-header">
     <div class="header-brand">
       <div class="header-logo">🔭</div>
-      <span class="brand-name">BatiViz<span>IØ</span></span>
+      <span class="brand-name">Bativiz<span>IØ</span></span>
     </div>
     <div class="header-right">
-      <span class="client-badge">Pierre & Sophie Martin</span>
+      <span class="client-badge" id="client-name"></span>
       <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
     </div>
   </header>
 
   <div class="project-hero">
     <div class="hero-label">Votre projet</div>
-    <div class="hero-address">12 Chemin des Vignes<br>31450 Ayguesvives</div>
-    <div class="hero-meta">
-      <div class="meta-item">
-        <span class="meta-label">Début des travaux</span>
-        <span class="meta-value">Septembre 2024</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Livraison prévue</span>
-        <span class="meta-value">Octobre 2025</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Constructeur</span>
-        <span class="meta-value">Maisons Pyrénées</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Passages réalisés</span>
-        <span class="meta-value">5 / 13 prévus</span>
-      </div>
+    <div class="hero-address" id="hero-address">
+      <div class="skeleton" style="height:38px;width:55%;margin-bottom:8px"></div>
+      <div class="skeleton" style="height:38px;width:35%"></div>
+    </div>
+    <div class="hero-meta" id="hero-meta">
+      <div class="skeleton" style="height:36px;width:110px"></div>
+      <div class="skeleton" style="height:36px;width:110px"></div>
+      <div class="skeleton" style="height:36px;width:110px"></div>
     </div>
   </div>
 
   <div class="progress-section">
     <span class="progress-label">Avancement global</span>
-    <div class="progress-track">
-      <div class="progress-fill" id="progress-fill"></div>
-    </div>
-    <span class="progress-pct">42%</span>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <span class="progress-pct" id="progress-pct">—</span>
   </div>
 
   <div class="passages-section">
     <div class="section-title">Passages de suivi</div>
-
-    <div class="timeline-tabs" role="tablist">
-      <button class="tab-btn active" onclick="switchTab(4)" role="tab">
-        <div class="tab-dot"></div>
-        <span class="tab-month">Janvier</span>
-        <span class="tab-year">2025</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab(3)" role="tab">
-        <div class="tab-dot"></div>
-        <span class="tab-month">Décembre</span>
-        <span class="tab-year">2024</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab(2)" role="tab">
-        <div class="tab-dot"></div>
-        <span class="tab-month">Novembre</span>
-        <span class="tab-year">2024</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab(1)" role="tab">
-        <div class="tab-dot"></div>
-        <span class="tab-month">Octobre</span>
-        <span class="tab-year">2024</span>
-      </button>
-      <button class="tab-btn" onclick="switchTab(0)" role="tab">
-        <div class="tab-dot"></div>
-        <span class="tab-month">Septembre</span>
-        <span class="tab-year">2024</span>
-      </button>
-    </div>
-
-    <!-- PASSAGE 1 -->
-    <div class="content-panel" id="panel-0">
-      <div class="passage-header">
-        <div>
-          <div class="passage-title">Passage 1 — Terrassement</div>
-          <div class="passage-subtitle">Réalisé le 18 septembre 2024</div>
-        </div>
-        <span class="passage-badge">✓ Archivé</span>
-      </div>
-      <div class="media-grid">
-        <div class="media-card featured" onclick="openLightbox('360° — Vue panoramique du terrain')">
-          <div class="thumb-360"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vidéo 360°</div>
-              <div class="media-name">Vue panoramique — Terrain vierge</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('Drone — Vue aérienne Nord')">
-          <div class="thumb-drone"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vue drone</div>
-              <div class="media-name">Aerial Nord · 80m</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('Drone — Progression du terrassement')">
-          <div class="thumb-drone" style="background: linear-gradient(160deg, #0A1E10 0%, #1A3D20 50%, #1E5C30 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vue drone</div>
-              <div class="media-name">Progression du terrassement</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-      </div>
-      <div class="notes-card">
-        <div class="notes-title">Note du passage</div>
-        <div class="notes-text">Les travaux de terrassement ont débuté le 16 septembre. Le terrain a été entièrement décaissé sur 80 cm de profondeur. L'évacuation des terres a été réalisée en 3 rotations. Météo favorable, aucun incident à signaler. Les fondations peuvent être coulées dès la semaine prochaine selon planning.</div>
-      </div>
-    </div>
-
-    <!-- PASSAGE 2 -->
-    <div class="content-panel" id="panel-1">
-      <div class="passage-header">
-        <div>
-          <div class="passage-title">Passage 2 — Fondations</div>
-          <div class="passage-subtitle">Réalisé le 14 octobre 2024</div>
-        </div>
-        <span class="passage-badge">✓ Archivé</span>
-      </div>
-      <div class="media-grid">
-        <div class="media-card featured" onclick="openLightbox('360° — Fondations coulées')">
-          <div class="thumb-360" style="background: linear-gradient(135deg, #0D1B2A 0%, #1A3040 50%, #1E4D6B 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vidéo 360°</div>
-              <div class="media-name">Vue intégrale — Fondations en place</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('Drone — Vue aérienne fondations')">
-          <div class="thumb-drone" style="background: linear-gradient(160deg, #080F18 0%, #132030 60%, #1A3550 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vue drone</div>
-              <div class="media-name">Empreinte au sol · 60m</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('Drone — Semelles filantes')">
-          <div class="thumb-drone" style="background: linear-gradient(160deg, #0F1520 0%, #1E2D40 60%, #2A4060 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vue drone</div>
-              <div class="media-name">Semelles filantes — détail</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-      </div>
-      <div class="notes-card">
-        <div class="notes-title">Note du passage</div>
-        <div class="notes-text">Les fondations ont été coulées entre le 7 et le 10 octobre. Béton armé de type C25/30 conforme au DTU 13.1. Le coulage de la dalle de propreté est terminé. Délai de séchage respecté avant pose des parpaings. Le radier sera mis en œuvre dès que les conditions météo le permettront.</div>
-      </div>
-    </div>
-
-    <!-- PASSAGE 3 -->
-    <div class="content-panel" id="panel-2">
-      <div class="passage-header">
-        <div>
-          <div class="passage-title">Passage 3 — Élévation des murs</div>
-          <div class="passage-subtitle">Réalisé le 20 novembre 2024</div>
-        </div>
-        <span class="passage-badge">✓ Archivé</span>
-      </div>
-      <div class="media-grid">
-        <div class="media-card featured" onclick="openLightbox('360° — Murs RDC en cours')">
-          <div class="thumb-360" style="background: linear-gradient(135deg, #0A1520 0%, #162840 50%, #1E4060 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vidéo 360°</div>
-              <div class="media-name">Vue intérieure — RDC en élévation</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('Drone — Élévation murs')">
-          <div class="thumb-drone" style="background: linear-gradient(160deg, #0A1A15 0%, #1A3528 60%, #204D38 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vue drone</div>
-              <div class="media-name">Élévation en cours · 45m</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('360° — Détail baies')">
-          <div class="thumb-360" style="background: linear-gradient(135deg, #101E2A 0%, #1C3040 50%, #253D52 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vidéo 360°</div>
-              <div class="media-name">Réservations portes & fenêtres</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-      </div>
-      <div class="notes-card">
-        <div class="notes-title">Note du passage</div>
-        <div class="notes-text">L'élévation des murs du RDC est en bonne voie, environ 60% réalisée à date de passage. Les réservations pour les baies vitrées et portes sont correctement positionnées. On distingue désormais clairement le plan de la maison depuis les vues aériennes.</div>
-      </div>
-    </div>
-
-    <!-- PASSAGE 4 -->
-    <div class="content-panel" id="panel-3">
-      <div class="passage-header">
-        <div>
-          <div class="passage-title">Passage 4 — Charpente</div>
-          <div class="passage-subtitle">Réalisé le 19 décembre 2024</div>
-        </div>
-        <span class="passage-badge">✓ Archivé</span>
-      </div>
-      <div class="media-grid">
-        <div class="media-card featured" onclick="openLightbox('360° — Charpente posée')">
-          <div class="thumb-360" style="background: linear-gradient(135deg, #0D1A20 0%, #1A3040 50%, #204A60 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vidéo 360°</div>
-              <div class="media-name">Charpente bois posée — vue intérieure</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('Drone — Vue toiture')">
-          <div class="thumb-drone" style="background: linear-gradient(160deg, #15100A 0%, #2A2015 60%, #3A3020 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vue drone</div>
-              <div class="media-name">Faîtage & pente toiture · 30m</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('Drone — Vue d\'ensemble toiture')">
-          <div class="thumb-drone" style="background: linear-gradient(160deg, #0A1020 0%, #182030 60%, #203050 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vue drone</div>
-              <div class="media-name">Ensemble toiture · 100m</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-      </div>
-      <div class="notes-card">
-        <div class="notes-title">Note du passage</div>
-        <div class="notes-text">La charpente traditionnelle en bois de pin a été entièrement posée. Le faîtage est à 7,2m NGF. Les pannes et chevrons sont en place, la couverture peut démarrer. La maison prend forme de manière très élégante, les volumes sont parfaitement respectés par rapport aux plans.</div>
-      </div>
-    </div>
-
-    <!-- PASSAGE 5 -->
-    <div class="content-panel active" id="panel-4">
-      <div class="passage-header">
-        <div>
-          <div class="passage-title">Passage 5 — Couverture & mise hors d'eau</div>
-          <div class="passage-subtitle">Réalisé le 22 janvier 2025</div>
-        </div>
-        <span class="passage-badge latest">● Dernier passage</span>
-      </div>
-      <div class="media-grid">
-        <div class="media-card featured" onclick="openLightbox('360° — Maison hors d\'eau')">
-          <div class="thumb-360" style="background: linear-gradient(135deg, #0A1820 0%, #152C3A 50%, #1E4555 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vidéo 360°</div>
-              <div class="media-name">Extérieur complet — Mise hors d'eau</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('Drone — Toiture terminée')">
-          <div class="thumb-drone" style="background: linear-gradient(160deg, #0A1A25 0%, #183050 60%, #204570 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vue drone</div>
-              <div class="media-name">Toiture terminée · 50m</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-        <div class="media-card" onclick="openLightbox('Drone — Vue d\'ensemble façades')">
-          <div class="thumb-drone" style="background: linear-gradient(160deg, #0A1820 0%, #152E40 60%, #1C4560 100%)"></div>
-          <div class="media-overlay">
-            <div class="media-info">
-              <div class="media-type">Vue drone</div>
-              <div class="media-name">4 façades · 80m</div>
-            </div>
-          </div>
-          <div class="play-btn">▶</div>
-        </div>
-      </div>
-      <div class="notes-card">
-        <div class="notes-title">Note du passage</div>
-        <div class="notes-text">Excellente nouvelle : la maison est désormais hors d'eau et hors d'air. La couverture en tuiles canal terre cuite est terminée, les solins et noues sont étanchéifiés. Les menuiseries extérieures (PVC blanc, triple vitrage) ont été livrées et sont en cours de pose. Le chantier entre maintenant dans la phase cloisonnement et second œuvre.</div>
-      </div>
-    </div>
-
+    <div class="timeline-tabs" id="timeline-tabs" role="tablist"></div>
+    <div id="panels-container"></div>
   </div>
 </div>
 
@@ -901,126 +217,220 @@
 <div id="lightbox" onclick="closeLightbox()">
   <div class="lightbox-inner" onclick="event.stopPropagation()">
     <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-    <div class="lightbox-content">
-      <div style="font-size:2.5rem; opacity:0.2">▶</div>
-      <div id="lightbox-title" style="font-size:0.95rem; color:var(--fog)"></div>
-      <div class="lightbox-label">Cliquez pour lancer la vidéo</div>
+    <div style="background:#000;border-radius:8px;overflow:hidden;">
+      <iframe id="lightbox-iframe" style="width:800px;height:450px;border:none;display:block;"
+        allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen>
+      </iframe>
     </div>
+    <div id="lightbox-title"></div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const { createClient } = supabase;
-  const sb = createClient(
-    'https://cajgqzzyxykzxsudpmms.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhamdxenp5eHlrenhzdWRwbW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MjU3NzEsImV4cCI6MjA5MTQwMTc3MX0.3kuRoLsmdDU8Hd-U4b7S8q1GSZwsf46SN7JOEFMKrz0'
-  );
+const { createClient } = supabase;
+const sb = createClient(
+  'https://cajgqzzyxykzxsudpmms.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhamdxenp5eHlrenhzdWRwbW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MjU3NzEsImV4cCI6MjA5MTQwMTc3MX0.3kuRoLsmdDU8Hd-U4b7S8q1GSZwsf46SN7JOEFMKrz0'
+);
 
-  // ── Vérifier session existante au chargement ──
-  window.addEventListener('DOMContentLoaded', async () => {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-      const role = await getRole(session.user.id);
-      if (role === 'admin') {
-        window.location.href = '/admin';
-      } else if (role === 'client') {
-        showApp(session.user);
-      }
-    }
-  });
+// ── Vérifier session existante au chargement ──
+window.addEventListener('DOMContentLoaded', async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
+    if (profile?.role === 'admin') { window.location.href = '/admin'; return; }
+    if (profile?.role === 'client') { await loadApp(session.user); }
+  }
+});
 
-  async function getRole(userId) {
-    const { data } = await sb
-      .from('profiles')
-      .select('role')
-      .eq('id', userId)
-      .single();
-    return data?.role ?? null;
+// ── Login ──
+async function doLogin() {
+  const errEl = document.getElementById('login-error');
+  errEl.style.display = 'none';
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const btn   = document.getElementById('btn-login');
+  if (!email || !pass) { errEl.textContent = 'Merci de remplir tous les champs.'; errEl.style.display = 'block'; return; }
+  btn.textContent = 'Connexion…'; btn.disabled = true;
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) {
+    errEl.textContent = 'Email ou mot de passe incorrect.';
+    errEl.style.display = 'block';
+    btn.textContent = 'Accéder à mon suivi →'; btn.disabled = false;
+    return;
+  }
+  const { data: profile } = await sb.from('profiles').select('role').eq('id', data.user.id).single();
+  if (profile?.role === 'admin') { window.location.href = '/admin'; return; }
+  if (profile?.role === 'client') { await loadApp(data.user); return; }
+  await sb.auth.signOut();
+  errEl.textContent = 'Aucun accès configuré pour ce compte.';
+  errEl.style.display = 'block';
+  btn.textContent = 'Accéder à mon suivi →'; btn.disabled = false;
+}
+
+// ── Charger l'app ──
+async function loadApp(user) {
+  document.getElementById('login-screen').classList.add('hidden');
+  setTimeout(() => document.getElementById('app').classList.add('visible'), 800);
+
+  // Nom du client
+  const { data: profile } = await sb.from('profiles').select('nom').eq('id', user.id).single();
+  document.getElementById('client-name').textContent = profile?.nom || user.email;
+
+  // Chantier
+  const { data: chantier } = await sb.from('chantiers').select('*').eq('client_id', user.id).single();
+  if (!chantier) {
+    document.getElementById('hero-address').innerHTML = '<em style="opacity:0.6;font-size:1.2rem">Aucun chantier associé.</em>';
+    document.getElementById('panels-container').innerHTML = `<div class="empty-state"><div class="empty-icon">🏗</div><p>Votre chantier apparaîtra ici dès sa création.</p></div>`;
+    return;
   }
 
-  function showError(msg) {
-    const el = document.getElementById('login-error');
-    el.textContent = msg;
-    el.style.display = 'block';
+  // Hero
+  document.getElementById('hero-address').innerHTML = `${chantier.adresse}<br>${chantier.code_postal} ${chantier.ville}`;
+  const fmt = d => d ? new Date(d).toLocaleDateString('fr-FR', {month:'long', year:'numeric'}) : '—';
+  document.getElementById('hero-meta').innerHTML = `
+    <div class="meta-item"><span class="meta-label">Début des travaux</span><span class="meta-value">${fmt(chantier.date_debut)}</span></div>
+    <div class="meta-item"><span class="meta-label">Livraison prévue</span><span class="meta-value">${fmt(chantier.date_livraison)}</span></div>
+    <div class="meta-item"><span class="meta-label">Constructeur</span><span class="meta-value">${chantier.constructeur || '—'}</span></div>
+    <div class="meta-item"><span class="meta-label">Passages réalisés</span><span class="meta-value" id="nb-passages">—</span></div>`;
+
+  // Avancement
+  const pct = chantier.avancement || 0;
+  document.getElementById('progress-pct').textContent = pct + '%';
+  setTimeout(() => { document.getElementById('progress-fill').style.width = pct + '%'; }, 400);
+
+  // Passages
+  await loadPassages(chantier.id);
+}
+
+// ── Charger les passages ──
+async function loadPassages(chantierId) {
+  const { data: passages } = await sb
+    .from('passages')
+    .select('*, medias(*)')
+    .eq('chantier_id', chantierId)
+    .order('date_passage', { ascending: false });
+
+  const nbEl = document.getElementById('nb-passages');
+  if (nbEl) nbEl.textContent = passages?.length || 0;
+
+  const tabsEl   = document.getElementById('timeline-tabs');
+  const panelsEl = document.getElementById('panels-container');
+
+  if (!passages || passages.length === 0) {
+    tabsEl.innerHTML = '';
+    panelsEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🔭</div><p>Aucun passage enregistré pour le moment.<br>Le premier suivi apparaîtra ici dès votre prochaine visite.</p></div>`;
+    return;
   }
 
-  function hideError() {
-    document.getElementById('login-error').style.display = 'none';
-  }
+  // Onglets
+  tabsEl.innerHTML = passages.map((p, i) => {
+    const d    = new Date(p.date_passage);
+    const mois = d.toLocaleDateString('fr-FR', {month:'long'});
+    const an   = d.getFullYear();
+    return `<button class="tab-btn ${i===0?'active':''}" onclick="switchTab(${i})" role="tab">
+      <div class="tab-dot"></div>
+      <span class="tab-month">${mois[0].toUpperCase()+mois.slice(1)}</span>
+      <span class="tab-year">${an}</span>
+    </button>`;
+  }).join('');
 
-  async function doLogin() {
-    hideError();
-    const email = document.getElementById('login-email').value.trim();
-    const pass  = document.getElementById('login-pass').value;
-    const btn   = document.getElementById('btn-login');
+  // Panels
+  panelsEl.innerHTML = passages.map((p, i) => buildPanel(p, i)).join('');
+}
 
-    if (!email || !pass) { showError('Merci de remplir tous les champs.'); return; }
+// ── Construire un panel ──
+function buildPanel(p, i) {
+  const date  = new Date(p.date_passage).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'});
+  const badge = i === 0
+    ? `<span class="passage-badge latest">● Dernier passage</span>`
+    : `<span class="passage-badge">✓ Archivé</span>`;
+  const note  = p.note ? `<div class="notes-card"><div class="notes-title">Note du passage</div><div class="notes-text">${p.note}</div></div>` : '';
 
-    btn.textContent = 'Connexion…';
-    btn.disabled = true;
+  return `
+    <div class="content-panel ${i===0?'active':''}" id="panel-${i}">
+      <div class="passage-header">
+        <div>
+          <div class="passage-title">${p.titre}</div>
+          <div class="passage-subtitle">Réalisé le ${date}</div>
+        </div>
+        ${badge}
+      </div>
+      ${buildMediaGrid(p.medias || [])}
+      ${note}
+    </div>`;
+}
 
-    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+// ── Grille de médias ──
+function buildMediaGrid(medias) {
+  if (!medias.length) return `<div class="empty-state" style="padding:28px"><div class="empty-icon">🎬</div><p>Médias en cours d'ajout…</p></div>`;
 
-    if (error) {
-      showError('Email ou mot de passe incorrect.');
-      btn.textContent = 'Accéder à mon suivi →';
-      btn.disabled = false;
-      return;
-    }
+  const [first, ...rest] = medias;
+  const featClass = rest.length === 0 ? 'solo' : 'featured';
 
-    const role = await getRole(data.user.id);
+  // Première vidéo : lecteur intégré
+  const firstCard = `
+    <div class="media-card ${featClass}" style="cursor:default;">
+      <iframe src="https://www.youtube.com/embed/${first.url_youtube}?rel=0&modestbranding=1&color=white"
+        style="width:100%;height:100%;border:none;display:block;"
+        allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+        allowfullscreen title="${(first.nom||'').replace(/"/g,'&quot;')}">
+      </iframe>
+    </div>`;
 
-    if (role === 'admin') {
-      window.location.href = '/admin';
-    } else if (role === 'client') {
-      showApp(data.user);
-    } else {
-      await sb.auth.signOut();
-      showError('Aucun accès configuré pour ce compte.');
-      btn.textContent = 'Accéder à mon suivi →';
-      btn.disabled = false;
-    }
-  }
+  // Autres vidéos : vignettes cliquables
+  const restCards = rest.map(m => {
+    const thumbClass = m.type === '360' ? 'thumb-360' : 'thumb-drone';
+    const typeLabel  = m.type === '360' ? 'Vidéo 360°' : 'Vue drone';
+    const nom = (m.nom||'').replace(/'/g,"\\'");
+    return `
+      <div class="media-card" onclick="openYoutube('${m.url_youtube}','${nom}')">
+        <div class="${thumbClass}"></div>
+        <div class="media-overlay">
+          <div class="media-info">
+            <div class="media-type">${typeLabel}</div>
+            <div class="media-name">${m.nom||''}</div>
+          </div>
+        </div>
+        <div class="play-btn">▶</div>
+      </div>`;
+  }).join('');
 
-  function showApp(user) {
-    document.getElementById('login-screen').classList.add('hidden');
-    setTimeout(() => {
-      document.getElementById('app').classList.add('visible');
-      setTimeout(() => { document.getElementById('progress-fill').style.width = '42%'; }, 300);
-    }, 800);
-  }
+  return `<div class="media-grid">${firstCard}${restCards}</div>`;
+}
 
-  async function doLogout() {
-    await sb.auth.signOut();
-    document.getElementById('app').classList.remove('visible');
-    document.getElementById('login-screen').classList.remove('hidden');
-    document.getElementById('progress-fill').style.width = '0%';
-    document.getElementById('login-email').value = '';
-    document.getElementById('login-pass').value = '';
-  }
+// ── Tabs ──
+function switchTab(i) {
+  document.querySelectorAll('.tab-btn').forEach((b,j) => b.classList.toggle('active', i===j));
+  document.querySelectorAll('.content-panel').forEach((p,j) => p.classList.toggle('active', i===j));
+}
 
-  function switchTab(index) {
-    document.querySelectorAll('.tab-btn').forEach((b, i) => {
-      const order = [4,3,2,1,0];
-      b.classList.toggle('active', order[i] === index);
-    });
-    document.querySelectorAll('.content-panel').forEach((p, i) => {
-      p.classList.toggle('active', i === index);
-    });
-  }
+// ── Lightbox ──
+function openYoutube(id, title) {
+  document.getElementById('lightbox-iframe').src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&color=white`;
+  document.getElementById('lightbox-title').textContent = title || '';
+  document.getElementById('lightbox').classList.add('open');
+}
 
-  function openLightbox(title) {
-    document.getElementById('lightbox-title').textContent = title;
-    document.getElementById('lightbox').classList.add('open');
-  }
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightbox-iframe').src = '';
+}
 
-  function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+// ── Logout ──
+async function doLogout() {
+  await sb.auth.signOut();
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pass').value = '';
+}
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Enter') doLogin();
-    if (e.key === 'Escape') closeLightbox();
-  });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.getElementById('login-screen').classList.contains('hidden')) doLogin();
+  if (e.key === 'Escape') closeLightbox();
+});
 </script>
 </body>
 </html>
