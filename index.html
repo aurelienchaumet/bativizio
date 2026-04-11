@@ -123,6 +123,35 @@
   .empty-state { text-align:center; padding:60px 20px; color:var(--slate-light); }
   .empty-icon { font-size:2.5rem; opacity:0.3; margin-bottom:16px; }
 
+  /* ── Carrousel photos ── */
+  .photo-section { margin-bottom:24px; }
+  .photo-section-title { font-size:0.68rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--wave); font-family:'DM Mono',monospace; margin-bottom:12px; }
+  .photo-carousel { position:relative; border-radius:8px; background:var(--navy); border:1px solid rgba(74,96,112,0.2); overflow:hidden; }
+  .photo-track { display:flex; transition:transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+  .photo-slide { flex-shrink:0; width:100%; aspect-ratio:16/9; overflow:hidden; }
+  .photo-slide img { width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in; transition:transform 0.3s; }
+  .photo-slide img:hover { transform:scale(1.02); }
+  .photo-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(17,28,39,0.7); border:1px solid rgba(184,200,212,0.3); color:var(--white); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; backdrop-filter:blur(4px); transition:all 0.2s; font-size:1rem; z-index:5; }
+  .photo-nav:hover { background:rgba(46,107,138,0.7); border-color:var(--wave-light); }
+  .photo-nav.prev { left:12px; }
+  .photo-nav.next { right:12px; }
+  .photo-dots { display:flex; justify-content:center; gap:6px; padding:10px; }
+  .photo-dot { width:6px; height:6px; border-radius:50%; background:rgba(184,200,212,0.3); cursor:pointer; transition:all 0.2s; border:none; }
+  .photo-dot.active { background:var(--wave-light); transform:scale(1.3); }
+  .photo-counter { position:absolute; top:12px; right:12px; background:rgba(17,28,39,0.7); color:var(--fog); font-size:0.7rem; padding:4px 10px; border-radius:12px; font-family:'DM Mono',monospace; backdrop-filter:blur(4px); }
+
+  /* Lightbox photo */
+  #photo-lightbox { position:fixed; inset:0; z-index:300; background:rgba(10,18,28,0.97); display:none; align-items:center; justify-content:center; backdrop-filter:blur(12px); }
+  #photo-lightbox.open { display:flex; }
+  .photo-lb-inner { position:relative; display:flex; align-items:center; justify-content:center; }
+  .photo-lb-inner img { max-width:90vw; max-height:88vh; object-fit:contain; border-radius:4px; }
+  .photo-lb-close { position:absolute; top:-44px; right:0; background:none; border:none; color:var(--fog); font-size:1.4rem; cursor:pointer; opacity:0.6; transition:opacity 0.2s; }
+  .photo-lb-close:hover { opacity:1; }
+  .photo-lb-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(17,28,39,0.7); border:1px solid rgba(184,200,212,0.25); color:var(--white); width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.2s; font-size:1.1rem; }
+  .photo-lb-nav:hover { background:rgba(46,107,138,0.6); }
+  .photo-lb-nav.prev { left:-58px; }
+  .photo-lb-nav.next { right:-58px; }
+
   /* Lightbox */
   #lightbox { position:fixed; inset:0; z-index:200; background:rgba(17,28,39,0.96); display:none; align-items:center; justify-content:center; backdrop-filter:blur(10px); }
   #lightbox.open { display:flex; }
@@ -213,7 +242,7 @@
   </div>
 </div>
 
-<!-- LIGHTBOX -->
+<!-- LIGHTBOX VIDÉO -->
 <div id="lightbox" onclick="closeLightbox()">
   <div class="lightbox-inner" onclick="event.stopPropagation()">
     <button class="lightbox-close" onclick="closeLightbox()">✕</button>
@@ -223,6 +252,16 @@
       </iframe>
     </div>
     <div id="lightbox-title"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX PHOTO -->
+<div id="photo-lightbox" onclick="closePhotoLightbox()">
+  <div class="photo-lb-inner" onclick="event.stopPropagation()">
+    <button class="photo-lb-close" onclick="closePhotoLightbox()">✕</button>
+    <button class="photo-lb-nav prev" onclick="lbNavPhoto(-1)">‹</button>
+    <img id="photo-lb-img" src="" alt="">
+    <button class="photo-lb-nav next" onclick="lbNavPhoto(1)">›</button>
   </div>
 </div>
 
@@ -348,6 +387,9 @@ function buildPanel(p, i) {
     : `<span class="passage-badge">✓ Archivé</span>`;
   const note  = p.note ? `<div class="notes-card"><div class="notes-title">Note du passage</div><div class="notes-text">${p.note}</div></div>` : '';
 
+  const videos = (p.medias||[]).filter(m => m.type !== 'photo');
+  const photos = (p.medias||[]).filter(m => m.type === 'photo');
+
   return `
     <div class="content-panel ${i===0?'active':''}" id="panel-${i}">
       <div class="passage-header">
@@ -357,30 +399,28 @@ function buildPanel(p, i) {
         </div>
         ${badge}
       </div>
-      ${buildMediaGrid(p.medias || [])}
+      ${buildMediaGrid(videos)}
+      ${buildPhotoCarousel(photos, i)}
       ${note}
     </div>`;
 }
 
-// ── Grille de médias ──
+// ── Grille de vidéos ──
 function buildMediaGrid(medias) {
-  if (!medias.length) return `<div class="empty-state" style="padding:28px"><div class="empty-icon">🎬</div><p>Médias en cours d'ajout…</p></div>`;
+  if (!medias.length) return '';
 
   const [first, ...rest] = medias;
   const featClass = rest.length === 0 ? 'solo' : 'featured';
 
-  // Première vidéo : lecteur intégré
   const firstCard = `
     <div class="media-card ${featClass}" style="cursor:default;">
-      <iframe src="https://player.vimeo.com/video/1182198506?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" 
-        frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; 
-        web-share; gyroscope; accelerometer" referrerpolicy="strict-origin-when-cross-origin" 
-        style="position:absolute;top:0;left:0;width:100%;height:100%;" 
-      title="YTDown.com_YouTube_Building-Construction-Virtual-Reality-36_Media_wR9erEdaZwk_001_1080s">
+      <iframe src="https://www.youtube.com/embed/${first.url_youtube}?rel=0&modestbranding=1&color=white"
+        style="width:100%;height:100%;border:none;display:block;"
+        allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
+        allowfullscreen title="${(first.nom||'').replace(/"/g,'&quot;')}">
       </iframe>
     </div>`;
 
-  // Autres vidéos : vignettes cliquables
   const restCards = rest.map(m => {
     const thumbClass = m.type === '360' ? 'thumb-360' : 'thumb-drone';
     const typeLabel  = m.type === '360' ? 'Vidéo 360°' : 'Vue drone';
@@ -399,6 +439,94 @@ function buildMediaGrid(medias) {
   }).join('');
 
   return `<div class="media-grid">${firstCard}${restCards}</div>`;
+}
+
+// ── Carrousel photos ──
+const carouselStates = {};
+
+function buildPhotoCarousel(photos, panelIndex) {
+  if (!photos.length) return '';
+
+  const id = `carousel-${panelIndex}`;
+  carouselStates[id] = { index: 0, total: photos.length, photos };
+
+  const slides = photos.map((p, i) =>
+    `<div class="photo-slide">
+      <img src="${p.url_photo}" alt="${p.nom||('Photo '+(i+1))}" loading="lazy"
+        onclick="openPhotoLightbox('${id}',${i})">
+    </div>`
+  ).join('');
+
+  const dots = photos.length > 1
+    ? `<div class="photo-dots">${photos.map((_,i) =>
+        `<button class="photo-dot ${i===0?'active':''}" onclick="goToPhoto('${id}',${i})"></button>`
+      ).join('')}</div>`
+    : '';
+
+  const navs = photos.length > 1
+    ? `<button class="photo-nav prev" onclick="navPhoto('${id}',-1)">‹</button>
+       <button class="photo-nav next" onclick="navPhoto('${id}',1)">›</button>`
+    : '';
+
+  const counter = photos.length > 1
+    ? `<div class="photo-counter" id="${id}-counter">1 / ${photos.length}</div>`
+    : '';
+
+  return `
+    <div class="photo-section">
+      <div class="photo-section-title">📷 Photos du passage</div>
+      <div class="photo-carousel" id="${id}">
+        <div class="photo-track" id="${id}-track">${slides}</div>
+        ${counter}
+        ${navs}
+        ${dots}
+      </div>
+    </div>`;
+}
+
+function navPhoto(id, dir) {
+  const s = carouselStates[id];
+  if (!s) return;
+  s.index = (s.index + dir + s.total) % s.total;
+  updateCarousel(id);
+}
+
+function goToPhoto(id, i) {
+  if (!carouselStates[id]) return;
+  carouselStates[id].index = i;
+  updateCarousel(id);
+}
+
+function updateCarousel(id) {
+  const s = carouselStates[id];
+  document.getElementById(`${id}-track`).style.transform = `translateX(-${s.index * 100}%)`;
+  document.querySelectorAll(`#${id} .photo-dot`).forEach((d,i) => d.classList.toggle('active', i === s.index));
+  const counter = document.getElementById(`${id}-counter`);
+  if (counter) counter.textContent = `${s.index+1} / ${s.total}`;
+}
+
+// ── Lightbox photo ──
+let lbPhotos = [];
+let lbIndex  = 0;
+
+function openPhotoLightbox(carouselId, index) {
+  const s = carouselStates[carouselId];
+  if (!s) return;
+  lbPhotos = s.photos;
+  lbIndex  = index;
+  document.getElementById('photo-lb-img').src = lbPhotos[lbIndex].url_photo;
+  document.getElementById('photo-lightbox').classList.add('open');
+  // Masquer les nav si une seule photo
+  document.querySelectorAll('.photo-lb-nav').forEach(n => n.style.display = lbPhotos.length > 1 ? 'flex' : 'none');
+}
+
+function lbNavPhoto(dir) {
+  lbIndex = (lbIndex + dir + lbPhotos.length) % lbPhotos.length;
+  document.getElementById('photo-lb-img').src = lbPhotos[lbIndex].url_photo;
+}
+
+function closePhotoLightbox() {
+  document.getElementById('photo-lightbox').classList.remove('open');
 }
 
 // ── Tabs ──
@@ -430,7 +558,9 @@ async function doLogout() {
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !document.getElementById('login-screen').classList.contains('hidden')) doLogin();
-  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'Escape') { closeLightbox(); closePhotoLightbox(); }
+  if (e.key === 'ArrowLeft'  && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(-1);
+  if (e.key === 'ArrowRight' && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(1);
 });
 </script>
 </body>
