@@ -244,54 +244,42 @@
     document.getElementById('loading').style.display = 'block';
     document.getElementById('form-state').style.display = 'none';
 
-    // Supabase v2 peut passer le token soit dans le hash soit dans les query params
-    const hash   = window.location.hash.substring(1);
-    const search = window.location.search.substring(1);
-    const params = new URLSearchParams(hash || search);
+    // Supabase JS v2 détecte automatiquement le access_token dans le hash
+    // On attend juste que la session soit établie
+    const { data: { session }, error } = await sb.auth.getSession();
 
+    if (session) {
+      // Session établie automatiquement par Supabase via le hash
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('form-state').style.display = 'block';
+      return;
+    }
+
+    // Si pas de session, on essaie de lire manuellement le hash
+    const hash   = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
     const accessToken  = params.get('access_token');
     const refreshToken = params.get('refresh_token');
     const type         = params.get('type');
-    const tokenHash    = params.get('token_hash') || params.get('token');
 
-    // Cas 1 : token complet dans le hash (ancien format Supabase)
-    if (accessToken && (type === 'recovery' || type === 'invite')) {
-      const { error } = await sb.auth.setSession({
-        access_token:  accessToken,
-        refresh_token: refreshToken || ''
-      });
-      if (error) {
-        showError('Ce lien est invalide ou a expiré. Demandez un nouveau lien.');
-      }
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('form-state').style.display = 'block';
+    if (!accessToken || (type !== 'recovery' && type !== 'invite')) {
+      window.location.href = '/';
       return;
     }
 
-    // Cas 2 : token_hash dans l'URL (nouveau format Supabase)
-    if (tokenHash && (type === 'recovery' || type === 'invite' || type === 'email')) {
-      const { error } = await sb.auth.verifyOtp({
-        token_hash: tokenHash,
-        type: type === 'invite' ? 'invite' : 'recovery'
-      });
-      if (error) {
-        showError('Ce lien est invalide ou a expiré. Demandez un nouveau lien.');
-      }
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('form-state').style.display = 'block';
-      return;
+    // Établir la session manuellement
+    const { error: sessionError } = await sb.auth.setSession({
+      access_token:  accessToken,
+      refresh_token: refreshToken || accessToken
+    });
+
+    document.getElementById('loading').style.display = 'none';
+
+    if (sessionError) {
+      showError('Ce lien est invalide ou a expiré. Demandez un nouveau lien.');
     }
 
-    // Cas 3 : session déjà active (utilisateur déjà connecté via le lien)
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('form-state').style.display = 'block';
-      return;
-    }
-
-    // Aucun token trouvé → redirection
-    window.location.href = '/';
+    document.getElementById('form-state').style.display = 'block';
   });
 
   // ── Force de mot de passe ──
