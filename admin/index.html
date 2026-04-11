@@ -426,13 +426,8 @@ nav{padding:14px 10px;flex:1}
       <div class="modal-divider"></div>
       <div style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)">Vidéos YouTube</div>
       <div class="media-list" id="media-list"></div>
-<<<<<<< HEAD
       <button class="add-media-btn" onclick="addMediaRow()">+ Ajouter un média</button>
       <div class="form-hint" style="margin-top:8px">Vidéos : ID YouTube (après <code>watch?v=</code>) · Photos : URL directe (Google Photos, Imgur…)</div>
-=======
-      <button class="add-media-btn" onclick="addMediaRow()">+ Ajouter une vidéo</button>
-      <div class="form-hint" style="margin-top:8px">L'ID YouTube est la partie après <code>watch?v=</code> dans l'URL de la vidéo.</div>
->>>>>>> 844adba306a77671f6ec8359a5e79710160a48df
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-passage')">Annuler</button>
@@ -752,7 +747,6 @@ async function savePassage() {
   const rows = document.querySelectorAll('#media-list .media-row');
   const medias = [];
   rows.forEach(row => {
-<<<<<<< HEAD
     const url  = row.querySelector('.media-url').value.trim();
     const nom  = row.querySelector('.media-nom').value.trim();
     const type = row.querySelector('.media-type-sel').value;
@@ -761,12 +755,6 @@ async function savePassage() {
     if (type === 'photo') { entry.url_photo = url; }
     else                  { entry.url_youtube = url; }
     medias.push(entry);
-=======
-    const ytId = row.querySelector('.yt-id').value.trim();
-    const nom  = row.querySelector('.media-nom').value.trim();
-    const type = row.querySelector('.media-type-sel').value;
-    if (ytId) medias.push({ passage_id: passageId, url_youtube: ytId, nom: nom || null, type });
->>>>>>> 844adba306a77671f6ec8359a5e79710160a48df
   });
   if (medias.length) await sb.from('medias').insert(medias);
 
@@ -868,7 +856,6 @@ function addMediaRow(media = null) {
   const el = document.getElementById('media-list');
   const row = document.createElement('div');
   row.className = 'media-row';
-<<<<<<< HEAD
   const isPhoto = media?.type === 'photo';
   const urlVal  = isPhoto ? (media?.url_photo||'') : (media?.url_youtube||'');
   row.innerHTML = `
@@ -879,20 +866,10 @@ function addMediaRow(media = null) {
     </select>
     <input class="media-nom" placeholder="Nom (optionnel)" value="${media?.nom||''}">
     <input class="media-url yt-id" placeholder="${isPhoto ? 'URL de la photo' : 'ID YouTube'}" value="${urlVal}" style="color:${isPhoto?'var(--green)':'var(--wave-light)'}">
-=======
-  row.innerHTML = `
-    <select class="media-type-sel">
-      <option value="drone" ${media?.type==='drone'?'selected':''}>🚁 Drone</option>
-      <option value="360"   ${media?.type==='360'  ?'selected':''}>⬤ 360°</option>
-    </select>
-    <input class="media-nom" placeholder="Nom de la vidéo (optionnel)" value="${media?.nom||''}">
-    <input class="yt-id" placeholder="ID YouTube" value="${media?.url_youtube||''}">
->>>>>>> 844adba306a77671f6ec8359a5e79710160a48df
     <button class="media-del" onclick="this.closest('.media-row').remove()">✕</button>`;
   el.appendChild(row);
 }
 
-<<<<<<< HEAD
 function toggleMediaInput(sel) {
   const row   = sel.closest('.media-row');
   const input = row.querySelector('.media-url');
@@ -920,23 +897,6 @@ function openModal(id) {
   document.getElementById(id).classList.add('open');
 }
 
-=======
-// ══ MODALS ══
-function openModal(id) {
-  if (id === 'modal-chantier' && !document.getElementById('edit-chantier-id').value) {
-    document.getElementById('modal-chantier-title').textContent = 'Créer un nouveau chantier';
-    document.getElementById('edit-chantier-id').value = '';
-    ['ch-adresse','ch-cp','ch-ville','ch-constructeur'].forEach(f => document.getElementById(f).value = '');
-    document.getElementById('ch-avancement').value = 0;
-    document.getElementById('ch-slider').value = 0;
-    document.getElementById('ch-debut').value = '';
-    document.getElementById('ch-livraison').value = '';
-    loadClientsSelect();
-  }
-  document.getElementById(id).classList.add('open');
-}
-
->>>>>>> 844adba306a77671f6ec8359a5e79710160a48df
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
 document.querySelectorAll('.modal-overlay').forEach(m => {
