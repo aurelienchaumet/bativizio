@@ -372,10 +372,11 @@ function buildMediaGrid(medias) {
   // Première vidéo : lecteur intégré
   const firstCard = `
     <div class="media-card ${featClass}" style="cursor:default;">
-      <iframe src="https://www.youtube.com/embed/${first.url_youtube}?rel=0&modestbranding=1&color=white"
-        style="width:100%;height:100%;border:none;display:block;"
-        allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
-        allowfullscreen title="${(first.nom||'').replace(/"/g,'&quot;')}">
+      <iframe src="https://player.vimeo.com/video/1182198506?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" 
+        frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; 
+        web-share; gyroscope; accelerometer" referrerpolicy="strict-origin-when-cross-origin" 
+        style="position:absolute;top:0;left:0;width:100%;height:100%;" 
+      title="YTDown.com_YouTube_Building-Construction-Virtual-Reality-36_Media_wR9erEdaZwk_001_1080s">
       </iframe>
     </div>`;
 
