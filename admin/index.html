@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ScopIØ — Administration</title>
+<title>BatiVizIØ — Administration</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -438,10 +438,85 @@ nav { padding: 14px 10px; flex:1; }
 </head>
 <body>
 
+<!-- LOGIN ADMIN -->
+<div id="login-screen" style="
+  position:fixed; inset:0; z-index:200;
+  display:flex;
+  background: var(--bg);
+  transition: opacity 0.6s ease;
+">
+  <div style="
+    flex:1;
+    background: linear-gradient(160deg, #060E16 0%, var(--surface) 50%, #0E2030 100%);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+  ">
+    <div style="
+      position:absolute; bottom:0; left:0; right:0; height:160px;
+      background: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1200 120%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0,40 C300,90 600,10 900,50 C1050,70 1150,30 1200,40 L1200,120 L0,120 Z%22 fill=%22rgba(46,107,138,0.08)%22/%3E%3C/svg%3E') no-repeat bottom;
+      background-size:cover;
+    "></div>
+    <div style="text-align:center; color:var(--text); position:relative; z-index:1;">
+      <div style="font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:600; letter-spacing:0.06em;">
+        BatiViz<span style="color:var(--wave-light)">IØ</span>
+      </div>
+      <div style="font-size:0.7rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-dim); font-family:'DM Mono',monospace; margin-top:8px;">
+        Espace administration
+      </div>
+    </div>
+  </div>
+  <div style="
+    width:400px; background:var(--surface);
+    border-left:1px solid var(--border);
+    display:flex; flex-direction:column; justify-content:center;
+    padding:56px 44px;
+  ">
+    <div style="font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600; margin-bottom:6px;">Connexion</div>
+    <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:32px;">Accès réservé à l'administrateur</div>
+
+    <div style="margin-bottom:16px;">
+      <label style="display:block; font-size:0.65rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); font-family:'DM Mono',monospace; margin-bottom:7px;">Email</label>
+      <input type="email" id="admin-email" placeholder="admin@bativizio.fr" style="
+        width:100%; padding:10px 14px;
+        background:var(--surface2); border:1px solid var(--border2);
+        border-radius:6px; color:var(--text);
+        font-family:'DM Sans',sans-serif; font-size:0.88rem;
+        outline:none; transition:border-color 0.15s;
+      " onfocus="this.style.borderColor='var(--wave)'" onblur="this.style.borderColor='var(--border2)'">
+    </div>
+    <div style="margin-bottom:20px;">
+      <label style="display:block; font-size:0.65rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); font-family:'DM Mono',monospace; margin-bottom:7px;">Mot de passe</label>
+      <input type="password" id="admin-pass" placeholder="••••••••" style="
+        width:100%; padding:10px 14px;
+        background:var(--surface2); border:1px solid var(--border2);
+        border-radius:6px; color:var(--text);
+        font-family:'DM Sans',sans-serif; font-size:0.88rem;
+        outline:none; transition:border-color 0.15s;
+      " onfocus="this.style.borderColor='var(--wave)'" onblur="this.style.borderColor='var(--border2)'" onkeydown="if(event.key==='Enter') adminLogin()">
+    </div>
+
+    <div id="admin-error" style="display:none; margin-bottom:14px; padding:10px 14px; background:var(--red-dim); border:1px solid rgba(192,80,64,0.3); border-radius:6px; font-size:0.8rem; color:var(--red);"></div>
+
+    <button id="btn-admin-login" onclick="adminLogin()" style="
+      width:100%; padding:12px;
+      background:var(--wave); color:var(--text);
+      border:none; border-radius:6px;
+      font-family:'DM Sans',sans-serif; font-size:0.86rem;
+      cursor:pointer; font-weight:500;
+      transition:background 0.2s;
+    " onmouseover="this.style.background='var(--wave-light)'" onmouseout="this.style.background='var(--wave)'">
+      Accéder au tableau de bord →
+    </button>
+  </div>
+</div>
+
+<!-- APP ADMIN (masqué jusqu'à auth) -->
+<div id="admin-app" style="display:none;">
+
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <div class="brand">Scop<span>IØ</span></div>
+    <div class="brand">BatiViz<span>IØ</span></div>
     <div class="admin-tag">Espace administration</div>
   </div>
   <nav>
@@ -471,10 +546,11 @@ nav { padding: 14px 10px; flex:1; }
   <div class="sidebar-footer">
     <div class="user-pill">
       <div class="user-avatar">SC</div>
-      <div>
-        <div class="user-name">ScopIØ</div>
+      <div style="flex:1">
+        <div class="user-name">BatiVizIØ</div>
         <div class="user-role">Administrateur</div>
       </div>
+      <button onclick="adminLogout()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:0.85rem;" title="Déconnexion">⏻</button>
     </div>
   </div>
 </aside>
@@ -485,7 +561,7 @@ nav { padding: 14px 10px; flex:1; }
   <div class="topbar">
     <div>
       <div class="topbar-title">Tableau de bord</div>
-      <div class="topbar-breadcrumb">ScopIØ › <span>Overview</span></div>
+      <div class="topbar-breadcrumb">BatiVizIØ › <span>Overview</span></div>
     </div>
     <div class="topbar-right">
       <button class="btn btn-ghost" onclick="openNewChantier()">+ Nouveau chantier</button>
@@ -864,8 +940,94 @@ nav { padding: 14px 10px; flex:1; }
   <span id="toast-text">Enregistré avec succès</span>
 </div>
 
+</div><!-- /admin-app -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  function openNewPassage() { document.getElementById('modal-passage').classList.add('open'); }
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://cajgqzzyxykzxsudpmms.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhamdxenp5eHlrenhzdWRwbW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MjU3NzEsImV4cCI6MjA5MTQwMTc3MX0.3kuRoLsmdDU8Hd-U4b7S8q1GSZwsf46SN7JOEFMKrz0'
+  );
+
+  // ── Vérifier session au chargement ──
+  window.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      const role = await getRole(session.user.id);
+      if (role === 'admin') {
+        showAdminApp();
+      } else {
+        // Pas admin → renvoyer au login client
+        await sb.auth.signOut();
+        window.location.href = '/';
+      }
+    }
+  });
+
+  async function getRole(userId) {
+    const { data } = await sb
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single();
+    return data?.role ?? null;
+  }
+
+  function showAdminError(msg) {
+    const el = document.getElementById('admin-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  async function adminLogin() {
+    document.getElementById('admin-error').style.display = 'none';
+    const email = document.getElementById('admin-email').value.trim();
+    const pass  = document.getElementById('admin-pass').value;
+    const btn   = document.getElementById('btn-admin-login');
+
+    if (!email || !pass) { showAdminError('Merci de remplir tous les champs.'); return; }
+
+    btn.textContent = 'Connexion…';
+    btn.disabled = true;
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+    if (error) {
+      showAdminError('Email ou mot de passe incorrect.');
+      btn.textContent = 'Accéder au tableau de bord →';
+      btn.disabled = false;
+      return;
+    }
+
+    const role = await getRole(data.user.id);
+
+    if (role === 'admin') {
+      showAdminApp();
+    } else {
+      await sb.auth.signOut();
+      showAdminError('Ce compte n\'a pas les droits administrateur.');
+      btn.textContent = 'Accéder au tableau de bord →';
+      btn.disabled = false;
+    }
+  }
+
+  function showAdminApp() {
+    document.getElementById('login-screen').style.opacity = '0';
+    document.getElementById('login-screen').style.pointerEvents = 'none';
+    setTimeout(() => {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-app').style.display = 'flex';
+    }, 600);
+  }
+
+  async function adminLogout() {
+    await sb.auth.signOut();
+    window.location.reload();
+  }
+
+  // ── Modals ──
+  function openNewPassage()  { document.getElementById('modal-passage').classList.add('open'); }
   function openNewChantier() { document.getElementById('modal-chantier').classList.add('open'); }
   function openNewClient()   { document.getElementById('modal-client').classList.add('open'); }
   function closeModal(id)    { document.getElementById(id).classList.remove('open'); }

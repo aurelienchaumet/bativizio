@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ScopIØ — Suivi de chantier</title>
+<title>BatiVizIØ — Suivi de chantier</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -563,7 +563,7 @@
       <div class="login-logo">
         <div class="logo-icon">🔭</div>
       </div>
-      <h1>Scop<span>IØ</span></h1>
+      <h1>BatiViz<span>IØ</span></h1>
       <p>Suivi de chantier · Île d'Oléron</p>
     </div>
   </div>
@@ -571,17 +571,15 @@
     <h2>Bienvenue</h2>
     <p class="subtitle">Accédez au suivi de votre chantier</p>
     <div class="form-group">
-      <label>Identifiant client</label>
-      <input type="text" id="login-user" placeholder="ex : martin.pierre" value="martin.pierre">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="votre@email.com">
     </div>
     <div class="form-group">
       <label>Mot de passe</label>
-      <input type="password" id="login-pass" placeholder="••••••••" value="chantier2024">
+      <input type="password" id="login-pass" placeholder="••••••••">
     </div>
-    <button class="btn-login" onclick="doLogin()">Accéder à mon suivi →</button>
-    <div class="login-hint">
-      Démo · <strong>martin.pierre</strong> / <strong>chantier2024</strong>
-    </div>
+    <div id="login-error" style="display:none; margin-bottom:12px; padding:10px 14px; background:#fee; border:1px solid #fcc; border-radius:6px; font-size:0.82rem; color:#c00;"></div>
+    <button class="btn-login" id="btn-login" onclick="doLogin()">Accéder à mon suivi →</button>
   </div>
 </div>
 
@@ -591,7 +589,7 @@
   <header class="app-header">
     <div class="header-brand">
       <div class="header-logo">🔭</div>
-      <span class="brand-name">Scop<span>IØ</span></span>
+      <span class="brand-name">BatiViz<span>IØ</span></span>
     </div>
     <div class="header-right">
       <span class="client-badge">Pierre & Sophie Martin</span>
@@ -911,25 +909,95 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  function doLogin() {
-    const u = document.getElementById('login-user').value;
-    const p = document.getElementById('login-pass').value;
-    if (u === 'martin.pierre' && p === 'chantier2024') {
-      document.getElementById('login-screen').classList.add('hidden');
-      setTimeout(() => {
-        document.getElementById('app').classList.add('visible');
-        setTimeout(() => { document.getElementById('progress-fill').style.width = '42%'; }, 300);
-      }, 800);
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://cajgqzzyxykzxsudpmms.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhamdxenp5eHlrenhzdWRwbW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MjU3NzEsImV4cCI6MjA5MTQwMTc3MX0.3kuRoLsmdDU8Hd-U4b7S8q1GSZwsf46SN7JOEFMKrz0'
+  );
+
+  // ── Vérifier session existante au chargement ──
+  window.addEventListener('DOMContentLoaded', async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      const role = await getRole(session.user.id);
+      if (role === 'admin') {
+        window.location.href = '/admin';
+      } else if (role === 'client') {
+        showApp(session.user);
+      }
+    }
+  });
+
+  async function getRole(userId) {
+    const { data } = await sb
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single();
+    return data?.role ?? null;
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('login-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function hideError() {
+    document.getElementById('login-error').style.display = 'none';
+  }
+
+  async function doLogin() {
+    hideError();
+    const email = document.getElementById('login-email').value.trim();
+    const pass  = document.getElementById('login-pass').value;
+    const btn   = document.getElementById('btn-login');
+
+    if (!email || !pass) { showError('Merci de remplir tous les champs.'); return; }
+
+    btn.textContent = 'Connexion…';
+    btn.disabled = true;
+
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+    if (error) {
+      showError('Email ou mot de passe incorrect.');
+      btn.textContent = 'Accéder à mon suivi →';
+      btn.disabled = false;
+      return;
+    }
+
+    const role = await getRole(data.user.id);
+
+    if (role === 'admin') {
+      window.location.href = '/admin';
+    } else if (role === 'client') {
+      showApp(data.user);
     } else {
-      alert('Identifiants incorrects. Essayez martin.pierre / chantier2024');
+      await sb.auth.signOut();
+      showError('Aucun accès configuré pour ce compte.');
+      btn.textContent = 'Accéder à mon suivi →';
+      btn.disabled = false;
     }
   }
 
-  function doLogout() {
+  function showApp(user) {
+    document.getElementById('login-screen').classList.add('hidden');
+    setTimeout(() => {
+      document.getElementById('app').classList.add('visible');
+      setTimeout(() => { document.getElementById('progress-fill').style.width = '42%'; }, 300);
+    }, 800);
+  }
+
+  async function doLogout() {
+    await sb.auth.signOut();
     document.getElementById('app').classList.remove('visible');
     document.getElementById('login-screen').classList.remove('hidden');
     document.getElementById('progress-fill').style.width = '0%';
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-pass').value = '';
   }
 
   function switchTab(index) {
