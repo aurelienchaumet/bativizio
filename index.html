@@ -203,7 +203,7 @@
       <div style="font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--wave); font-family:'DM Mono',monospace; margin-bottom:8px;">Accès démonstration</div>
       <div style="font-size:0.8rem; color:var(--slate); margin-bottom:10px; line-height:1.5;">Vous souhaitez découvrir la plateforme ? Utilisez le compte de démo :</div>
       <div style="font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--navy); margin-bottom:10px; line-height:1.8;">
-        <span style="color:var(--slate)">Email ·</span> demo@bativizio.io<br>
+        <span style="color:var(--slate)">Email ·</span> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="96f2f3fbf9d6f4f7e2ffe0ffecfff9b8fff9">[email&#160;protected]</a><br>
         <span style="color:var(--slate)">Mot de passe ·</span> demo
       </div>
       <button onclick="fillDemo()" style="width:100%; padding:9px; background:var(--navy); color:var(--white); border:none; border-radius:6px; font-family:'DM Sans',sans-serif; font-size:0.8rem; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='var(--wave)'" onmouseout="this.style.background='var(--navy)'">
@@ -277,7 +277,7 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const { createClient } = supabase;
 const sb = createClient(
@@ -291,6 +291,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (session) {
     const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
     if (profile?.role === 'admin') { window.location.href = '/admin'; return; }
+    if (profile?.role === 'constructeur') { window.location.href = '/constructeur'; return; }
     if (profile?.role === 'client') { await loadApp(session.user); }
   }
 });
@@ -313,6 +314,7 @@ async function doLogin() {
   }
   const { data: profile } = await sb.from('profiles').select('role').eq('id', data.user.id).single();
   if (profile?.role === 'admin') { window.location.href = '/admin'; return; }
+  if (profile?.role === 'constructeur') { window.location.href = '/constructeur'; return; }
   if (profile?.role === 'client') { await loadApp(data.user); return; }
   await sb.auth.signOut();
   errEl.textContent = 'Aucun accès configuré pour ce compte.';
@@ -544,9 +546,4 @@ function fillDemo() {
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && !document.getElementById('login-screen').classList.contains('hidden')) doLogin();
   if (e.key === 'Escape') { closeLightbox(); closePhotoLightbox(); }
-  if (e.key === 'ArrowLeft'  && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(-1);
-  if (e.key === 'ArrowRight' && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(1);
-});
-</script>
-</body>
-</html>
+  if (e.key === 'ArrowLeft'  && docum

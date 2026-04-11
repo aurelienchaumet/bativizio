@@ -384,7 +384,7 @@ nav{padding:14px 10px;flex:1}
       <div class="modal-divider"></div>
       <div style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)">Projet</div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Constructeur</label><input type="text" class="form-input" id="ch-constructeur" placeholder="Maisons Atlantique"></div>
+        <div class="form-group"><label class="form-label">Nom du constructeur</label><input type="text" class="form-input" id="ch-constructeur" placeholder="Maisons Atlantique"></div>
         <div class="form-group"><label class="form-label">Avancement (%)</label><input type="number" class="form-input" id="ch-avancement" value="0" min="0" max="100" oninput="document.getElementById('ch-slider').value=this.value"><input type="range" class="prog-slider" id="ch-slider" value="0" min="0" max="100" oninput="document.getElementById('ch-avancement').value=this.value"></div>
       </div>
       <div class="form-row">
@@ -392,8 +392,11 @@ nav{padding:14px 10px;flex:1}
         <div class="form-group"><label class="form-label">Livraison prévue</label><input type="date" class="form-input" id="ch-livraison"></div>
       </div>
       <div class="modal-divider"></div>
-      <div style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)">Client associé</div>
-      <div class="form-row full"><div class="form-group"><label class="form-label">Client</label><select class="form-select" id="ch-client"><option value="">— Sélectionner un client —</option></select></div></div>
+      <div style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)">Accès</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Compte constructeur</label><select class="form-select" id="ch-constructeur-id"><option value="">— Sélectionner un constructeur —</option></select></div>
+        <div class="form-group"><label class="form-label">Client final</label><select class="form-select" id="ch-client"><option value="">— Sélectionner un client —</option></select></div>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-chantier')">Annuler</button>
@@ -444,9 +447,18 @@ nav{padding:14px 10px;flex:1}
       <button class="modal-close" onclick="closeModal('modal-client')">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-row full"><div class="form-group"><label class="form-label">Nom complet</label><input type="text" class="form-input" id="cl-nom" placeholder="Prénom Nom"></div></div>
-      <div class="form-row full"><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="cl-email" placeholder="client@email.com"></div></div>
+      <div class="form-row full"><div class="form-group"><label class="form-label">Nom complet</label><input type="text" class="form-input" id="cl-nom" placeholder="Prénom Nom ou Société"></div></div>
+      <div class="form-row full"><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="cl-email" placeholder="contact@email.com"></div></div>
       <div class="form-row full"><div class="form-group"><label class="form-label">Mot de passe initial</label><input type="text" class="form-input" id="cl-password" placeholder="Mot de passe temporaire"></div></div>
+      <div class="form-row full"><div class="form-group"><label class="form-label">Rôle</label>
+        <select class="form-select" id="cl-role">
+          <option value="client">Client final</option>
+          <option value="constructeur">Constructeur</option>
+        </select>
+      </div></div>
+      <div style="margin-top:14px; padding:12px 14px; background:var(--wave-dim); border:1px solid rgba(46,107,138,0.2); border-radius:6px; font-size:0.78rem; color:var(--text-muted); line-height:1.6;">
+        Après création, allez dans <strong style="color:var(--text)">Supabase → Auth → Users</strong>, créez le compte avec cet email, puis exécutez le SQL affiché dans la console.
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-client')">Annuler</button>
@@ -658,18 +670,33 @@ async function openChantierDetail(id) {
 
 // ══ PAGE CLIENTS ══
 async function loadClientsPage() {
-  const { data: clients } = await sb.from('profiles').select('*, chantiers(adresse, ville)').eq('role', 'client');
-  allClients = clients || [];
+  const { data: profiles } = await sb.from('profiles')
+    .select('*, chantiers!chantiers_client_id_fkey(adresse, ville)')
+    .in('role', ['client', 'constructeur'])
+    .order('role');
+
+  allClients = profiles || [];
   const tbody = document.getElementById('clients-tbody');
-  if (!clients?.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--text-dim)">Aucun client.</td></tr>`; return; }
-  tbody.innerHTML = clients.map(c => `
-    <tr>
-      <td class="strong">${c.nom||'—'}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:0.76rem">${c.id}</td>
-      <td>${c.chantiers?.length ? c.chantiers.map(ch=>`${ch.adresse}, ${ch.ville}`).join('<br>') : '—'}</td>
-      <td><span class="tag tag-green">Actif</span></td>
-      <td><button class="btn btn-ghost btn-sm" onclick="showToast('UUID copié','success')">Copier UUID</button></td>
-    </tr>`).join('');
+  if (!profiles?.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--text-dim)">Aucun client ou constructeur.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = profiles.map(c => {
+    const roleTag = c.role === 'constructeur'
+      ? `<span class="tag tag-wave">Constructeur</span>`
+      : `<span class="tag tag-green">Client</span>`;
+    const chantiers = c.chantiers?.length
+      ? c.chantiers.map(ch => `${ch.adresse}, ${ch.ville}`).join('<br>')
+      : '—';
+    return `
+      <tr>
+        <td class="strong">${c.nom||'—'}</td>
+        <td>${roleTag}</td>
+        <td>${chantiers}</td>
+        <td><span class="tag tag-green">Actif</span></td>
+        <td><button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText('${c.id}');showToast('UUID copié ✓','success')">Copier UUID</button></td>
+      </tr>`;
+  }).join('');
 }
 
 // ══ CHANTIER CRUD ══
@@ -781,28 +808,37 @@ async function openEditChantier() {
   document.getElementById('ch-slider').value      = c.avancement || 0;
   document.getElementById('ch-debut').value       = c.date_debut || '';
   document.getElementById('ch-livraison').value   = c.date_livraison || '';
-  await loadClientsSelect(c.client_id);
+  await loadClientsSelect(c.client_id, c.constructeur_id);
   openModal('modal-chantier');
 }
 
-async function loadClientsSelect(selectedId = null) {
-  const { data: clients } = await sb.from('profiles').select('id, nom').eq('role', 'client');
-  const sel = document.getElementById('ch-client');
-  sel.innerHTML = '<option value="">— Sélectionner un client —</option>' +
-    (clients||[]).map(c => `<option value="${c.id}" ${c.id === selectedId ? 'selected' : ''}>${c.nom||c.id}</option>`).join('');
+async function loadClientsSelect(selectedClientId = null, selectedConstructeurId = null) {
+  const [{ data: clients }, { data: constructeurs }] = await Promise.all([
+    sb.from('profiles').select('id, nom').eq('role', 'client').order('nom'),
+    sb.from('profiles').select('id, nom').eq('role', 'constructeur').order('nom'),
+  ]);
+
+  const selClient = document.getElementById('ch-client');
+  selClient.innerHTML = '<option value="">— Sélectionner un client —</option>' +
+    (clients||[]).map(c => `<option value="${c.id}" ${c.id === selectedClientId ? 'selected' : ''}>${c.nom||c.id}</option>`).join('');
+
+  const selConst = document.getElementById('ch-constructeur-id');
+  selConst.innerHTML = '<option value="">— Sélectionner un constructeur —</option>' +
+    (constructeurs||[]).map(c => `<option value="${c.id}" ${c.id === selectedConstructeurId ? 'selected' : ''}>${c.nom||c.id}</option>`).join('');
 }
 
 async function saveChantier() {
   const editId = document.getElementById('edit-chantier-id').value;
   const payload = {
-    adresse:       document.getElementById('ch-adresse').value.trim(),
-    code_postal:   document.getElementById('ch-cp').value.trim(),
-    ville:         document.getElementById('ch-ville').value.trim(),
-    constructeur:  document.getElementById('ch-constructeur').value.trim(),
-    avancement:    parseInt(document.getElementById('ch-avancement').value) || 0,
-    date_debut:    document.getElementById('ch-debut').value || null,
-    date_livraison:document.getElementById('ch-livraison').value || null,
-    client_id:     document.getElementById('ch-client').value || null,
+    adresse:          document.getElementById('ch-adresse').value.trim(),
+    code_postal:      document.getElementById('ch-cp').value.trim(),
+    ville:            document.getElementById('ch-ville').value.trim(),
+    constructeur:     document.getElementById('ch-constructeur').value.trim(),
+    avancement:       parseInt(document.getElementById('ch-avancement').value) || 0,
+    date_debut:       document.getElementById('ch-debut').value || null,
+    date_livraison:   document.getElementById('ch-livraison').value || null,
+    client_id:        document.getElementById('ch-client').value || null,
+    constructeur_id:  document.getElementById('ch-constructeur-id').value || null,
   };
   if (!payload.adresse || !payload.ville) { showToast('Adresse et ville requises.', 'error'); return; }
   if (editId) {
@@ -822,16 +858,13 @@ async function saveChantier() {
 async function saveClient() {
   const nom      = document.getElementById('cl-nom').value.trim();
   const email    = document.getElementById('cl-email').value.trim();
-  const password = document.getElementById('cl-password').value;
-  if (!nom || !email || !password) { showToast('Tous les champs sont requis.', 'error'); return; }
+  const role     = document.getElementById('cl-role').value;
+  if (!nom || !email) { showToast('Nom et email requis.', 'error'); return; }
 
-  // Créer via Supabase Admin n'est pas possible côté client
-  // On informe l'admin de créer le compte manuellement
-  showToast('Créez le compte dans Supabase → Auth → Users, puis insérez le profil via SQL.', 'error');
+  const sql = `insert into profiles (id, role, nom) values ('[UUID_DU_COMPTE]', '${role}', '${nom}');`;
+  console.log('SQL à exécuter après création du compte Supabase :', sql);
 
-  // On peut quand même préparer le SQL pour l'admin
-  const sql = `insert into profiles (id, role, nom) values ('[UUID]', 'client', '${nom}');`;
-  console.log('SQL à exécuter après création du compte :', sql);
+  showToast(`Créez le compte dans Supabase Auth, puis insérez le profil via SQL (voir console).`, 'error');
   closeModal('modal-client');
 }
 
@@ -892,7 +925,8 @@ function openModal(id) {
     document.getElementById('ch-slider').value = 0;
     document.getElementById('ch-debut').value = '';
     document.getElementById('ch-livraison').value = '';
-    loadClientsSelect();
+    document.getElementById('ch-constructeur-id').value = '';
+    loadClientsSelect(null, null);
   }
   document.getElementById(id).classList.add('open');
 }
