@@ -203,7 +203,7 @@
       <div style="font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--wave); font-family:'DM Mono',monospace; margin-bottom:8px;">Accès démonstration</div>
       <div style="font-size:0.8rem; color:var(--slate); margin-bottom:10px; line-height:1.5;">Vous souhaitez découvrir la plateforme ? Utilisez le compte de démo :</div>
       <div style="font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--navy); margin-bottom:10px; line-height:1.8;">
-        <span style="color:var(--slate)">Email ·</span> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="96f2f3fbf9d6f4f7e2ffe0ffecfff9b8fff9">[email&#160;protected]</a><br>
+        <span style="color:var(--slate)">Email ·</span> <span id="demo-email-display"></span><br>
         <span style="color:var(--slate)">Mot de passe ·</span> demo
       </div>
       <button onclick="fillDemo()" style="width:100%; padding:9px; background:var(--navy); color:var(--white); border:none; border-radius:6px; font-family:'DM Sans',sans-serif; font-size:0.8rem; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='var(--wave)'" onmouseout="this.style.background='var(--navy)'">
@@ -537,9 +537,21 @@ async function doLogout() {
   document.getElementById('login-pass').value = '';
 }
 
+// Email démo construit dynamiquement pour éviter l'obfuscation Cloudflare
+const DEMO_USER = 'demo';
+const DEMO_DOMAIN = 'bativizio.io';
+const DEMO_EMAIL = DEMO_USER + '@' + DEMO_DOMAIN;
+const DEMO_PASS  = 'demo';
+
+// Afficher l'email démo dans l'encart
+window.addEventListener('DOMContentLoaded', () => {
+  const el = document.getElementById('demo-email-display');
+  if (el) el.textContent = DEMO_EMAIL;
+});
+
 function fillDemo() {
-  document.getElementById('login-email').value = 'demo@bativizio.io';
-  document.getElementById('login-pass').value  = 'demo';
+  document.getElementById('login-email').value = DEMO_EMAIL;
+  document.getElementById('login-pass').value  = DEMO_PASS;
   doLogin();
 }
 
