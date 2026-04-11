@@ -414,10 +414,11 @@ function buildMediaGrid(medias) {
 
   const firstCard = `
     <div class="media-card ${featClass}" style="cursor:default;">
-      <iframe src="https://www.youtube.com/embed/${first.url_youtube}?rel=0&modestbranding=1&color=white"
+      <iframe src="https://player.vimeo.com/video/${first.url_youtube}?autoplay=0&loop=0&color=4A8FAD&title=0&byline=0&portrait=0"
         style="width:100%;height:100%;border:none;display:block;"
-        allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"
-        allowfullscreen title="${(first.nom||'').replace(/"/g,'&quot;')}">
+        allow="autoplay; fullscreen; picture-in-picture; xr-spatial-tracking"
+        allowfullscreen
+        title="${(first.nom||'').replace(/"/g,'&quot;')}">
       </iframe>
     </div>`;
 
@@ -426,7 +427,7 @@ function buildMediaGrid(medias) {
     const typeLabel  = m.type === '360' ? 'Vidéo 360°' : 'Vue drone';
     const nom = (m.nom||'').replace(/'/g,"\\'");
     return `
-      <div class="media-card" onclick="openYoutube('${m.url_youtube}','${nom}')">
+      <div class="media-card" onclick="openVimeo('${m.url_youtube}','${nom}')">
         <div class="${thumbClass}"></div>
         <div class="media-overlay">
           <div class="media-info">
@@ -501,8 +502,9 @@ function switchTab(i) {
 }
 
 // ── Lightbox ──
-function openYoutube(id, title) {
-  document.getElementById('lightbox-iframe').src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&color=white`;
+function openVimeo(id, title) {
+  document.getElementById('lightbox-iframe').src =
+    `https://player.vimeo.com/video/${id}?autoplay=1&color=4A8FAD&title=0&byline=0&portrait=0`;
   document.getElementById('lightbox-title').textContent = title || '';
   document.getElementById('lightbox').classList.add('open');
 }

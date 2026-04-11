@@ -427,7 +427,7 @@ nav{padding:14px 10px;flex:1}
       <div style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)">Vidéos YouTube</div>
       <div class="media-list" id="media-list"></div>
       <button class="add-media-btn" onclick="addMediaRow()">+ Ajouter un média</button>
-      <div class="form-hint" style="margin-top:8px">Vidéos : ID YouTube (après <code>watch?v=</code>) · Photos : URL directe (Google Photos, Imgur…)</div>
+      <div class="form-hint" style="margin-top:8px">Vidéos : ID Vimeo (les chiffres après vimeo.com/) · Photos : URL directe (Google Photos, Imgur…)</div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-passage')">Annuler</button>
@@ -865,7 +865,7 @@ function addMediaRow(media = null) {
       <option value="photo" ${isPhoto              ?'selected':''}>📷 Photo</option>
     </select>
     <input class="media-nom" placeholder="Nom (optionnel)" value="${media?.nom||''}">
-    <input class="media-url yt-id" placeholder="${isPhoto ? 'URL de la photo' : 'ID YouTube'}" value="${urlVal}" style="color:${isPhoto?'var(--green)':'var(--wave-light)'}">
+    <input class="media-url yt-id" placeholder="${isPhoto ? 'URL de la photo' : 'ID Vimeo (ex: 1182198506)'}" value="${urlVal}" style="color:${isPhoto?'var(--green)':'var(--wave-light)'}">
     <button class="media-del" onclick="this.closest('.media-row').remove()">✕</button>`;
   el.appendChild(row);
 }
@@ -877,7 +877,7 @@ function toggleMediaInput(sel) {
     input.placeholder = 'URL de la photo (Google Photos, Imgur…)';
     input.style.color = 'var(--green)';
   } else {
-    input.placeholder = 'ID YouTube';
+    input.placeholder = 'ID Vimeo (ex: 1182198506)';
     input.style.color = 'var(--wave-light)';
   }
 }
