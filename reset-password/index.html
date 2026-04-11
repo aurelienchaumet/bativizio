@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BativizIØ — Nouveau mot de passe</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:      #1C2B3A;
+    --navy-deep: #111C27;
+    --wave:      #2E6B8A;
+    --wave-light:#4A8FAD;
+    --fog:       #B8C8D4;
+    --mist:      #D8E4EC;
+    --white-sand:#F2F6F8;
+    --white:     #FFFFFF;
+    --slate:     #4A6070;
+    --foam:      #EAF3F8;
+    --green:     #3A9B6F;
+    --red:       #C05040;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    background: var(--navy-deep);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .visual {
+    flex: 1;
+    background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 45%, var(--wave) 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+
+  .visual::after {
+    content: '';
+    position: absolute; bottom:0; left:0; right:0; height:160px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,40 C300,90 600,10 900,50 C1050,70 1150,30 1200,40 L1200,120 L0,120 Z' fill='rgba(242,246,248,0.05)'/%3E%3C/svg%3E") no-repeat bottom;
+    background-size: cover;
+  }
+
+  .brand {
+    text-align: center; color: var(--white); position: relative; z-index:1;
+  }
+
+  .brand h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem; font-weight: 600; letter-spacing: 0.06em;
+  }
+
+  .brand h1 span { color: var(--wave-light); }
+
+  .brand p {
+    margin-top: 10px; font-size: 0.72rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    opacity: 0.4; font-family: 'DM Mono', monospace;
+  }
+
+  .panel {
+    width: 420px;
+    background: var(--white);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 64px 48px;
+    border-left: 1px solid var(--mist);
+  }
+
+  .panel h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.9rem; font-weight: 400;
+    color: var(--navy); margin-bottom: 6px;
+  }
+
+  .panel .subtitle {
+    font-size: 0.84rem; color: var(--slate); margin-bottom: 32px;
+  }
+
+  .form-group { margin-bottom: 18px; }
+
+  .form-group label {
+    display: block; font-size: 0.7rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--slate); font-family: 'DM Mono', monospace; margin-bottom: 8px;
+  }
+
+  .form-group input {
+    width: 100%; padding: 13px 16px;
+    border: 1.5px solid var(--mist);
+    background: var(--white-sand);
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem; color: var(--navy);
+    outline: none; transition: border-color 0.2s;
+  }
+
+  .form-group input:focus { border-color: var(--wave); background: var(--white); }
+
+  .strength-bar {
+    height: 3px; background: var(--mist);
+    border-radius: 2px; margin-top: 8px; overflow: hidden;
+  }
+
+  .strength-fill {
+    height: 100%; width: 0%;
+    border-radius: 2px;
+    transition: width 0.3s, background 0.3s;
+  }
+
+  .strength-label {
+    font-size: 0.7rem; color: var(--slate);
+    font-family: 'DM Mono', monospace; margin-top: 4px;
+  }
+
+  .btn {
+    width: 100%; padding: 14px;
+    background: var(--navy); color: var(--white);
+    border: none; border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; letter-spacing: 0.05em;
+    cursor: pointer; transition: background 0.2s;
+    margin-top: 8px;
+  }
+
+  .btn:hover:not(:disabled) { background: var(--wave); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .alert {
+    padding: 12px 16px; border-radius: 6px;
+    font-size: 0.82rem; margin-bottom: 16px;
+    display: none;
+  }
+
+  .alert-error { background: #FEE; border: 1px solid #FCC; color: var(--red); }
+  .alert-success { background: #EFF8F4; border: 1px solid #B2DFC8; color: var(--green); }
+
+  .back-link {
+    display: block; text-align: center;
+    margin-top: 20px; font-size: 0.8rem;
+    color: var(--slate); text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--wave); }
+
+  /* État chargement */
+  #loading {
+    text-align: center; padding: 40px 0;
+    display: none;
+  }
+
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid var(--mist);
+    border-top-color: var(--wave);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* État succès */
+  #success-state { display: none; text-align: center; }
+  .success-icon { font-size: 2.5rem; margin-bottom: 16px; }
+
+  @media (max-width: 700px) {
+    .visual { display: none; }
+    .panel { width: 100%; padding: 48px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="visual">
+  <div class="brand">
+    <h1>Bativiz<span>IØ</span></h1>
+    <p>Suivi de chantier · Île d'Oléron</p>
+  </div>
+</div>
+
+<div class="panel">
+
+  <!-- Chargement -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <p style="font-size:0.85rem; color:var(--slate)">Vérification du lien…</p>
+  </div>
+
+  <!-- Formulaire -->
+  <div id="form-state">
+    <h2>Nouveau mot de passe</h2>
+    <p class="subtitle">Choisissez un mot de passe sécurisé pour votre compte.</p>
+
+    <div id="alert-error" class="alert alert-error"></div>
+
+    <div class="form-group">
+      <label>Nouveau mot de passe</label>
+      <input type="password" id="password" placeholder="••••••••" oninput="checkStrength(this.value)">
+      <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+      <div class="strength-label" id="strength-label"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Confirmer le mot de passe</label>
+      <input type="password" id="password-confirm" placeholder="••••••••">
+    </div>
+
+    <button class="btn" id="btn-submit" onclick="submitPassword()">
+      Enregistrer le mot de passe →
+    </button>
+
+    <a href="/" class="back-link">← Retour à la connexion</a>
+  </div>
+
+  <!-- Succès -->
+  <div id="success-state">
+    <div class="success-icon">✓</div>
+    <h2 style="font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:400; color:var(--navy); margin-bottom:8px;">
+      Mot de passe enregistré
+    </h2>
+    <p style="font-size:0.85rem; color:var(--slate); margin-bottom:28px;">
+      Votre mot de passe a été mis à jour avec succès.
+    </p>
+    <button class="btn" onclick="window.location.href='/'">
+      Se connecter →
+    </button>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://cajgqzzyxykzxsudpmms.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhamdxenp5eHlrenhzdWRwbW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MjU3NzEsImV4cCI6MjA5MTQwMTc3MX0.3kuRoLsmdDU8Hd-U4b7S8q1GSZwsf46SN7JOEFMKrz0'
+  );
+
+  // Supabase place le token dans le hash de l'URL (#access_token=...&type=recovery)
+  window.addEventListener('DOMContentLoaded', async () => {
+    const hash = window.location.hash;
+
+    if (!hash.includes('type=recovery') && !hash.includes('type=invite')) {
+      // Pas de token valide → rediriger vers le login
+      window.location.href = '/';
+      return;
+    }
+
+    // Supabase JS détecte automatiquement le token dans le hash
+    const { data: { session }, error } = await sb.auth.getSession();
+
+    if (error || !session) {
+      showError('Ce lien est invalide ou a expiré. Demandez un nouveau lien de réinitialisation.');
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('form-state').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('form-state').style.display = 'block';
+  });
+
+  // ── Force de mot de passe ──
+  function checkStrength(val) {
+    const fill  = document.getElementById('strength-fill');
+    const label = document.getElementById('strength-label');
+    let score = 0;
+    if (val.length >= 8)  score++;
+    if (val.length >= 12) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      { pct: '0%',   color: 'transparent', text: '' },
+      { pct: '25%',  color: '#E05A4A',     text: 'Trop court' },
+      { pct: '50%',  color: '#C49A30',     text: 'Faible' },
+      { pct: '75%',  color: '#4A8FAD',     text: 'Correct' },
+      { pct: '90%',  color: '#3A9B6F',     text: 'Fort' },
+      { pct: '100%', color: '#3A9B6F',     text: 'Très fort ✓' },
+    ];
+
+    const lvl = levels[Math.min(score, 5)];
+    fill.style.width    = val.length ? lvl.pct : '0%';
+    fill.style.background = lvl.color;
+    label.textContent   = val.length ? lvl.text : '';
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('alert-error');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  async function submitPassword() {
+    document.getElementById('alert-error').style.display = 'none';
+    const pass    = document.getElementById('password').value;
+    const confirm = document.getElementById('password-confirm').value;
+    const btn     = document.getElementById('btn-submit');
+
+    if (pass.length < 8) {
+      showError('Le mot de passe doit contenir au moins 8 caractères.');
+      return;
+    }
+
+    if (pass !== confirm) {
+      showError('Les deux mots de passe ne correspondent pas.');
+      return;
+    }
+
+    btn.textContent = 'Enregistrement…';
+    btn.disabled = true;
+
+    const { error } = await sb.auth.updateUser({ password: pass });
+
+    if (error) {
+      showError('Une erreur est survenue. Veuillez réessayer.');
+      btn.textContent = 'Enregistrer le mot de passe →';
+      btn.disabled = false;
+      return;
+    }
+
+    // Succès
+    document.getElementById('form-state').style.display = 'none';
+    document.getElementById('success-state').style.display = 'block';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitPassword();
+  });
+</script>
+</body>
+</html>
