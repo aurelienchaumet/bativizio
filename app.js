@@ -10,8 +10,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
-    if (profile?.role === 'admin') { window.location.href = '/admin'; return; }
-    if (profile?.role === 'constructeur') { window.location.href = '/constructeur'; return; }
+    if (profile?.role === 'admin') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/admin'; return; }
+    if (profile?.role === 'constructeur') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/constructeur'; return; }
     if (profile?.role === 'client') { await loadApp(session.user); }
   }
 });
@@ -91,8 +91,8 @@ async function doLogin() {
     return;
   }
   const { data: profile } = await sb.from('profiles').select('role').eq('id', data.user.id).single();
-  if (profile?.role === 'admin') { window.location.href = '/admin'; return; }
-  if (profile?.role === 'constructeur') { window.location.href = '/constructeur'; return; }
+  if (profile?.role === 'admin') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/admin'; return; }
+  if (profile?.role === 'constructeur') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/constructeur'; return; }
   if (profile?.role === 'client') { await loadApp(data.user); return; }
   await sb.auth.signOut();
   errEl.textContent = 'Aucun accès configuré pour ce compte.';
