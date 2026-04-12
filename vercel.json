@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/client", "destination": "/client/index.html" },
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/constructeur", "destination": "/constructeur/index.html" },
+    { "source": "/reset-password", "destination": "/reset-password/index.html" }
+  ]
+}

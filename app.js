@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
     if (profile?.role === 'admin') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/admin'; return; }
     if (profile?.role === 'constructeur') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/constructeur'; return; }
-    if (profile?.role === 'client') { await loadApp(session.user); }
+    if (profile?.role === 'client') { window.location.href = '/client/'; return; }
   }
 });
 
@@ -93,7 +93,7 @@ async function doLogin() {
   const { data: profile } = await sb.from('profiles').select('role').eq('id', data.user.id).single();
   if (profile?.role === 'admin') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/admin'; return; }
   if (profile?.role === 'constructeur') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/constructeur'; return; }
-  if (profile?.role === 'client') { await loadApp(data.user); return; }
+  if (profile?.role === 'client') { window.location.href = '/client/'; return; }
   await sb.auth.signOut();
   errEl.textContent = 'Aucun accès configuré pour ce compte.';
   errEl.style.display = 'block';
@@ -116,7 +116,7 @@ async function loadApp(user) {
   setTimeout(() => document.getElementById('app').classList.add('visible'), 800);
   const { data: profile } = await sb.from('profiles').select('nom').eq('id', user.id).single();
   document.getElementById('client-name').textContent = profile?.nom || user.email;
-  const { data: chantier } = await sb.from('chantiers').select('*, constructeur_profile:profiles!chantiers_constructeur_id_fkey(nom)').eq('client_id', user.id).single();
+  const { data: chantier } = await sb.from('chantiers').select('*, constructeur_profile:profiles!chantiers_constructeur_id_fkey(nom, logo_url)').eq('client_id', user.id).single();
   if (!chantier) {
     document.getElementById('hero-address').innerHTML = '<em style="opacity:0.6">Aucun chantier associe.</em>';
     document.getElementById('panels-container').innerHTML = '<div class="empty-state"><div class="empty-icon">X</div><p>Votre chantier apparaitra ici.</p></div>';
@@ -127,7 +127,7 @@ async function loadApp(user) {
   document.getElementById('hero-meta').innerHTML =
     '<div class="meta-item"><span class="meta-label">Debut</span><span class="meta-value">' + fmt(chantier.date_debut) + '</span></div>' +
     '<div class="meta-item"><span class="meta-label">Livraison</span><span class="meta-value">' + fmt(chantier.date_livraison) + '</span></div>' +
-    '<div class="meta-item"><span class="meta-label">Constructeur</span><span class="meta-value">' + (chantier.constructeur_profile?.nom || '-') + '</span></div>' +
+    '<div class="meta-item constructeur-meta">' +(chantier.constructeur_profile?.logo_url ? '<img src="' + chantier.constructeur_profile.logo_url + '" alt="Logo constructeur" class="constructeur-logo">' : '') +'<div><span class="meta-label">Constructeur</span><span class="meta-value">' + (chantier.constructeur_profile?.nom || '-') + '</span></div></div>' +
     '<div class="meta-item"><span class="meta-label">Passages</span><span class="meta-value" id="nb-passages">-</span></div>';
   const pct = chantier.avancement || 0;
   document.getElementById('progress-pct').textContent = pct + '%';
@@ -258,8 +258,7 @@ function closeLightbox() {
 
 async function doLogout() {
   await sb.auth.signOut();
-  document.getElementById('app').classList.remove('visible');
-  document.getElementById('login-screen').classList.remove('hidden');
+  window.location.href = '/';
   document.getElementById('login-email').value = '';
   document.getElementById('login-pass').value = '';
 }
