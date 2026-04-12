@@ -665,10 +665,7 @@ function closePhotoLightbox() {
 // ── Logout ──
 async function doLogout() {
   await sb.auth.signOut();
-  document.getElementById('app').classList.remove('visible');
-  document.getElementById('login-screen').classList.add('visible');
-  document.getElementById('login-email').value = '';
-  document.getElementById('login-pass').value = '';
+  window.location.href = '/';
 }
 
 document.addEventListener('keydown', e => {
