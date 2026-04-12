@@ -18,6 +18,9 @@
 body{background:var(--white-sand);font-family:'DM Sans',sans-serif;color:var(--navy);min-height:100vh}
 
 /* LOGIN */
+  #login-screen { position:fixed; inset:0; z-index:100; display:flex; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
+  #login-screen.visible { opacity:1; pointer-events:all; }
+  #login-screen.hidden { opacity:0; pointer-events:none; }
   .login-visual { flex:1; background:linear-gradient(155deg, #0a1520 0%, #111c27 40%, #1a3a52 100%); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
   .login-visual::after { content:''; position:absolute; bottom:0; left:0; right:0; height:220px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 200' preserveAspectRatio='none'%3E%3Cpath d='M0,100 C360,170 720,30 1080,100 C1260,135 1380,70 1440,90 L1440,200 L0,200 Z' fill='rgba(46,107,138,0.15)'/%3E%3Cpath d='M0,140 C300,100 600,170 900,130 C1100,105 1300,155 1440,140 L1440,200 L0,200 Z' fill='rgba(10,21,32,0.3)'/%3E%3C/svg%3E") no-repeat bottom; background-size:cover; }
   .login-brand { position:relative; z-index:1; text-align:left; color:var(--white); max-width:500px; padding:0 60px; }
@@ -364,6 +367,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (profile?.role === 'admin') { window.location.href = '/admin'; return; }
     if (profile?.role === 'client') { window.location.href = '/'; return; }
   }
+  // Pas de session valide → afficher le login
+  document.getElementById('login-screen').classList.add('visible');
 });
 
 // ── Login ──
@@ -661,13 +666,13 @@ function closePhotoLightbox() {
 async function doLogout() {
   await sb.auth.signOut();
   document.getElementById('app').classList.remove('visible');
-  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-screen').classList.add('visible');
   document.getElementById('login-email').value = '';
   document.getElementById('login-pass').value = '';
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !document.getElementById('login-screen').classList.contains('hidden')) doLogin();
+  if (e.key === 'Enter' && document.getElementById('login-screen').classList.contains('visible')) doLogin();
   if (e.key === 'Escape') { closeLightbox(); closePhotoLightbox(); }
   if (e.key === 'ArrowLeft'  && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(-1);
   if (e.key === 'ArrowRight' && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(1);
