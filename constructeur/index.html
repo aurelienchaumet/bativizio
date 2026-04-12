@@ -454,7 +454,6 @@ function renderChantiers(chantiers) {
           </div>
           <div class="chantier-card-meta">
             <span class="meta-passages" id="passages-${c.id}">— passages</span>
-            <span class="meta-date">${c.constructeur||''}</span>
           </div>
         </div>
       </div>`;
@@ -481,7 +480,7 @@ async function openChantier(id) {
 
   const fmt = d => d ? new Date(d).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }) : '—';
   document.getElementById('detail-meta').textContent =
-    `Début : ${fmt(c.date_debut)} · Livraison : ${fmt(c.date_livraison)} · ${c.constructeur||''}`;
+    `Début : ${fmt(c.date_debut)} · Livraison : ${fmt(c.date_livraison)}`;
 
   const pct = c.avancement || 0;
   document.getElementById('detail-prog-pct').textContent = pct + '%';

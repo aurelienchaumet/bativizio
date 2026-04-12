@@ -383,8 +383,7 @@ nav{padding:14px 10px;flex:1}
       </div>
       <div class="modal-divider"></div>
       <div style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)">Projet</div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Nom du constructeur</label><input type="text" class="form-input" id="ch-constructeur" placeholder="Maisons Atlantique"></div>
+      <div class="form-row full">
         <div class="form-group"><label class="form-label">Avancement (%)</label><input type="number" class="form-input" id="ch-avancement" value="0" min="0" max="100" oninput="document.getElementById('ch-slider').value=this.value"><input type="range" class="prog-slider" id="ch-slider" value="0" min="0" max="100" oninput="document.getElementById('ch-avancement').value=this.value"></div>
       </div>
       <div class="form-row">
@@ -561,7 +560,7 @@ async function loadDashboard() {
   document.getElementById('nb-chantiers').textContent   = nbC || 0;
 
   // Liste chantiers
-  const { data: chantiers } = await sb.from('chantiers').select('*, profiles(nom)').order('created_at', { ascending: false });
+  const { data: chantiers } = await sb.from('chantiers').select('*, profiles!chantiers_client_id_fkey(nom), constructeur_profile:profiles!chantiers_constructeur_id_fkey(nom)').order('created_at', { ascending: false });
   allChantiers = chantiers || [];
   renderDashChantiers(chantiers || []);
 
@@ -604,7 +603,7 @@ function renderDashPassages(list) {
 
 // ══ PAGE CHANTIERS ══
 async function loadChantiersPage() {
-  const { data: chantiers } = await sb.from('chantiers').select('*, profiles(nom)').order('created_at', { ascending: false });
+  const { data: chantiers } = await sb.from('chantiers').select('*, profiles!chantiers_client_id_fkey(nom), constructeur_profile:profiles!chantiers_constructeur_id_fkey(nom)').order('created_at', { ascending: false });
   allChantiers = chantiers || [];
   document.getElementById('nb-chantiers').textContent = chantiers?.length || 0;
   const el = document.getElementById('chantiers-list');
@@ -614,7 +613,7 @@ async function loadChantiersPage() {
       <div class="ch-avatar">🏡</div>
       <div class="ch-info">
         <div class="ch-name">${c.adresse}, ${c.code_postal} ${c.ville}</div>
-        <div class="ch-client">${c.profiles?.nom || 'Sans client'} · ${c.constructeur||'—'}</div>
+        <div class="ch-client">${c.profiles?.nom || 'Sans client'} · ${c.constructeur_profile?.nom||'—'}</div>
       </div>
       <div class="ch-prog">
         <div class="prog-mini"><div class="prog-mini-fill" style="width:${c.avancement||0}%"></div></div>
@@ -628,14 +627,14 @@ async function loadChantiersPage() {
 async function openChantierDetail(id) {
   currentChantierId = id;
   showPage('detail', null);
-  const { data: c } = await sb.from('chantiers').select('*, profiles(nom, id)').eq('id', id).single();
+  const { data: c } = await sb.from('chantiers').select('*, profiles!chantiers_client_id_fkey(nom), constructeur_profile:profiles!chantiers_constructeur_id_fkey(nom)').eq('id', id).single();
   if (!c) return;
   document.getElementById('detail-title').textContent = `${c.adresse}, ${c.ville}`;
   const fmt = d => d ? new Date(d).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'}) : '—';
   document.getElementById('detail-infos').innerHTML = `
     <div class="detail-item"><div class="detail-label">Adresse</div><div class="detail-value">${c.adresse}, ${c.code_postal} ${c.ville}</div></div>
     <div class="detail-item"><div class="detail-label">Client</div><div class="detail-value">${c.profiles?.nom||'—'}</div></div>
-    <div class="detail-item"><div class="detail-label">Constructeur</div><div class="detail-value">${c.constructeur||'—'}</div></div>
+    <div class="detail-item"><div class="detail-label">Constructeur</div><div class="detail-value">${c.constructeur_profile?.nom||'—'}</div></div>
     <div class="detail-item"><div class="detail-label">Avancement</div><div class="detail-value">${c.avancement||0}%</div></div>
     <div class="detail-item"><div class="detail-label">Début des travaux</div><div class="detail-value">${fmt(c.date_debut)}</div></div>
     <div class="detail-item"><div class="detail-label">Livraison prévue</div><div class="detail-value">${fmt(c.date_livraison)}</div></div>`;
@@ -803,7 +802,6 @@ async function openEditChantier() {
   document.getElementById('ch-adresse').value     = c.adresse || '';
   document.getElementById('ch-cp').value          = c.code_postal || '';
   document.getElementById('ch-ville').value       = c.ville || '';
-  document.getElementById('ch-constructeur').value= c.constructeur || '';
   document.getElementById('ch-avancement').value  = c.avancement || 0;
   document.getElementById('ch-slider').value      = c.avancement || 0;
   document.getElementById('ch-debut').value       = c.date_debut || '';
@@ -833,7 +831,6 @@ async function saveChantier() {
     adresse:          document.getElementById('ch-adresse').value.trim(),
     code_postal:      document.getElementById('ch-cp').value.trim(),
     ville:            document.getElementById('ch-ville').value.trim(),
-    constructeur:     document.getElementById('ch-constructeur').value.trim(),
     avancement:       parseInt(document.getElementById('ch-avancement').value) || 0,
     date_debut:       document.getElementById('ch-debut').value || null,
     date_livraison:   document.getElementById('ch-livraison').value || null,
@@ -920,7 +917,7 @@ function openModal(id) {
   if (id === 'modal-chantier' && !document.getElementById('edit-chantier-id').value) {
     document.getElementById('modal-chantier-title').textContent = 'Créer un nouveau chantier';
     document.getElementById('edit-chantier-id').value = '';
-    ['ch-adresse','ch-cp','ch-ville','ch-constructeur'].forEach(f => document.getElementById(f).value = '');
+    ['ch-adresse','ch-cp','ch-ville'].forEach(f => document.getElementById(f).value = '');
     document.getElementById('ch-avancement').value = 0;
     document.getElementById('ch-slider').value = 0;
     document.getElementById('ch-debut').value = '';

@@ -52,7 +52,7 @@ async function loadApp(user) {
   setTimeout(() => document.getElementById('app').classList.add('visible'), 800);
   const { data: profile } = await sb.from('profiles').select('nom').eq('id', user.id).single();
   document.getElementById('client-name').textContent = profile?.nom || user.email;
-  const { data: chantier } = await sb.from('chantiers').select('*').eq('client_id', user.id).single();
+  const { data: chantier } = await sb.from('chantiers').select('*, constructeur_profile:profiles!chantiers_constructeur_id_fkey(nom)').eq('client_id', user.id).single();
   if (!chantier) {
     document.getElementById('hero-address').innerHTML = '<em style="opacity:0.6">Aucun chantier associe.</em>';
     document.getElementById('panels-container').innerHTML = '<div class="empty-state"><div class="empty-icon">X</div><p>Votre chantier apparaitra ici.</p></div>';
@@ -63,7 +63,7 @@ async function loadApp(user) {
   document.getElementById('hero-meta').innerHTML =
     '<div class="meta-item"><span class="meta-label">Debut</span><span class="meta-value">' + fmt(chantier.date_debut) + '</span></div>' +
     '<div class="meta-item"><span class="meta-label">Livraison</span><span class="meta-value">' + fmt(chantier.date_livraison) + '</span></div>' +
-    '<div class="meta-item"><span class="meta-label">Constructeur</span><span class="meta-value">' + (chantier.constructeur || '-') + '</span></div>' +
+    '<div class="meta-item"><span class="meta-label">Constructeur</span><span class="meta-value">' + (chantier.constructeur_profile?.nom || '-') + '</span></div>' +
     '<div class="meta-item"><span class="meta-label">Passages</span><span class="meta-value" id="nb-passages">-</span></div>';
   const pct = chantier.avancement || 0;
   document.getElementById('progress-pct').textContent = pct + '%';
