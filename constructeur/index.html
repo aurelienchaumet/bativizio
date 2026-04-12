@@ -18,27 +18,21 @@
 body{background:var(--white-sand);font-family:'DM Sans',sans-serif;color:var(--navy);min-height:100vh}
 
 /* LOGIN */
-#login-screen{position:fixed;inset:0;z-index:100;display:flex;transition:opacity 0.8s ease}
-.login-visual{flex:1;background:linear-gradient(160deg,var(--navy-deep) 0%,var(--navy) 45%,var(--wave) 100%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.login-visual::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 40px,rgba(255,255,255,0.02) 40px,rgba(255,255,255,0.02) 41px)}
-.login-visual::after{content:'';position:absolute;bottom:0;left:0;right:0;height:180px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z' fill='rgba(44,107,138,0.3)'/%3E%3C/svg%3E") no-repeat bottom;background-size:cover}
-.login-brand{position:relative;z-index:1;text-align:center;color:var(--white)}
-.login-brand h1{font-family:'Cormorant Garamond',serif;font-size:3.2rem;font-weight:600;letter-spacing:0.06em;line-height:1}
-.login-brand h1 span{color:var(--wave-light)}
-.login-brand p{margin-top:14px;font-size:0.78rem;letter-spacing:0.2em;text-transform:uppercase;opacity:0.45;font-family:'DM Mono',monospace}
-.login-form-panel{width:420px;background:var(--white);display:flex;flex-direction:column;justify-content:center;padding:64px 48px;border-left:1px solid var(--mist)}
-.login-form-panel h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:var(--navy);margin-bottom:6px}
-.login-form-panel .subtitle{font-size:0.85rem;color:var(--slate-light);margin-bottom:36px}
-.form-group{margin-bottom:18px}
-.form-group label{display:block;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--slate);font-family:'DM Mono',monospace;margin-bottom:8px}
-.form-group input{width:100%;padding:13px 16px;border:1.5px solid var(--mist);background:var(--white-sand);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.92rem;color:var(--navy);outline:none;transition:border-color 0.2s}
-.form-group input:focus{border-color:var(--wave)}
-.btn-login{width:100%;padding:14px;background:var(--navy);color:var(--white);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.88rem;letter-spacing:0.06em;cursor:pointer;margin-top:8px;transition:background 0.2s}
-.btn-login:hover:not(:disabled){background:var(--wave)}
-.btn-login:disabled{opacity:0.6;cursor:not-allowed}
-.login-error{display:none;margin-bottom:14px;padding:10px 14px;background:#FEE;border:1px solid #FCC;border-radius:6px;font-size:0.82rem;color:#C00}
-#login-screen.hidden{opacity:0;pointer-events:none}
-
+  .login-visual { flex:1; background:linear-gradient(155deg, #0a1520 0%, #111c27 40%, #1a3a52 100%); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  .login-visual::after { content:''; position:absolute; bottom:0; left:0; right:0; height:220px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 200' preserveAspectRatio='none'%3E%3Cpath d='M0,100 C360,170 720,30 1080,100 C1260,135 1380,70 1440,90 L1440,200 L0,200 Z' fill='rgba(46,107,138,0.15)'/%3E%3Cpath d='M0,140 C300,100 600,170 900,130 C1100,105 1300,155 1440,140 L1440,200 L0,200 Z' fill='rgba(10,21,32,0.3)'/%3E%3C/svg%3E") no-repeat bottom; background-size:cover; }
+  .login-brand { position:relative; z-index:1; text-align:left; color:var(--white); max-width:500px; padding:0 60px; }
+  .login-brand-top { display:flex; align-items:center; gap:14px; margin-bottom:36px; }
+  .login-brand h1 { font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:600; letter-spacing:0.06em; line-height:1; margin-bottom:10px; }
+  .login-brand h1 span { color:var(--wave-light); }
+  .login-brand .tagline { font-size:0.72rem; letter-spacing:0.22em; text-transform:uppercase; color:rgba(184,200,212,0.45); font-family:'DM Mono',monospace; margin-bottom:44px; }
+  .login-pitch .accroche { font-family:'Cormorant Garamond',serif; font-size:1.55rem; font-weight:400; line-height:1.45; color:rgba(255,255,255,0.9); margin-bottom:28px; }
+  .login-pitch .accroche em { color:var(--wave-light); font-style:normal; }
+  .login-features { list-style:none; display:flex; flex-direction:column; gap:14px; }
+  .login-features li { display:flex; align-items:flex-start; gap:12px; font-size:0.87rem; color:rgba(184,200,212,0.75); line-height:1.5; }
+  .feat-icon { width:18px; height:18px; border:1px solid rgba(74,143,173,0.5); border-radius:4px; background:rgba(46,107,138,0.2); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; margin-top:1px; }
+  .login-form-panel { width:420px; background:var(--white); display:flex; flex-direction:column; justify-content:center; padding:64px 48px; border-left:1px solid var(--mist); }
+  .login-form-panel h2 { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:400; color:var(--navy); margin-bottom:6px; }
+  .login-form-panel .subtitle { font-size:0.85rem; color:var(--slate-light); margin-bottom:36px; line-height:1.5; }
 /* APP */
 #app{display:none}
 #app.visible{display:block}
@@ -207,13 +201,27 @@ body{background:var(--white-sand);font-family:'DM Sans',sans-serif;color:var(--n
 <div id="login-screen">
   <div class="login-visual">
     <div class="login-brand">
-      <h1>Bativiz<span>IØ</span></h1>
-      <p>Espace constructeur · Île d'Oléron</p>
+      <div class="login-brand-top">
+        <div style="width:48px;height:48px;border:1px solid rgba(74,143,173,0.4);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;background:rgba(46,107,138,0.15);">🔭</div>
+        <div>
+          <h1>Bativiz<span>IØ</span></h1>
+          <p class="tagline">Espace constructeur · Île d'Oléron</p>
+        </div>
+      </div>
+      <div class="login-pitch">
+        <p class="accroche">Pilotez vos chantiers,<br><em>gardez vos clients informés.</em></p>
+        <ul class="login-features">
+          <li><span class="feat-icon">🏗</span> Vue consolidée de tous vos chantiers en cours</li>
+          <li><span class="feat-icon">🚁</span> Passages drone et 360° organisés par étape</li>
+          <li><span class="feat-icon">👤</span> Vos clients suivent l'avancement en autonomie</li>
+          <li><span class="feat-icon">📊</span> Avancement et dates de livraison en un coup d'œil</li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="login-form-panel">
     <h2>Bienvenue</h2>
-    <p class="subtitle">Accédez au suivi de vos chantiers</p>
+    <p class="subtitle">Connectez-vous pour accéder<br>à l'espace constructeur.</p>
     <div id="login-error" class="login-error"></div>
     <div class="form-group">
       <label>Email</label>
