@@ -853,16 +853,40 @@ async function saveChantier() {
 
 // ══ CLIENT CRUD ══
 async function saveClient() {
-  const nom      = document.getElementById('cl-nom').value.trim();
-  const email    = document.getElementById('cl-email').value.trim();
-  const role     = document.getElementById('cl-role').value;
-  if (!nom || !email) { showToast('Nom et email requis.', 'error'); return; }
+  const nom      = document.getElementById('cl-nom').value.trim()
+  const email    = document.getElementById('cl-email').value.trim()
+  const password = document.getElementById('cl-password').value.trim()
+  const role     = document.getElementById('cl-role').value
 
-  const sql = `insert into profiles (id, role, nom) values ('[UUID_DU_COMPTE]', '${role}', '${nom}');`;
-  console.log('SQL à exécuter après création du compte Supabase :', sql);
+  if (!nom || !email || !password) { showToast('Tous les champs sont requis.', 'error'); return }
 
-  showToast(`Créez le compte dans Supabase Auth, puis insérez le profil via SQL (voir console).`, 'error');
-  closeModal('modal-client');
+  const btn = document.querySelector('#modal-client .btn-wave')
+  btn.textContent = 'Création…'; btn.disabled = true
+
+  try {
+    const { data: { session } } = await sb.auth.getSession()
+
+    const res = await fetch('https://cajgqzzyxykzxsudpmms.supabase.co/functions/v1/create-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ nom, email, password, role })
+    })
+
+    const result = await res.json()
+    if (!res.ok) throw new Error(result.error)
+
+    showToast(`Compte ${role} créé ✓`, 'success')
+    closeModal('modal-client')
+    loadClientsPage()
+
+  } catch (err) {
+    showToast('Erreur : ' + err.message, 'error')
+  } finally {
+    btn.textContent = 'Créer l\'accès →'; btn.disabled = false
+  }
 }
 
 // ══ PASSAGE DELETE ══
