@@ -28,7 +28,7 @@
   #login-screen { position:fixed; inset:0; z-index:100; display:flex; transition:opacity 0.8s ease, transform 0.8s ease; }
   .login-visual { flex:1; background:linear-gradient(155deg, #0a1520 0%, #111c27 40%, #1a3a52 100%); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
   .login-visual::after { content:''; position:absolute; bottom:0; left:0; right:0; height:220px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 200' preserveAspectRatio='none'%3E%3Cpath d='M0,100 C360,170 720,30 1080,100 C1260,135 1380,70 1440,90 L1440,200 L0,200 Z' fill='rgba(46,107,138,0.15)'/%3E%3Cpath d='M0,140 C300,100 600,170 900,130 C1100,105 1300,155 1440,140 L1440,200 L0,200 Z' fill='rgba(10,21,32,0.3)'/%3E%3C/svg%3E") no-repeat bottom; background-size:cover; }
-  .login-brand { position:relative; z-index:1; text-align:left; color:var(--white); max-width:500px; padding:0 60px; }
+  .login-brand { position:relative; z-index:1; text-align:left; color:var(--white); max-width:500px; padding:0 60px; transition:opacity 0.4s ease, transform 0.4s ease; }
   .login-brand-top { display:flex; align-items:center; gap:14px; margin-bottom:36px; }
   .logo-icon { width:48px; height:48px; border:1px solid rgba(74,143,173,0.4); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; background:rgba(46,107,138,0.15); }
   .login-brand h1 { font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:600; letter-spacing:0.06em; line-height:1; margin-bottom:10px; }
@@ -39,11 +39,36 @@
   .login-pitch .accroche em { color:var(--wave-light); font-style:normal; }
   .login-features { list-style:none; display:flex; flex-direction:column; gap:14px; }
   .login-features li { display:flex; align-items:flex-start; gap:12px; font-size:0.87rem; color:rgba(184,200,212,0.75); line-height:1.5; }
-  .login-features li::before { content:''; width:18px; height:18px; border:1px solid rgba(74,143,173,0.5); border-radius:4px; background:rgba(46,107,138,0.2); flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; }
   .feat-icon { width:18px; height:18px; border:1px solid rgba(74,143,173,0.5); border-radius:4px; background:rgba(46,107,138,0.2); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px; margin-top:1px; }
+  /* Panneau droit */
   .login-form-panel { width:440px; background:var(--white); display:flex; flex-direction:column; justify-content:center; padding:64px 48px; border-left:1px solid var(--mist); }
   .login-form-panel h2 { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:400; color:var(--navy); margin-bottom:6px; }
   .login-form-panel .subtitle { font-size:0.85rem; color:var(--slate-light); margin-bottom:36px; line-height:1.5; }
+  /* Écran de choix */
+  #choice-screen { display:flex; flex-direction:column; align-items:stretch; }
+  #form-screen { display:none; flex-direction:column; align-items:stretch; }
+  .choice-title { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:400; color:var(--navy); margin-bottom:8px; }
+  .choice-subtitle { font-size:0.85rem; color:var(--slate-light); margin-bottom:32px; line-height:1.5; }
+  .choice-cards { display:flex; flex-direction:column; gap:12px; margin-bottom:28px; }
+  .choice-card { display:flex; align-items:center; gap:16px; padding:18px 20px; border:1.5px solid var(--mist); border-radius:10px; cursor:pointer; transition:all 0.2s; background:var(--white-sand); }
+  .choice-card:hover { border-color:var(--wave); background:var(--foam); transform:translateY(-1px); box-shadow:0 4px 16px rgba(46,107,138,0.1); }
+  .choice-card-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  .choice-card-icon.client { background:linear-gradient(135deg,#e8f4f9,#d0e8f2); }
+  .choice-card-icon.constr { background:linear-gradient(135deg,#e8f0e0,#d4e8c8); }
+  .choice-card-text { flex:1; }
+  .choice-card-label { font-size:0.95rem; font-weight:500; color:var(--navy); margin-bottom:3px; }
+  .choice-card-desc { font-size:0.78rem; color:var(--slate-light); }
+  .choice-card-arrow { font-size:1rem; color:var(--mist); transition:color 0.2s, transform 0.2s; }
+  .choice-card:hover .choice-card-arrow { color:var(--wave); transform:translateX(3px); }
+  .btn-back { background:none; border:none; color:var(--slate-light); font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif; display:flex; align-items:center; gap:6px; margin-bottom:24px; padding:0; transition:color 0.2s; }
+  .btn-back:hover { color:var(--navy); }
+  .demo-box { margin-top:20px; padding:14px 16px; background:var(--foam); border:1px solid var(--mist); border-radius:8px; }
+  .demo-box-label { font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--wave); font-family:'DM Mono',monospace; margin-bottom:8px; }
+  .demo-box-text { font-size:0.8rem; color:var(--slate); margin-bottom:10px; line-height:1.5; }
+  .demo-box-creds { font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--navy); margin-bottom:10px; line-height:1.8; }
+  .demo-box-creds span { color:var(--slate); }
+  .btn-demo { width:100%; padding:9px; background:var(--navy); color:var(--white); border:none; border-radius:6px; font-family:'DM Sans',sans-serif; font-size:0.8rem; cursor:pointer; transition:background 0.2s; }
+  .btn-demo:hover { background:var(--wave); }
   .form-group { margin-bottom:18px; }
   .form-group label { display:block; font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--slate); font-family:'DM Mono',monospace; margin-bottom:8px; }
   .form-group input { width:100%; padding:13px 16px; border:1.5px solid var(--mist); background:var(--white-sand); border-radius:6px; font-family:'DM Sans',sans-serif; font-size:0.92rem; color:var(--navy); outline:none; transition:border-color 0.2s, background 0.2s; }
@@ -185,50 +210,91 @@
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-visual">
-    <div class="login-brand">
+    <div class="login-brand" id="login-brand">
       <div class="login-brand-top">
         <div class="logo-icon">🔭</div>
         <div>
           <h1>Bativiz<span>IØ</span></h1>
-          <p class="tagline">Suivi de chantier · Île d'Oléron</p>
+          <p class="tagline" id="brand-tagline">Suivi de chantier · Île d'Oléron</p>
         </div>
       </div>
-      <div class="login-pitch">
-        <p class="accroche">Votre chantier, <em>en temps réel</em>,<br>depuis n'importe où.</p>
-        <ul class="login-features">
+      <div class="login-pitch" id="login-pitch">
+        <p class="accroche" id="pitch-accroche">Votre chantier,<br><em>depuis n'importe où.</em></p>
+        <ul class="login-features" id="pitch-features">
           <li><span class="feat-icon">🚁</span> Survols drone et vidéos 360° à chaque passage</li>
-          <li><span class="feat-icon">📍</span> Avancement mis à jour après chaque visite de chantier</li>
+          <li><span class="feat-icon">📍</span> Avancement mis à jour après chaque visite</li>
           <li><span class="feat-icon">📷</span> Galerie photo complète, organisée par étape</li>
           <li><span class="feat-icon">🔒</span> Accès privé et sécurisé, rien que pour vous</li>
         </ul>
       </div>
     </div>
   </div>
-  <div class="login-form-panel">
-    <h2>Bienvenue</h2>
-    <p class="subtitle">Connectez-vous pour accéder<br>au suivi de votre chantier.</p>
-    <div id="login-error" class="login-error"></div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="login-email" placeholder="votre@email.com">
-    </div>
-    <div class="form-group">
-      <label>Mot de passe</label>
-      <input type="password" id="login-pass" placeholder="••••••••">
-    </div>
-    <button class="btn-login" id="btn-login" onclick="doLogin()">Accéder à mon suivi →</button>
 
-    <div style="margin-top:20px; padding:14px 16px; background:var(--foam); border:1px solid var(--mist); border-radius:8px;">
-      <div style="font-size:0.68rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--wave); font-family:'DM Mono',monospace; margin-bottom:8px;">Accès démonstration</div>
-      <div style="font-size:0.8rem; color:var(--slate); margin-bottom:10px; line-height:1.5;">Vous souhaitez découvrir la plateforme ? Utilisez le compte de démo :</div>
-      <div style="font-family:'DM Mono',monospace; font-size:0.78rem; color:var(--navy); margin-bottom:10px; line-height:1.8;">
-        <span style="color:var(--slate)">Email ·</span> <span id="demo-email-display"></span><br>
-        <span style="color:var(--slate)">Mot de passe ·</span> demo
+  <div class="login-form-panel">
+
+    <!-- ÉCRAN DE CHOIX -->
+    <div id="choice-screen">
+      <div class="choice-title">Bienvenue</div>
+      <p class="choice-subtitle">Vous êtes sur BativizIØ, la plateforme de suivi de chantier par drone et caméra 360° de l'Île d'Oléron.<br><br>Qui êtes-vous ?</p>
+      <div class="choice-cards">
+        <div class="choice-card" onclick="selectProfile('client')">
+          <div class="choice-card-icon client">🏡</div>
+          <div class="choice-card-text">
+            <div class="choice-card-label">Je fais construire une maison</div>
+            <div class="choice-card-desc">Suivez l'avancement de votre chantier en temps réel</div>
+          </div>
+          <div class="choice-card-arrow">→</div>
+        </div>
+        <div class="choice-card" onclick="selectProfile('constructeur')">
+          <div class="choice-card-icon constr">🏗</div>
+          <div class="choice-card-text">
+            <div class="choice-card-label">Je suis un constructeur</div>
+            <div class="choice-card-desc">Gérez vos chantiers et tenez vos clients informés</div>
+          </div>
+          <div class="choice-card-arrow">→</div>
+        </div>
       </div>
-      <button onclick="fillDemo()" style="width:100%; padding:9px; background:var(--navy); color:var(--white); border:none; border-radius:6px; font-family:'DM Sans',sans-serif; font-size:0.8rem; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='var(--wave)'" onmouseout="this.style.background='var(--navy)'">
-        ↗ Préremplir et accéder à la démo
-      </button>
     </div>
+
+    <!-- FORMULAIRE DE CONNEXION -->
+    <div id="form-screen">
+      <button class="btn-back" onclick="backToChoice()">← Retour</button>
+      <h2 id="form-title">Bienvenue</h2>
+      <p class="subtitle" id="form-subtitle">Connectez-vous pour accéder à votre espace.</p>
+      <div id="login-error" class="login-error"></div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="votre@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="form-group">
+        <label>Mot de passe</label>
+        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn-login" id="btn-login" onclick="doLogin()">Accéder à mon espace →</button>
+
+      <!-- Démo client -->
+      <div class="demo-box" id="demo-box-client">
+        <div class="demo-box-label">Accès démonstration</div>
+        <div class="demo-box-text">Découvrez la vue d'un propriétaire avec le compte de démo :</div>
+        <div class="demo-box-creds">
+          <span>Email ·</span> <span id="demo-email-display"></span><br>
+          <span>Mot de passe ·</span> demo
+        </div>
+        <button class="btn-demo" onclick="fillDemo('client')">↗ Accéder à la démo client</button>
+      </div>
+
+      <!-- Démo constructeur -->
+      <div class="demo-box" id="demo-box-constructeur" style="display:none">
+        <div class="demo-box-label">Accès démonstration</div>
+        <div class="demo-box-text">Découvrez la vue d'un constructeur avec le compte de démo :</div>
+        <div class="demo-box-creds">
+          <span>Email ·</span> constructeur@bativizio.io<br>
+          <span>Mot de passe ·</span> constructeur
+        </div>
+        <button class="btn-demo" onclick="fillDemo('constructeur')">↗ Accéder à la démo constructeur</button>
+      </div>
+    </div>
+
   </div>
 </div>
 </div>

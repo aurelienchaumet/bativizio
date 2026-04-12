@@ -16,6 +16,65 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+// ── Choix du profil ──────────────────────────────────────────────────────────
+const pitchData = {
+  client: {
+    tagline: 'Suivi de chantier · Île d\'Oléron',
+    accroche: 'Votre chantier, <em>en temps réel</em>,<br>depuis n\'importe où.',
+    features: [
+      '🚁 Survols drone et vidéos 360° à chaque passage',
+      '📍 Avancement mis à jour après chaque visite',
+      '📷 Galerie photo complète, organisée par étape',
+      '🔒 Accès privé et sécurisé, rien que pour vous',
+    ],
+    formTitle: 'Accès propriétaire',
+    formSubtitle: 'Connectez-vous pour suivre l\'avancement de votre chantier.',
+  },
+  constructeur: {
+    tagline: 'Espace constructeur · Île d\'Oléron',
+    accroche: 'Pilotez vos chantiers,<br><em>gardez vos clients informés.</em>',
+    features: [
+      '🏗 Vue consolidée de tous vos chantiers en cours',
+      '🚁 Passages drone et 360° organisés par étape',
+      '👤 Vos clients suivent l\'avancement en autonomie',
+      '📊 Avancement et dates de livraison en un coup d\'œil',
+    ],
+    formTitle: 'Espace constructeur',
+    formSubtitle: 'Connectez-vous pour accéder à votre tableau de bord.',
+  },
+};
+
+function selectProfile(type) {
+  const d = pitchData[type];
+
+  // Mettre à jour le panneau gauche
+  document.getElementById('brand-tagline').textContent = d.tagline;
+  document.getElementById('pitch-accroche').innerHTML  = d.accroche;
+  document.getElementById('pitch-features').innerHTML  = d.features
+    .map(f => `<li><span class="feat-icon">${f.slice(0,2)}</span>${f.slice(3)}</li>`).join('');
+
+  // Mettre à jour le formulaire
+  document.getElementById('form-title').textContent    = d.formTitle;
+  document.getElementById('form-subtitle').textContent = d.formSubtitle;
+
+  // Afficher la bonne démo
+  document.getElementById('demo-box-client').style.display      = type === 'client'       ? 'block' : 'none';
+  document.getElementById('demo-box-constructeur').style.display = type === 'constructeur' ? 'block' : 'none';
+
+  // Transition écrans
+  document.getElementById('choice-screen').style.display = 'none';
+  document.getElementById('form-screen').style.display   = 'flex';
+  document.getElementById('login-email').focus();
+}
+
+function backToChoice() {
+  document.getElementById('form-screen').style.display   = 'none';
+  document.getElementById('choice-screen').style.display = 'flex';
+  document.getElementById('login-error').style.display   = 'none';
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pass').value  = '';
+}
+
 async function doLogin() {
   const errEl = document.getElementById('login-error');
   errEl.style.display = 'none';
@@ -28,7 +87,7 @@ async function doLogin() {
   if (error) {
     errEl.textContent = 'Email ou mot de passe incorrect.';
     errEl.style.display = 'block';
-    btn.textContent = 'Acceder a mon suivi'; btn.disabled = false;
+    btn.textContent = 'Accéder à mon espace →'; btn.disabled = false;
     return;
   }
   const { data: profile } = await sb.from('profiles').select('role').eq('id', data.user.id).single();
@@ -36,14 +95,19 @@ async function doLogin() {
   if (profile?.role === 'constructeur') { window.location.href = '/constructeur'; return; }
   if (profile?.role === 'client') { await loadApp(data.user); return; }
   await sb.auth.signOut();
-  errEl.textContent = 'Aucun acces configure pour ce compte.';
+  errEl.textContent = 'Aucun accès configuré pour ce compte.';
   errEl.style.display = 'block';
-  btn.textContent = 'Acceder a mon suivi'; btn.disabled = false;
+  btn.textContent = 'Accéder à mon espace →'; btn.disabled = false;
 }
 
-function fillDemo() {
-  document.getElementById('login-email').value = 'demo' + '@' + 'bativizio.io';
-  document.getElementById('login-pass').value  = 'demo';
+function fillDemo(type) {
+  if (type === 'constructeur') {
+    document.getElementById('login-email').value = 'constructeur' + '@' + 'bativizio.io';
+    document.getElementById('login-pass').value  = 'constructeur';
+  } else {
+    document.getElementById('login-email').value = 'demo' + '@' + 'bativizio.io';
+    document.getElementById('login-pass').value  = 'demo';
+  }
   doLogin();
 }
 
