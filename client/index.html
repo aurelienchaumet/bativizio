@@ -262,67 +262,29 @@
 
   <div class="login-form-panel">
 
-    <!-- ÉCRAN DE CHOIX -->
-    <div id="choice-screen">
-      <div class="choice-title">Bienvenue</div>
-      <p class="choice-subtitle">Vous êtes sur BatiVizIØ, la plateforme de suivi de chantier par drone et caméra 360° de l'Île d'Oléron.<br><br>Qui êtes-vous ?</p>
-      <div class="choice-cards">
-        <div class="choice-card" onclick="selectProfile('client')">
-          <div class="choice-card-icon client">🏡</div>
-          <div class="choice-card-text">
-            <div class="choice-card-label">Je fais construire une maison</div>
-            <div class="choice-card-desc">Suivez l'avancement de votre chantier en temps réel</div>
-          </div>
-          <div class="choice-card-arrow">→</div>
-        </div>
-        <div class="choice-card" onclick="selectProfile('constructeur')">
-          <div class="choice-card-icon constr">🏗</div>
-          <div class="choice-card-text">
-            <div class="choice-card-label">Je suis un constructeur</div>
-            <div class="choice-card-desc">Gérez vos chantiers et tenez vos clients informés</div>
-          </div>
-          <div class="choice-card-arrow">→</div>
-        </div>
-      </div>
+    <!-- FORMULAIRE CLIENT DIRECT -->
+    <a href="/" class="btn-back" style="text-decoration:none;display:inline-flex">← Retour</a>
+    <h2 id="form-title">Accès propriétaire</h2>
+    <p class="subtitle" id="form-subtitle">Connectez-vous pour suivre l'avancement de votre chantier.</p>
+    <div id="login-error" class="login-error"></div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="votre@email.com" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
+    <div class="form-group">
+      <label>Mot de passe</label>
+      <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-login" id="btn-login" onclick="doLogin()">Accéder à mon espace →</button>
 
-    <!-- FORMULAIRE DE CONNEXION -->
-    <div id="form-screen">
-      <button class="btn-back" onclick="backToChoice()">← Retour</button>
-      <h2 id="form-title">Bienvenue</h2>
-      <p class="subtitle" id="form-subtitle">Connectez-vous pour accéder à votre espace.</p>
-      <div id="login-error" class="login-error"></div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="login-email" placeholder="votre@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="demo-box" id="demo-box-client">
+      <div class="demo-box-label">Accès démonstration</div>
+      <div class="demo-box-text">Découvrez la vue d'un propriétaire avec le compte de démo :</div>
+      <div class="demo-box-creds">
+        <span>Email ·</span> <span id="demo-email-display"></span><br>
+        <span>Mot de passe ·</span> demo
       </div>
-      <div class="form-group">
-        <label>Mot de passe</label>
-        <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-      </div>
-      <button class="btn-login" id="btn-login" onclick="doLogin()">Accéder à mon espace →</button>
-
-      <!-- Démo client -->
-      <div class="demo-box" id="demo-box-client">
-        <div class="demo-box-label">Accès démonstration</div>
-        <div class="demo-box-text">Découvrez la vue d'un propriétaire avec le compte de démo :</div>
-        <div class="demo-box-creds">
-          <span>Email ·</span> <span id="demo-email-display"></span><br>
-          <span>Mot de passe ·</span> demo
-        </div>
-        <button class="btn-demo" onclick="fillDemo('client')">↗ Accéder à la démo client</button>
-      </div>
-
-      <!-- Démo constructeur -->
-      <div class="demo-box" id="demo-box-constructeur" style="display:none">
-        <div class="demo-box-label">Accès démonstration</div>
-        <div class="demo-box-text">Découvrez la vue d'un constructeur avec le compte de démo :</div>
-        <div class="demo-box-creds">
-          <span>Email ·</span> constructeur@bativizio.io<br>
-          <span>Mot de passe ·</span> constructeur
-        </div>
-        <button class="btn-demo" onclick="fillDemo('constructeur')">↗ Accéder à la démo constructeur</button>
-      </div>
+      <button class="btn-demo" onclick="fillDemo('client')">↗ Accéder à la démo client</button>
     </div>
 
   </div>
