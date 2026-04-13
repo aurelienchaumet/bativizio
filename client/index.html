@@ -197,7 +197,20 @@
   .content-panel.active > *:nth-child(3){animation-delay:0.12s}
 
   @media (max-width:700px) {
-    .login-visual{display:none} .login-form-panel{width:100%;padding:44px 24px}
+    #login-screen { position:relative; inset:auto; flex-direction:column; min-height:100vh; }
+    .login-visual {
+      flex:none;
+      min-height:auto;
+      padding:40px 28px 28px;
+      align-items:flex-start;
+      justify-content:flex-start;
+    }
+    .login-visual::after { height:80px; }
+    .login-brand { padding:0; max-width:100%; }
+    .login-brand h1 { font-size:2.2rem; margin-bottom:6px; }
+    .login-brand .tagline { margin-bottom:0; }
+    .login-pitch { display:none; }
+    .login-form-panel{width:100%;padding:32px 24px 48px; border-left:none; border-top:1px solid rgba(46,107,138,0.2); justify-content:flex-start;}
     .app-header{padding:0 20px} .project-hero{padding:32px 20px 28px}
     .hero-address{font-size:1.7rem} .passages-section{padding:24px 20px}
     .progress-section{padding:18px 20px;gap:16px}
