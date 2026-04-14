@@ -505,12 +505,14 @@ nav{padding:14px 10px;flex:1}
       <div class="form-row full"><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="cl-email" placeholder="contact@email.com"></div></div>
       <div class="form-row full"><div class="form-group"><label class="form-label">Mot de passe initial</label><input type="text" class="form-input" id="cl-password" placeholder="Mot de passe temporaire"></div></div>
       <div class="form-row full"><div class="form-group"><label class="form-label">Rôle</label>
-        <select class="form-select" id="cl-role" onchange="toggleNomConstructeur(this.value)">
-          <option value="client">Client final (propriétaire)</option>
+        <select class="form-select" id="cl-role">
+          <option value="client">Client final</option>
           <option value="constructeur">Constructeur</option>
         </select>
       </div></div>
-      <div class="form-row full" id="row-nom-constructeur"><div class="form-group"><label class="form-label">Nom du constructeur lié</label><input type="text" class="form-input" id="cl-nom-constructeur" placeholder="Ex : Maisons Dupont"></div></div>
+      <div style="margin-top:14px; padding:12px 14px; background:var(--wave-dim); border:1px solid rgba(46,107,138,0.2); border-radius:6px; font-size:0.78rem; color:var(--text-muted); line-height:1.6;">
+        Après création, allez dans <strong style="color:var(--text)">Supabase → Auth → Users</strong>, créez le compte avec cet email, puis exécutez le SQL affiché dans la console.
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-client')">Annuler</button>
@@ -904,50 +906,17 @@ function toggleLogoField(sel) {
   document.getElementById('logo-field-row').style.display = sel.value === 'constructeur' ? 'block' : 'none';
 }
 
-function toggleNomConstructeur(role) {
-  const row = document.getElementById('row-nom-constructeur');
-  if (row) row.style.display = role === 'client' ? '' : 'none';
-}
-
 async function saveClient() {
   const nom      = document.getElementById('cl-nom').value.trim();
   const email    = document.getElementById('cl-email').value.trim();
-  const password = document.getElementById('cl-password').value.trim();
   const role     = document.getElementById('cl-role').value;
-  const logo_url = document.getElementById('cl-logo')?.value.trim() || null;
-  const nom_constructeur = document.getElementById('cl-nom-constructeur')?.value.trim() || '';
+  if (!nom || !email) { showToast('Nom et email requis.', 'error'); return; }
 
-  if (!nom || !email || !password) {
-    showToast('Nom, email et mot de passe requis.', 'error');
-    return;
-  }
+  const sql = `insert into profiles (id, role, nom) values ('[UUID_DU_COMPTE]', '${role}', '${nom}');`;
+  console.log('SQL à exécuter après création du compte Supabase :', sql);
 
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { showToast('Session expirée, reconnectez-vous.', 'error'); return; }
-
-  const res = await fetch('https://cajgqzzyxykzxsudpmms.supabase.co/functions/v1/create-user', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${session.access_token}`
-    },
-    body: JSON.stringify({ nom, email, password, role, logo_url, nom_constructeur })
-  });
-
-  const result = await res.json();
-
-  if (!res.ok || result.error) {
-    showToast(`Erreur : ${result.error}`, 'error');
-    return;
-  }
-
-  showToast(`Accès créé et email envoyé à ${email} ✓`, 'success');
+  showToast(`Créez le compte dans Supabase Auth, puis insérez le profil via SQL (voir console).`, 'error');
   closeModal('modal-client');
-  ['cl-nom','cl-email','cl-password','cl-logo'].forEach(f => {
-    const el = document.getElementById(f);
-    if (el) el.value = '';
-  });
-  loadDashboard();
 }
 
 // ══ PASSAGE DELETE ══
