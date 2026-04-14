@@ -407,7 +407,7 @@ nav{padding:14px 10px;flex:1}
       <div class="page" id="page-clients">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
           <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600">Clients</div>
-          <button class="btn btn-wave" onclick="openModal('modal-client')">+ Nouveau client</button>
+          <button class="btn btn-wave" onclick="openModalClient()">+ Nouveau client</button>
         </div>
         <div class="card">
           <table class="data-table">
@@ -510,7 +510,11 @@ nav{padding:14px 10px;flex:1}
           <option value="constructeur">Constructeur</option>
         </select>
       </div></div>
-      <div class="form-row full" id="row-nom-constructeur"><div class="form-group"><label class="form-label">Nom du constructeur lié</label><input type="text" class="form-input" id="cl-nom-constructeur" placeholder="Ex : Maisons Dupont"></div></div>
+      <div class="form-row full" id="row-nom-constructeur"><div class="form-group"><label class="form-label">Constructeur lié</label>
+        <select class="form-select" id="cl-nom-constructeur">
+          <option value="">— Sélectionner un constructeur —</option>
+        </select>
+      </div></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-client')">Annuler</button>
@@ -902,6 +906,22 @@ async function saveChantier() {
 // ══ CLIENT CRUD ══
 function toggleLogoField(sel) {
   document.getElementById('logo-field-row').style.display = sel.value === 'constructeur' ? 'block' : 'none';
+}
+
+async function openModalClient() {
+  // Charger la liste des constructeurs
+  const { data: constructeurs } = await sb.from('profiles').select('id, nom').eq('role', 'constructeur').order('nom');
+  const sel = document.getElementById('cl-nom-constructeur');
+  sel.innerHTML = '<option value="">— Sélectionner un constructeur —</option>';
+  (constructeurs || []).forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.nom;
+    opt.textContent = c.nom;
+    sel.appendChild(opt);
+  });
+  // Afficher le champ constructeur par défaut (rôle = client au départ)
+  toggleNomConstructeur(document.getElementById('cl-role').value);
+  openModal('modal-client');
 }
 
 function toggleNomConstructeur(role) {
