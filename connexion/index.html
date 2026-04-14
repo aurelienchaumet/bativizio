@@ -257,7 +257,7 @@ body{
       <!-- Encarts démo -->
       <div class="demo-section-label">Accès démonstration</div>
       <div class="demo-cards">
-        <div class="demo-card blue" onclick="fillAndLogin('client')">
+        <div class="demo-card blue" onclick="fillDemo('client')">
           <div class="demo-card-left">
             <div class="demo-card-tag">Propriétaire</div>
             <div class="demo-card-title">Démo espace client</div>
@@ -265,7 +265,7 @@ body{
           </div>
           <div class="demo-card-arrow">→</div>
         </div>
-        <div class="demo-card gold" onclick="fillAndLogin('constructeur')">
+        <div class="demo-card gold" onclick="fillDemo('constructeur')">
           <div class="demo-card-left">
             <div class="demo-card-tag">Constructeur</div>
             <div class="demo-card-title">Démo espace constructeur</div>
@@ -303,23 +303,12 @@ body{
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/shared.js"></script>
 <script src="/app.js"></script>
 <script>
 // Enter key
 document.getElementById('login-email').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 document.getElementById('login-pass').addEventListener('keydown',  e => { if(e.key==='Enter') doLogin(); });
-
-// Remplir + connecter depuis les encarts démo
-function fillAndLogin(type) {
-  if (type === 'constructeur') {
-    document.getElementById('login-email').value = 'constructeur@bativizio.io';
-    document.getElementById('login-pass').value  = 'constructeur';
-  } else {
-    document.getElementById('login-email').value = 'demo@bativizio.io';
-    document.getElementById('login-pass').value  = 'demo';
-  }
-  doLogin();
-}
 </script>
 </body>
 </html>
