@@ -234,13 +234,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/shared.js"></script>
 <script>
-  const { createClient } = supabase;
-  const sb = createClient(
-    'https://cajgqzzyxykzxsudpmms.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhamdxenp5eHlrenhzdWRwbW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MjU3NzEsImV4cCI6MjA5MTQwMTc3MX0.3kuRoLsmdDU8Hd-U4b7S8q1GSZwsf46SN7JOEFMKrz0'
-  );
-
   window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('loading').style.display = 'block';
     document.getElementById('form-state').style.display = 'none';

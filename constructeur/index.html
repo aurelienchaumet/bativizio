@@ -435,13 +435,8 @@ body{background:var(--white-sand);font-family:'DM Sans',sans-serif;color:var(--n
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/shared.js"></script>
 <script>
-const { createClient } = supabase;
-const sb = createClient(
-  'https://cajgqzzyxykzxsudpmms.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhamdxenp5eHlrenhzdWRwbW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MjU3NzEsImV4cCI6MjA5MTQwMTc3MX0.3kuRoLsmdDU8Hd-U4b7S8q1GSZwsf46SN7JOEFMKrz0'
-);
-
 let allChantiers = [];
 
 // ── Vérifier session ──
@@ -661,105 +656,6 @@ function renderPassages(passages) {
   }).join('');
 }
 
-// ── Media grid ──
-function buildMediaGrid(medias) {
-  if (!medias.length) return '';
-  const [first, ...rest] = medias;
-  const featClass = rest.length === 0 ? 'solo' : 'featured';
-  const firstCard = `
-    <div class="media-card ${featClass}" style="cursor:default;">
-      <iframe src="https://player.vimeo.com/video/${first.url_youtube}?autoplay=0&loop=0&color=4A8FAD&title=0&byline=0&portrait=0"
-        style="width:100%;height:100%;border:none;display:block;"
-        allow="autoplay;fullscreen;picture-in-picture;xr-spatial-tracking" allowfullscreen
-        title="${(first.nom||'').replace(/"/g,'&quot;')}">
-      </iframe>
-    </div>`;
-  const restCards = rest.map(m => {
-    const thumbClass = m.type === '360' ? 'thumb-360' : 'thumb-drone';
-    const typeLabel  = m.type === '360' ? 'Vidéo 360°' : 'Vue drone';
-    const nom = (m.nom||'').replace(/'/g,"\\'");
-    return `
-      <div class="media-card" onclick="openVimeo('${m.url_youtube}','${nom}')">
-        <div class="${thumbClass}"></div>
-        <div class="media-overlay">
-          <div class="media-info">
-            <div class="media-type">${typeLabel}</div>
-            <div class="media-name">${m.nom||''}</div>
-          </div>
-        </div>
-        <div class="play-btn">▶</div>
-      </div>`;
-  }).join('');
-  return `<div class="media-grid">${firstCard}${restCards}</div>`;
-}
-
-// ── Photo grid ──
-function buildPhotoGrid(photos, panelIndex) {
-  if (!photos.length) return '';
-  const thumbs = photos.map((p, i) => `
-    <div class="photo-thumb" onclick="openPhotoLightbox(${panelIndex},${i})">
-      <img src="${p.url_photo}" alt="${(p.nom||'Photo '+(i+1)).replace(/"/g,'&quot;')}" loading="lazy">
-      <div class="photo-overlay"><span class="photo-zoom-icon">⊕</span></div>
-    </div>`
-  ).join('');
-  return `
-    <div class="photo-section">
-      <div class="photo-section-title">📷 Photos du passage</div>
-      <div class="photo-grid">${thumbs}</div>
-    </div>`;
-}
-
-// ── Tabs ──
-function switchTab(i) {
-  document.querySelectorAll('.tab-btn').forEach((b,j) => b.classList.toggle('active', i===j));
-  document.querySelectorAll('.content-panel').forEach((p,j) => p.classList.toggle('active', i===j));
-}
-
-// ── Lightbox Vimeo ──
-function openVimeo(id, title) {
-  document.getElementById('lightbox-iframe').src =
-    `https://player.vimeo.com/video/${id}?autoplay=1&color=4A8FAD&title=0&byline=0&portrait=0`;
-  document.getElementById('lightbox-title').textContent = title || '';
-  document.getElementById('lightbox').classList.add('open');
-}
-
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-  document.getElementById('lightbox-iframe').src = '';
-}
-
-// ── Lightbox photo ──
-let lbPhotos = [], lbIndex = 0;
-
-function openPhotoLightbox(panelIndex, index) {
-  const panel = document.getElementById(`panel-${panelIndex}`);
-  const imgs  = panel ? [...panel.querySelectorAll('.photo-thumb img')] : [];
-  lbPhotos = imgs.map(img => ({ url_photo: img.src, nom: img.alt }));
-  lbIndex  = index;
-  updatePhotoLightbox();
-  document.getElementById('photo-lightbox').classList.add('open');
-  document.querySelectorAll('.photo-lb-nav').forEach(n => n.style.display = lbPhotos.length > 1 ? 'flex' : 'none');
-}
-
-function updatePhotoLightbox() {
-  const p = lbPhotos[lbIndex];
-  document.getElementById('photo-lb-img').src = p.url_photo;
-  document.getElementById('photo-lb-img').alt = p.nom || '';
-  const caption = document.getElementById('photo-lb-caption');
-  if (caption) caption.textContent = p.nom || '';
-  const counter = document.getElementById('photo-lb-counter');
-  if (counter) counter.textContent = `${lbIndex+1} / ${lbPhotos.length}`;
-}
-
-function lbNavPhoto(dir) {
-  lbIndex = (lbIndex + dir + lbPhotos.length) % lbPhotos.length;
-  updatePhotoLightbox();
-}
-
-function closePhotoLightbox() {
-  document.getElementById('photo-lightbox').classList.remove('open');
-}
-
 // ── Logout ──
 async function doLogout() {
   await sb.auth.signOut();
@@ -772,44 +668,5 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft'  && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(-1);
   if (e.key === 'ArrowRight' && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(1);
 });
-</script>
-<!-- ── BANDEAU OFFRE ── -->
-<div id="offre-banner" style="
-  position:fixed;bottom:0;left:0;right:0;z-index:50;
-  background:rgba(12,21,30,0.95);backdrop-filter:blur(12px);
-  border-top:1px solid rgba(46,107,138,0.25);
-  padding:14px 32px;
-  display:none;
-  align-items:center;justify-content:space-between;gap:16px;
-  flex-wrap:wrap;
-">
-  <div style="display:flex;align-items:center;gap:12px">
-    <div style="width:6px;height:6px;border-radius:50%;background:#4A8FAD;animation:pulse 2s ease infinite;flex-shrink:0"></div>
-    <span style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:#B8C8D4;font-weight:300">
-      Vous êtes constructeur ? <strong style="color:white;font-weight:500">Découvrez l'offre BatiVizIØ</strong> — 3 000 € net de TVA, chantier complet.
-    </span>
-  </div>
-  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-    <a href="/constructeur-offre/" style="
-      padding:9px 20px;background:#2E6B8A;color:white;
-      border-radius:5px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;
-      text-decoration:none;transition:background 0.2s;white-space:nowrap;
-    " onmouseover="this.style.background='#4A8FAD'" onmouseout="this.style.background='#2E6B8A'">
-      Voir l'offre →
-    </a>
-    <button onclick="document.getElementById('offre-banner').style.display='none'" style="
-      background:none;border:none;color:#4A6070;cursor:pointer;
-      font-size:1.1rem;line-height:1;padding:4px;
-    ">✕</button>
-  </div>
-</div>
-<style>@keyframes pulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}</style>
-<script>
-// Affiche le bandeau après 8 secondes sur la démo
-setTimeout(() => {
-  const banner = document.getElementById('offre-banner');
-  if (banner) banner.style.display = 'flex';
-}, 8000);
-</script>
-</body>
+</script></body>
 </html>
