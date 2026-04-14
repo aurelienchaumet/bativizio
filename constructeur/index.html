@@ -772,6 +772,43 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft'  && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(-1);
   if (e.key === 'ArrowRight' && document.getElementById('photo-lightbox').classList.contains('open')) lbNavPhoto(1);
 });
+<!-- ── BANDEAU OFFRE ── -->
+<div id="offre-banner" style="
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  background:rgba(12,21,30,0.95);backdrop-filter:blur(12px);
+  border-top:1px solid rgba(46,107,138,0.25);
+  padding:14px 32px;
+  display:none;
+  align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;
+">
+  <div style="display:flex;align-items:center;gap:12px">
+    <div style="width:6px;height:6px;border-radius:50%;background:#4A8FAD;animation:pulse 2s ease infinite;flex-shrink:0"></div>
+    <span style="font-family:'DM Sans',sans-serif;font-size:0.85rem;color:#B8C8D4;font-weight:300">
+      Vous êtes constructeur ? <strong style="color:white;font-weight:500">Découvrez l'offre BatiVizIØ</strong> — 3 000 € net de TVA, chantier complet.
+    </span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <a href="/constructeur-offre/" style="
+      padding:9px 20px;background:#2E6B8A;color:white;
+      border-radius:5px;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;
+      text-decoration:none;transition:background 0.2s;white-space:nowrap;
+    " onmouseover="this.style.background='#4A8FAD'" onmouseout="this.style.background='#2E6B8A'">
+      Voir l'offre →
+    </a>
+    <button onclick="document.getElementById('offre-banner').style.display='none'" style="
+      background:none;border:none;color:#4A6070;cursor:pointer;
+      font-size:1.1rem;line-height:1;padding:4px;
+    ">✕</button>
+  </div>
+</div>
+<style>@keyframes pulse{0%,100%{opacity:0.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}</style>
+<script>
+// Affiche le bandeau après 8 secondes sur la démo
+setTimeout(() => {
+  const banner = document.getElementById('offre-banner');
+  if (banner) banner.style.display = 'flex';
+}, 8000);
 </script>
 </body>
 </html>
