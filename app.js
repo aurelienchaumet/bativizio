@@ -10,10 +10,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
-    if (profile?.role === 'admin') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/admin'; return; }
-    if (profile?.role === 'constructeur') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/constructeur'; return; }
+    if (profile?.role === 'admin') { hideLoginScreen(); window.location.href = '/admin'; return; }
+    if (profile?.role === 'constructeur') { hideLoginScreen(); window.location.href = '/constructeur'; return; }
     if (profile?.role === 'client') {
-      // Si déjà sur /client/, charger l'app directement sans rediriger
       if (window.location.pathname.startsWith('/client')) {
         await loadApp(session.user);
       } else {
@@ -24,6 +23,10 @@ window.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+function hideLoginScreen() {
+  const ls = document.getElementById('login-screen');
+  if (ls) ls.classList.add('hidden');
+}
 
 async function doLogin() {
   const errEl = document.getElementById('login-error');
@@ -41,8 +44,8 @@ async function doLogin() {
     return;
   }
   const { data: profile } = await sb.from('profiles').select('role').eq('id', data.user.id).single();
-  if (profile?.role === 'admin') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/admin'; return; }
-  if (profile?.role === 'constructeur') { document.getElementById('login-screen').classList.add('hidden'); window.location.href = '/constructeur'; return; }
+  if (profile?.role === 'admin') { hideLoginScreen(); window.location.href = '/admin'; return; }
+  if (profile?.role === 'constructeur') { hideLoginScreen(); window.location.href = '/constructeur'; return; }
   if (profile?.role === 'client') {
     if (window.location.pathname.startsWith('/client')) {
       await loadApp(data.user); return;
