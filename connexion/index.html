@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' fill='none'%3E%3Crect width='80' height='80' rx='16' fill='%23152333'/%3E%3Cpath d='M40 28 L60 44 L60 62 L20 62 L20 44 Z' fill='%232E6B8A' opacity='0.2'/%3E%3Crect x='20' y='44' width='40' height='18' stroke='%23E8F0F5' stroke-width='3' fill='none'/%3E%3Cpolyline points='16,46 40,28 64,46' stroke='%23E8F0F5' stroke-width='3' fill='none'/%3E%3Crect x='33' y='50' width='14' height='12' stroke='%23E8F0F5' stroke-width='2.5' fill='none'/%3E%3Ccircle cx='58' cy='15' r='9' stroke='%234A8FAD' stroke-width='3' fill='none'/%3E%3Ccircle cx='58' cy='15' r='3.5' fill='%234A8FAD'/%3E%3Cline x1='8' y1='68' x2='72' y2='68' stroke='%234A8FAD' stroke-width='3'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BatiVizIØ — Connexion</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy-deep: #0C151E;
+  --navy:      #1C2B3A;
+  --navy-mid:  #243447;
+  --wave:      #2E6B8A;
+  --wave-light:#4A8FAD;
+  --wave-pale: #5AAABF;
+  --fog:       #B8C8D4;
+  --mist:      #D8E4EC;
+  --sand:      #F2F6F8;
+  --white:     #FFFFFF;
+  --gold:      #C8A96E;
+  --slate:     #4A6070;
+  --slate-light:#6B8599;
+  --green:     #3A9B6F;
+  --red:       #C05040;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  min-height:100vh;
+  background:var(--navy-deep);
+  font-family:'DM Sans',sans-serif;
+  color:var(--white);
+  display:flex;flex-direction:column;
+}
+
+/* ── LAYOUT ── */
+.page {
+  display:grid;
+  grid-template-columns:1fr 480px;
+  min-height:100vh;
+}
+
+/* ── COLONNE GAUCHE ── */
+.visual {
+  background:linear-gradient(155deg,#060e16 0%,#0e1e2e 40%,#1a3a52 100%);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:80px 64px;
+  position:relative;overflow:hidden;
+}
+.visual::after {
+  content:'';position:absolute;bottom:0;left:0;right:0;height:240px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 200' preserveAspectRatio='none'%3E%3Cpath d='M0,100 C360,170 720,30 1080,100 C1260,135 1380,70 1440,90 L1440,200 L0,200 Z' fill='rgba(46,107,138,0.12)'/%3E%3Cpath d='M0,140 C300,100 600,170 900,130 C1100,105 1300,155 1440,140 L1440,200 L0,200 Z' fill='rgba(6,14,22,0.4)'/%3E%3C/svg%3E") no-repeat bottom;
+  background-size:cover;pointer-events:none;
+}
+.visual-grid {
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(46,107,138,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(46,107,138,0.05) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 80% 80% at 30% 50%,black 0%,transparent 100%);
+}
+.visual-content{position:relative;z-index:1;max-width:480px;}
+
+/* Logo */
+.brand{display:flex;align-items:center;gap:14px;margin-bottom:56px;}
+.brand-name{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;letter-spacing:0.06em;}
+.brand-name span{color:var(--wave-light)}
+.brand-tagline{font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:rgba(184,200,212,0.4);font-family:'DM Mono',monospace;margin-top:3px;}
+
+/* Accroche */
+.visual-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.6rem;font-weight:600;line-height:1.2;
+  margin-bottom:20px;
+}
+.visual-title em{font-style:italic;font-weight:300;color:var(--wave-light)}
+.visual-sub{
+  font-size:0.95rem;color:rgba(184,200,212,0.7);font-weight:300;
+  line-height:1.7;margin-bottom:48px;max-width:400px;
+}
+
+/* Deux encarts démo */
+.demo-cards{display:flex;flex-direction:column;gap:12px;}
+.demo-card{
+  background:rgba(46,107,138,0.08);
+  border:1px solid rgba(46,107,138,0.2);
+  border-radius:8px;padding:20px 24px;
+  cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.demo-card:hover{background:rgba(46,107,138,0.15);border-color:rgba(74,143,173,0.4);transform:translateX(4px);}
+.demo-card.gold{
+  background:rgba(200,169,110,0.07);
+  border-color:rgba(200,169,110,0.2);
+}
+.demo-card.gold:hover{background:rgba(200,169,110,0.14);border-color:rgba(200,169,110,0.4);}
+
+.demo-card-left{}
+.demo-card-tag{
+  font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;
+  font-family:'DM Mono',monospace;margin-bottom:6px;
+}
+.demo-card.blue .demo-card-tag{color:var(--wave-light)}
+.demo-card.gold .demo-card-tag{color:var(--gold)}
+.demo-card-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;margin-bottom:4px;}
+.demo-card-sub{font-size:0.78rem;color:var(--fog);font-weight:300;}
+.demo-card-arrow{
+  font-size:1rem;color:var(--fog);flex-shrink:0;
+  transition:transform 0.2s;
+}
+.demo-card:hover .demo-card-arrow{transform:translateX(4px);}
+.demo-card.blue .demo-card-arrow{color:var(--wave-light)}
+.demo-card.gold .demo-card-arrow{color:var(--gold)}
+
+.demo-section-label{
+  font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(122,154,173,0.4);font-family:'DM Mono',monospace;
+  margin-bottom:14px;
+}
+
+/* ── COLONNE DROITE — FORMULAIRE ── */
+.form-panel{
+  background:var(--navy);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:64px 52px;
+  border-left:1px solid rgba(46,107,138,0.15);
+  position:relative;
+}
+.back-link{
+  position:absolute;top:28px;left:52px;
+  font-size:0.8rem;color:var(--fog);text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:color 0.2s;font-family:'DM Mono',monospace;
+}
+.back-link:hover{color:var(--white)}
+
+.form-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;font-weight:600;margin-bottom:6px;
+}
+.form-sub{
+  font-size:0.85rem;color:var(--slate-light);
+  line-height:1.5;margin-bottom:36px;
+}
+
+.form-group{margin-bottom:18px;}
+.form-group label{
+  display:block;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--slate-light);font-family:'DM Mono',monospace;margin-bottom:8px;
+}
+.form-group input{
+  width:100%;padding:13px 16px;
+  border:1.5px solid rgba(46,107,138,0.2);
+  background:rgba(46,107,138,0.05);
+  border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.92rem;
+  color:var(--white);outline:none;transition:border-color 0.2s,background 0.2s;
+}
+.form-group input::placeholder{color:rgba(122,154,173,0.35);}
+.form-group input:focus{border-color:var(--wave);background:rgba(46,107,138,0.1);}
+
+.login-error{
+  display:none;margin-bottom:16px;padding:10px 14px;
+  background:rgba(192,80,64,0.12);border:1px solid rgba(192,80,64,0.3);
+  border-radius:6px;font-size:0.82rem;color:#E07060;
+}
+
+.btn-login{
+  width:100%;padding:14px;
+  background:var(--wave);color:var(--white);
+  border:none;border-radius:6px;
+  font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;
+  letter-spacing:0.04em;cursor:pointer;margin-top:8px;
+  transition:background 0.2s;
+}
+.btn-login:hover:not(:disabled){background:var(--wave-light);}
+.btn-login:disabled{opacity:0.6;cursor:not-allowed;}
+
+.forgot-link{
+  display:block;text-align:center;margin-top:16px;
+  font-size:0.78rem;color:var(--slate-light);text-decoration:none;
+  transition:color 0.2s;font-family:'DM Mono',monospace;
+}
+.forgot-link:hover{color:var(--fog)}
+
+.divider{
+  display:flex;align-items:center;gap:12px;
+  margin:28px 0;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(46,107,138,0.15);}
+.divider span{font-size:0.7rem;color:rgba(122,154,173,0.4);font-family:'DM Mono',monospace;white-space:nowrap;}
+
+/* Encarts démo dans le formulaire */
+.demo-mini{display:flex;flex-direction:column;gap:8px;}
+.demo-mini-card{
+  padding:12px 16px;border-radius:6px;
+  border:1px solid rgba(46,107,138,0.15);
+  background:rgba(12,21,30,0.4);
+  cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.demo-mini-card:hover{border-color:rgba(74,143,173,0.35);background:rgba(46,107,138,0.08);}
+.demo-mini-card.gold-card{border-color:rgba(200,169,110,0.12);}
+.demo-mini-card.gold-card:hover{border-color:rgba(200,169,110,0.3);background:rgba(200,169,110,0.05);}
+.demo-mini-label{font-size:0.78rem;color:var(--fog);font-weight:300;}
+.demo-mini-label strong{color:var(--white);font-weight:500;}
+.demo-mini-arrow{font-size:0.8rem;color:var(--wave-light);}
+.demo-mini-card.gold-card .demo-mini-arrow{color:var(--gold);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .page{grid-template-columns:1fr;}
+  .visual{padding:60px 32px;min-height:auto;}
+  .visual::after{display:none}
+  .form-panel{padding:48px 32px;border-left:none;border-top:1px solid rgba(46,107,138,0.15);}
+  .back-link{left:32px;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── COLONNE GAUCHE ── -->
+  <div class="visual">
+    <div class="visual-grid"></div>
+    <div class="visual-content">
+
+      <!-- Logo -->
+      <div class="brand">
+        <svg width="44" height="44" viewBox="0 0 80 80" fill="none">
+          <defs>
+            <linearGradient id="ll-bg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#152333"/><stop offset="100%" stop-color="#090f18"/></linearGradient>
+            <linearGradient id="ll-wave" x1="8" y1="0" x2="72" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2E6B8A"/><stop offset="100%" stop-color="#5AAABF"/></linearGradient>
+            <linearGradient id="ll-fill" x1="20" y1="22" x2="60" y2="62" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#4A8FAD" stop-opacity="0.18"/><stop offset="100%" stop-color="#2E6B8A" stop-opacity="0.07"/></linearGradient>
+            <linearGradient id="ll-lens" x1="48" y1="6" x2="66" y2="22" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#5AAABF"/><stop offset="100%" stop-color="#2E6B8A"/></linearGradient>
+          </defs>
+          <rect width="80" height="80" rx="16" fill="url(#ll-bg)"/>
+          <path d="M40 28 L60 44 L60 62 L20 62 L20 44 Z" fill="url(#ll-fill)"/>
+          <rect x="20" y="44" width="40" height="18" stroke="#E8F0F5" stroke-width="2" fill="none"/>
+          <polyline points="16,46 40,28 64,46" stroke="#E8F0F5" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+          <rect x="33" y="50" width="14" height="12" stroke="#E8F0F5" stroke-width="1.5" fill="none" rx="1"/>
+          <circle cx="58" cy="16" r="9" stroke="url(#ll-lens)" stroke-width="2" fill="none"/>
+          <circle cx="58" cy="16" r="5.5" stroke="url(#ll-lens)" stroke-width="1.5" fill="#2E6B8A" fill-opacity="0.2"/>
+          <circle cx="58" cy="16" r="2" fill="#4A8FAD" opacity="0.9"/>
+          <circle cx="55.5" cy="13.5" r="1" fill="white" opacity="0.35"/>
+          <line x1="8" y1="68" x2="72" y2="68" stroke="url(#ll-wave)" stroke-width="2" stroke-linecap="round"/>
+          <line x1="13" y1="72" x2="67" y2="72" stroke="url(#ll-wave)" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+        <div>
+          <div class="brand-name">BatiViz<span>IØ</span></div>
+          <div class="brand-tagline">Suivi de chantier · Île d'Oléron</div>
+        </div>
+      </div>
+
+      <!-- Accroche -->
+      <h1 class="visual-title">Votre chantier,<br><em>depuis n'importe où.</em></h1>
+      <p class="visual-sub">Connectez-vous à votre espace personnel pour suivre l'avancement de votre chantier — vidéos drone, photos, progression en temps réel.</p>
+
+      <!-- Encarts démo -->
+      <div class="demo-section-label">Accès démonstration</div>
+      <div class="demo-cards">
+        <div class="demo-card blue" onclick="fillAndLogin('client')">
+          <div class="demo-card-left">
+            <div class="demo-card-tag">Propriétaire</div>
+            <div class="demo-card-title">Démo espace client</div>
+            <div class="demo-card-sub">Suivez un chantier exemple depuis le point de vue d'un propriétaire.</div>
+          </div>
+          <div class="demo-card-arrow">→</div>
+        </div>
+        <div class="demo-card gold" onclick="fillAndLogin('constructeur')">
+          <div class="demo-card-left">
+            <div class="demo-card-tag">Constructeur</div>
+            <div class="demo-card-title">Démo espace constructeur</div>
+            <div class="demo-card-sub">Gérez vos chantiers et accédez au tableau de bord constructeur.</div>
+          </div>
+          <div class="demo-card-arrow">→</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── COLONNE DROITE — FORMULAIRE ── -->
+  <div class="form-panel">
+    <a href="/" class="back-link">← Retour</a>
+
+    <h2 class="form-title">Connexion</h2>
+    <p class="form-sub">Accédez à votre espace BatiVizIØ.</p>
+
+    <div id="login-error" class="login-error"></div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="votre@email.com" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label>Mot de passe</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <button class="btn-login" id="btn-login" onclick="doLogin()">Accéder à mon espace →</button>
+    <a href="/reset-password/" class="forgot-link">Mot de passe oublié ?</a>
+
+    <div class="divider"><span>ou tester la démo</span></div>
+
+    <div class="demo-mini">
+      <div class="demo-mini-card" onclick="fillAndLogin('client')">
+        <div class="demo-mini-label"><strong>Démo propriétaire</strong> — compte demo@bativizio.io</div>
+        <div class="demo-mini-arrow">→</div>
+      </div>
+      <div class="demo-mini-card gold-card" onclick="fillAndLogin('constructeur')">
+        <div class="demo-mini-label"><strong>Démo constructeur</strong> — compte constructeur@bativizio.io</div>
+        <div class="demo-mini-arrow">→</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/app.js"></script>
+<script>
+// Enter key
+document.getElementById('login-email').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('login-pass').addEventListener('keydown',  e => { if(e.key==='Enter') doLogin(); });
+
+// Remplir + connecter depuis les encarts démo
+function fillAndLogin(type) {
+  if (type === 'constructeur') {
+    document.getElementById('login-email').value = 'constructeur@bativizio.io';
+    document.getElementById('login-pass').value  = 'constructeur';
+  } else {
+    document.getElementById('login-email').value = 'demo@bativizio.io';
+    document.getElementById('login-pass').value  = 'demo';
+  }
+  doLogin();
+}
+</script>
+</body>
+</html>
