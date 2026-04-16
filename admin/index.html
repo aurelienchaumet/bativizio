@@ -536,6 +536,59 @@ nav{padding:14px 10px;flex:1}
   </div>
 </div>
 
+<!-- ══ MODAL : MODIFIER CLIENT ══ -->
+<div class="modal-overlay" id="modal-edit-client">
+  <div class="modal sm">
+    <div class="modal-header">
+      <div class="modal-title">Modifier le client</div>
+      <button class="modal-close" onclick="closeModal('modal-edit-client')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-client-id">
+      <div class="form-row full"><div class="form-group">
+        <label class="form-label">Nom complet</label>
+        <input type="text" class="form-input" id="edit-cl-nom" placeholder="Prénom Nom ou Société">
+      </div></div>
+      <div class="form-row full"><div class="form-group">
+        <label class="form-label">Rôle</label>
+        <select class="form-select" id="edit-cl-role" onchange="document.getElementById('edit-logo-row').style.display=this.value==='constructeur'?'':'none'">
+          <option value="client">Client final (propriétaire)</option>
+          <option value="constructeur">Constructeur</option>
+        </select>
+      </div></div>
+      <div class="form-row full" id="edit-logo-row" style="display:none"><div class="form-group">
+        <label class="form-label">URL du logo</label>
+        <input type="text" class="form-input" id="edit-cl-logo" placeholder="https://...">
+      </div></div>
+      <div style="margin-top:12px;padding:10px 14px;background:var(--wave-dim);border:1px solid rgba(46,107,138,0.2);border-radius:6px;font-size:0.78rem;color:var(--text-muted)">
+        Pour modifier l'<strong style="color:var(--text)">email ou le mot de passe</strong>, utilisez Supabase Auth directement.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-edit-client')">Annuler</button>
+      <button class="btn btn-wave" onclick="saveEditClient()">Enregistrer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL : SUPPRIMER CLIENT ══ -->
+<div class="modal-overlay" id="modal-delete-client">
+  <div class="modal sm">
+    <div class="modal-header">
+      <div class="modal-title">Supprimer ce compte</div>
+      <button class="modal-close" onclick="closeModal('modal-delete-client')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:10px">Vous allez supprimer le profil de <strong id="delete-client-nom" style="color:var(--text)"></strong>.</p>
+      <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.6">Cette action supprime le profil dans la base de données. Le compte Supabase Auth reste actif — supprimez-le manuellement si nécessaire.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-delete-client')">Annuler</button>
+      <button class="btn" style="background:var(--red-dim);color:var(--red);border:1px solid rgba(192,80,64,0.3)" onclick="confirmDeleteClient()">Supprimer le profil</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✓</span><span id="toast-text"></span></div>
 
@@ -746,7 +799,10 @@ async function loadClientsPage() {
         <td>${roleTag}</td>
         <td>${chantiers}</td>
         <td><span class="tag tag-green">Actif</span></td>
-        <td><button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText('${c.id}');showToast('UUID copié ✓','success')">Copier UUID</button></td>
+        <td style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" onclick="openEditClient('${c.id}')">✏ Modifier</button>
+          <button class="btn btn-sm" style="background:var(--red-dim);color:var(--red);border:1px solid rgba(192,80,64,0.25)" onclick="askDeleteClient('${c.id}','${(c.nom||'').replace(/'/g,"\\'")}')">✕ Supprimer</button>
+        </td>
       </tr>`;
   }).join('');
 }
@@ -1054,6 +1110,53 @@ document.querySelectorAll('.modal-overlay').forEach(m => {
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
 });
+
+// ══ CLIENT EDIT / DELETE ══
+let deleteClientId = null;
+
+async function openEditClient(id) {
+  const client = allClients.find(c => c.id === id);
+  if (!client) return;
+  document.getElementById('edit-client-id').value  = id;
+  document.getElementById('edit-cl-nom').value     = client.nom || '';
+  document.getElementById('edit-cl-role').value    = client.role || 'client';
+  document.getElementById('edit-cl-logo').value    = client.logo_url || '';
+  document.getElementById('edit-logo-row').style.display = client.role === 'constructeur' ? '' : 'none';
+  openModal('modal-edit-client');
+}
+
+async function saveEditClient() {
+  const id   = document.getElementById('edit-client-id').value;
+  const nom  = document.getElementById('edit-cl-nom').value.trim();
+  const role = document.getElementById('edit-cl-role').value;
+  const logo = document.getElementById('edit-cl-logo').value.trim() || null;
+  if (!nom) { showToast('Le nom est requis.', 'error'); return; }
+  const payload = { nom, role };
+  if (role === 'constructeur') payload.logo_url = logo;
+  const { error } = await sb.from('profiles').update(payload).eq('id', id);
+  if (error) { showToast('Erreur lors de la modification.', 'error'); return; }
+  closeModal('modal-edit-client');
+  showToast('Profil modifié ✓', 'success');
+  loadClientsPage();
+}
+
+function askDeleteClient(id, nom) {
+  deleteClientId = id;
+  document.getElementById('delete-client-nom').textContent = nom || 'ce client';
+  openModal('modal-delete-client');
+}
+
+async function confirmDeleteClient() {
+  if (!deleteClientId) return;
+  const idToDelete = deleteClientId;
+  const { error } = await sb.from('profiles').delete().eq('id', idToDelete);
+  if (error) { showToast('Erreur lors de la suppression.', 'error'); closeModal('modal-delete-client'); return; }
+  allClients = allClients.filter(c => c.id !== idToDelete);
+  deleteClientId = null;
+  closeModal('modal-delete-client');
+  showToast('Profil supprimé ✓', 'success');
+  loadClientsPage();
+}
 
 // ══ TOAST ══
 let toastTimer;
