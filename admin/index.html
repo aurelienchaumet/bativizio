@@ -905,6 +905,7 @@ async function savePassage() {
   if (!titre || !date) { showToast('Titre et date requis.', 'error'); return; }
 
   let passageId = id;
+  const isCreation = !id;
 
   if (id) {
     // Mise à jour
@@ -939,9 +940,36 @@ async function savePassage() {
   closeModal('modal-passage');
   showToast(id ? 'Passage modifié ✓' : 'Passage créé ✓', 'success');
 
+  // ══ NOTIFICATION EMAIL (création uniquement) ══
+  if (isCreation && passageId) {
+    notifyPassage(passageId);
+  }
+
   // Rafraîchir
   if (currentChantierId) openChantierDetail(currentChantierId);
   else loadDashboard();
+}
+
+async function notifyPassage(passageId) {
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+    const res = await fetch('https://cajgqzzyxykzxsudpmms.supabase.co/functions/v1/notify-passage', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ passage_id: passageId })
+    });
+    if (res.ok) {
+      setTimeout(() => showToast('Notifications envoyées ✓', 'success'), 600);
+    } else {
+      setTimeout(() => showToast('Passage créé — notification non envoyée', 'error'), 600);
+    }
+  } catch (e) {
+    setTimeout(() => showToast('Passage créé — notification non envoyée', 'error'), 600);
+  }
 }
 
 // ══ CHANTIER CRUD ══
