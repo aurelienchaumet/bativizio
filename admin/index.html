@@ -229,6 +229,81 @@ nav{padding:14px 10px;flex:1}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .content{animation:fadeIn 0.25s ease}
+
+/* ══ PREVIEW PANEL ══ */
+.preview-overlay{position:fixed;inset:0;z-index:80;background:rgba(6,12,18,0.6);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+.preview-overlay.open{opacity:1;pointer-events:all}
+.preview-panel{position:fixed;top:0;right:0;bottom:0;width:620px;background:#0E1B27;border-left:1px solid var(--border2);z-index:90;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.4,0,0.2,1)}
+.preview-panel.open{transform:translateX(0)}
+.preview-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--surface)}
+.preview-header-left{display:flex;align-items:center;gap:12px}
+.preview-badge{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;font-family:'DM Mono',monospace;padding:4px 10px;border-radius:12px;border:1px solid}
+.preview-badge.proprietaire{background:rgba(46,107,138,0.12);color:var(--wave-light);border-color:rgba(46,107,138,0.3)}
+.preview-badge.constructeur{background:rgba(196,169,110,0.1);color:#C8A96E;border-color:rgba(196,169,110,0.25)}
+.preview-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.preview-toggle button{padding:6px 14px;background:none;border:none;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:0.76rem;cursor:pointer;transition:all 0.15s}
+.preview-toggle button.active{background:var(--wave-dim);color:var(--wave-light)}
+.preview-close{background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:4px 8px;border-radius:4px;transition:all 0.15s}
+.preview-close:hover{background:var(--surface2);color:var(--text)}
+.preview-device{flex:1;overflow:hidden;display:flex;flex-direction:column;background:#F2F6F8}
+.preview-device.dark{background:#111C27}
+.preview-scrollarea{flex:1;overflow-y:auto;padding:0}
+
+/* Propriétaire preview styles */
+.pv-header{background:#111C27;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(74,96,112,0.3)}
+.pv-brand{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:#fff;letter-spacing:0.06em}
+.pv-brand span{color:#4A8FAD}
+.pv-user-badge{font-size:0.7rem;color:#B8C8D4;font-family:'DM Mono',monospace}
+.pv-hero{background:linear-gradient(160deg,#0a1520 0%,#111c27 50%,#1a3a52 100%);padding:22px 20px 18px;color:#fff}
+.pv-hero-label{font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:#4A8FAD;font-family:'DM Mono',monospace;margin-bottom:6px}
+.pv-hero-adresse{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;line-height:1.2;margin-bottom:12px}
+.pv-prog-bar{height:2px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:4px;overflow:hidden}
+.pv-prog-fill{height:100%;background:linear-gradient(90deg,#2E6B8A,#5AAABF);border-radius:2px;transition:width 0.8s ease}
+.pv-prog-label{font-size:0.68rem;color:rgba(184,200,212,0.6);font-family:'DM Mono',monospace}
+.pv-passage-header{padding:16px 20px 10px;background:#F2F6F8;border-bottom:1px solid #D8E4EC}
+.pv-passage-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:#1C2B3A;margin-bottom:2px}
+.pv-passage-date{font-size:0.7rem;color:#6B8599;font-family:'DM Mono',monospace}
+.pv-latest-badge{display:inline-block;margin-top:6px;font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;font-family:'DM Mono',monospace;padding:3px 9px;border-radius:10px;background:rgba(46,107,138,0.1);color:#2E6B8A;border:1px solid rgba(46,107,138,0.2)}
+.pv-media-section{padding:14px 20px;background:#F2F6F8}
+.pv-video-wrap{border-radius:8px;overflow:hidden;background:#000;aspect-ratio:16/9;margin-bottom:10px;position:relative}
+.pv-video-wrap iframe{width:100%;height:100%;border:none;display:block}
+.pv-video-error{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:#0a1520;color:rgba(184,200,212,0.5);font-size:0.8rem;font-family:'DM Mono',monospace;text-align:center;padding:20px}
+.pv-video-label{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:#6B8599;font-family:'DM Mono',monospace;margin-bottom:8px}
+.pv-thumb-row{display:flex;gap:8px;flex-wrap:wrap}
+.pv-thumb{flex:1;min-width:120px;border-radius:6px;overflow:hidden;aspect-ratio:16/9;background:#111C27;cursor:pointer;position:relative;border:2px solid transparent;transition:border-color 0.15s}
+.pv-thumb:hover{border-color:#2E6B8A}
+.pv-thumb iframe{width:100%;height:100%;border:none;pointer-events:none}
+.pv-thumb-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,rgba(17,28,39,0.85),transparent);padding:6px 8px;font-size:0.62rem;color:#B8C8D4;font-family:'DM Mono',monospace}
+.pv-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.pv-photo-item{aspect-ratio:4/3;border-radius:5px;overflow:hidden;background:#D8E4EC;cursor:pointer}
+.pv-photo-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.2s}
+.pv-photo-item:hover img{transform:scale(1.04)}
+.pv-note-section{padding:12px 20px 16px;background:#F2F6F8}
+.pv-note-card{background:#fff;border:1px solid #D8E4EC;border-radius:8px;padding:14px 16px}
+.pv-note-title{font-size:0.62rem;letter-spacing:0.14em;text-transform:uppercase;color:#4A8FAD;font-family:'DM Mono',monospace;margin-bottom:8px}
+.pv-note-text{font-size:0.85rem;color:#1C2B3A;line-height:1.6}
+.pv-empty{text-align:center;padding:32px 20px;color:#6B8599;font-size:0.82rem;font-family:'DM Mono',monospace}
+
+/* Vimeo status chips */
+.vimeo-status{display:inline-flex;align-items:center;gap:5px;font-size:0.65rem;font-family:'DM Mono',monospace;padding:3px 9px;border-radius:10px;margin-top:5px}
+.vimeo-status.ok{background:rgba(58,155,111,0.12);color:#3A9B6F;border:1px solid rgba(58,155,111,0.25)}
+.vimeo-status.checking{background:rgba(196,154,48,0.1);color:#C49A30;border:1px solid rgba(196,154,48,0.2)}
+.vimeo-status.err{background:var(--red-dim);color:var(--red);border:1px solid rgba(192,80,64,0.25)}
+.vimeo-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+/* Constructeur preview */
+.pv-constr-hero{background:linear-gradient(160deg,#111C27 0%,#243447 60%,#2E6B8A 100%);padding:22px 20px 18px;color:#fff}
+.pv-constr-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 20px;background:#fff;border-bottom:1px solid #D8E4EC}
+.pv-constr-stat{background:#F2F6F8;border:1px solid #D8E4EC;border-radius:6px;padding:10px 12px}
+.pv-constr-stat-label{font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:#6B8599;font-family:'DM Mono',monospace;margin-bottom:4px}
+.pv-constr-stat-val{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:#1C2B3A}
+.pv-constr-passage-list{padding:14px 20px}
+.pv-constr-passage-item{background:#fff;border:1px solid #D8E4EC;border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.pv-constr-passage-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.pv-constr-passage-name{font-size:0.9rem;font-weight:500;color:#1C2B3A}
+.pv-constr-passage-dt{font-size:0.68rem;color:#6B8599;font-family:'DM Mono',monospace}
+.pv-constr-media-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.pv-constr-chip{display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:12px;font-size:0.68rem;font-family:'DM Mono',monospace;background:#EAF3F8;color:#2E6B8A;border:1px solid #D8E4EC}
 </style>
 </head>
 <body>
@@ -536,6 +611,29 @@ nav{padding:14px 10px;flex:1}
   </div>
 </div>
 
+<!-- ══ PREVIEW OVERLAY + PANEL ══ -->
+<div class="preview-overlay" id="preview-overlay" onclick="closePreview()"></div>
+<div class="preview-panel" id="preview-panel">
+  <div class="preview-header">
+    <div class="preview-header-left">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600">Aperçu passage</div>
+      <div class="preview-badge proprietaire" id="preview-badge">Propriétaire</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="preview-toggle">
+        <button class="active" id="toggle-prop" onclick="switchPreviewMode('proprietaire')">👤 Propriétaire</button>
+        <button id="toggle-constr" onclick="switchPreviewMode('constructeur')">🏗 Constructeur</button>
+      </div>
+      <button class="preview-close" onclick="closePreview()">✕</button>
+    </div>
+  </div>
+  <div class="preview-device" id="preview-device">
+    <div class="preview-scrollarea" id="preview-scrollarea">
+      <!-- contenu injecté dynamiquement -->
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✓</span><span id="toast-text"></span></div>
 
@@ -710,6 +808,7 @@ async function openChantierDetail(id) {
             <div class="passage-card-date">${date}</div>
           </div>
           <div style="display:flex;gap:6px">
+            <button class="btn btn-wave btn-sm" onclick="openPassagePreview('${p.id}')">👁 Aperçu</button>
             <button class="btn btn-ghost btn-sm" onclick="openEditPassage('${p.id}')">✏ Modifier</button>
             <button class="btn btn-danger btn-sm" onclick="askDeletePassage('${p.id}')">✕</button>
           </div>
@@ -1064,6 +1163,210 @@ function showToast(msg, type = 'success') {
   t.className = `toast ${type} show`;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ══ PASSAGE PREVIEW ══
+let previewMode = 'proprietaire';
+let previewPassageData = null;
+let previewChantierData = null;
+
+async function openPassagePreview(passageId) {
+  // Fetch passage + chantier data
+  const { data: p } = await sb.from('passages').select('*, medias(*), chantiers(adresse, ville, code_postal, avancement, date_debut, date_livraison, constructeur_profile:profiles!chantiers_constructeur_id_fkey(nom, logo_url), profiles!chantiers_client_id_fkey(nom))').eq('id', passageId).single();
+  if (!p) { showToast('Passage introuvable', 'error'); return; }
+  previewPassageData = p;
+  previewChantierData = p.chantiers;
+
+  document.getElementById('preview-overlay').classList.add('open');
+  document.getElementById('preview-panel').classList.add('open');
+  renderPreview();
+}
+
+function closePreview() {
+  document.getElementById('preview-overlay').classList.remove('open');
+  document.getElementById('preview-panel').classList.remove('open');
+  // Stop iframes
+  document.querySelectorAll('#preview-scrollarea iframe').forEach(f => { f.src = f.src; });
+}
+
+function switchPreviewMode(mode) {
+  previewMode = mode;
+  document.getElementById('toggle-prop').classList.toggle('active', mode === 'proprietaire');
+  document.getElementById('toggle-constr').classList.toggle('active', mode === 'constructeur');
+  const badge = document.getElementById('preview-badge');
+  badge.className = 'preview-badge ' + mode;
+  badge.textContent = mode === 'proprietaire' ? 'Propriétaire' : 'Constructeur';
+  document.getElementById('preview-device').className = 'preview-device' + (mode === 'constructeur' ? '' : '');
+  renderPreview();
+}
+
+function renderPreview() {
+  const area = document.getElementById('preview-scrollarea');
+  if (previewMode === 'proprietaire') {
+    area.innerHTML = buildProprietairePreview(previewPassageData, previewChantierData);
+  } else {
+    area.innerHTML = buildConstructeurPreview(previewPassageData, previewChantierData);
+  }
+  // Check Vimeo statuses
+  setTimeout(checkVimeoStatuses, 1500);
+}
+
+function buildProprietairePreview(p, c) {
+  const adresse = c ? `${c.adresse}<br>${c.code_postal} ${c.ville}` : '—';
+  const avancement = c?.avancement || 0;
+  const date = new Date(p.date_passage).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'});
+  const videos = (p.medias||[]).filter(m => m.type !== 'photo');
+  const photos = (p.medias||[]).filter(m => m.type === 'photo');
+  const clientNom = c?.profiles?.nom || 'M. Dupont';
+
+  let mediaHTML = '';
+  if (videos.length) {
+    const [first, ...rest] = videos;
+    const typeLabel = first.type === '360' ? 'Vidéo 360°' : 'Vue drone';
+    const vimeoId = first.url_youtube || '';
+    mediaHTML += `
+      <div class="pv-media-section">
+        <div class="pv-video-label">${typeLabel}${first.nom ? ' — ' + first.nom : ''}</div>
+        <div class="pv-video-wrap" id="vwrap-${first.id}">
+          <iframe
+            src="https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&color=4A8FAD&title=0&byline=0&portrait=0"
+            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen
+            data-vimeo-id="${vimeoId}" class="vimeo-iframe"
+            onload="handleVimeoLoad(this)" onerror="handleVimeoError(this)">
+          </iframe>
+          <div class="pv-video-error" id="verr-${first.id}">⚠ ID Vimeo invalide ou vidéo non trouvée<br><span style="font-size:0.7rem;margin-top:4px;display:block">ID : ${vimeoId || '(vide)'}</span></div>
+        </div>
+        <div id="vstatus-${first.id}"><span class="vimeo-status checking"><span class="vimeo-dot"></span>Vérification…</span></div>`;
+    if (rest.length) {
+      mediaHTML += `<div style="margin-top:10px"><div class="pv-video-label">Autres vidéos du passage</div><div class="pv-thumb-row">`;
+      rest.forEach(m => {
+        const tl = m.type === '360' ? '⬤ 360°' : '🚁 Drone';
+        mediaHTML += `<div class="pv-thumb" id="vwrap-${m.id}" title="Cliquer pour ouvrir dans un lightbox">
+          <iframe src="https://player.vimeo.com/video/${m.url_youtube}?autoplay=0&title=0&byline=0&portrait=0" allow="fullscreen" data-vimeo-id="${m.url_youtube}" class="vimeo-iframe" onload="handleVimeoLoad(this)" onerror="handleVimeoError(this)"></iframe>
+          <div class="pv-thumb-label">${tl}${m.nom ? ' · '+m.nom : ''}</div>
+        </div>
+        <div id="vstatus-${m.id}" style="display:none"><span class="vimeo-status checking"><span class="vimeo-dot"></span></span></div>`;
+      });
+      mediaHTML += `</div></div>`;
+    }
+    mediaHTML += `</div>`;
+  }
+
+  if (photos.length) {
+    mediaHTML += `<div class="pv-media-section" style="padding-top:0">
+      <div class="pv-video-label" style="margin-bottom:8px">Photos du passage</div>
+      <div class="pv-photo-grid">`;
+    photos.forEach(ph => {
+      mediaHTML += `<div class="pv-photo-item"><img src="${ph.url_photo}" alt="${ph.nom||'Photo'}" loading="lazy" onerror="this.style.background='#D8E4EC';this.style.display='none';this.parentNode.innerHTML='<div style=\\'padding:8px;font-size:0.65rem;color:#6B8599;text-align:center\\'>⚠ Image<br>inaccessible</div>'"></div>`;
+    });
+    mediaHTML += `</div></div>`;
+  }
+
+  if (!videos.length && !photos.length) {
+    mediaHTML = `<div class="pv-empty">📷 Aucun média pour ce passage</div>`;
+  }
+
+  const noteHTML = p.note ? `<div class="pv-note-section"><div class="pv-note-card"><div class="pv-note-title">Note du passage</div><div class="pv-note-text">${p.note}</div></div></div>` : '';
+
+  return `
+    <div class="pv-header">
+      <div class="pv-brand">BatiViz<span>IØ</span></div>
+      <div class="pv-user-badge">${clientNom}</div>
+    </div>
+    <div class="pv-hero">
+      <div class="pv-hero-label">Mon chantier</div>
+      <div class="pv-hero-adresse">${adresse}</div>
+      <div class="pv-prog-bar"><div class="pv-prog-fill" style="width:${avancement}%"></div></div>
+      <div class="pv-prog-label">Avancement : ${avancement}%</div>
+    </div>
+    <div class="pv-passage-header">
+      <div class="pv-passage-title">${p.titre}</div>
+      <div class="pv-passage-date">Réalisé le ${date}</div>
+      <div class="pv-latest-badge">Dernier passage</div>
+    </div>
+    ${mediaHTML}
+    ${noteHTML}
+  `;
+}
+
+function buildConstructeurPreview(p, c) {
+  if (!c) return '<div class="pv-empty">Chantier non trouvé</div>';
+  const avancement = c.avancement || 0;
+  const fmt = d => d ? new Date(d).toLocaleDateString('fr-FR',{month:'long',year:'numeric'}) : '—';
+  const date = new Date(p.date_passage).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  const allMedias = p.medias || [];
+
+  const statHTML = `
+    <div class="pv-constr-stat-row">
+      <div class="pv-constr-stat"><div class="pv-constr-stat-label">Avancement</div><div class="pv-constr-stat-val">${avancement}%</div></div>
+      <div class="pv-constr-stat"><div class="pv-constr-stat-label">Démarrage</div><div class="pv-constr-stat-val" style="font-size:0.85rem;font-family:'DM Sans',sans-serif">${fmt(c.date_debut)}</div></div>
+      <div class="pv-constr-stat"><div class="pv-constr-stat-label">Livraison</div><div class="pv-constr-stat-val" style="font-size:0.85rem;font-family:'DM Sans',sans-serif">${fmt(c.date_livraison)}</div></div>
+    </div>`;
+
+  const chipsHTML = allMedias.length ? allMedias.map(m => {
+    const icon = m.type==='360'?'⬤':m.type==='photo'?'📷':'🚁';
+    const id = m.type==='photo' ? (m.url_photo||'').slice(0,30)+'…' : (m.url_youtube||'');
+    return `<span class="pv-constr-chip">${icon} ${m.nom||m.type} <span style="opacity:0.5;margin-left:4px">${id}</span></span>`;
+  }).join('') : '<span style="font-size:0.75rem;color:#6B8599">Aucun média</span>';
+
+  return `
+    <div class="pv-header">
+      <div class="pv-brand">BatiViz<span>IØ</span></div>
+      <div class="pv-user-badge">${c.constructeur_profile?.nom || 'Constructeur'}</div>
+    </div>
+    <div class="pv-constr-hero">
+      <div class="pv-hero-label">Chantier</div>
+      <div class="pv-hero-adresse">${c.adresse}, ${c.code_postal} ${c.ville}</div>
+      <div style="font-size:0.75rem;color:rgba(184,200,212,0.6);margin-top:4px">Client : ${c.profiles?.nom||'—'}</div>
+    </div>
+    ${statHTML}
+    <div class="pv-constr-passage-list">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:0.95rem;font-weight:600;color:#1C2B3A;margin-bottom:12px">Dernier passage enregistré</div>
+      <div class="pv-constr-passage-item">
+        <div class="pv-constr-passage-hd">
+          <div class="pv-constr-passage-name">${p.titre}</div>
+          <div class="pv-constr-passage-dt">${date}</div>
+        </div>
+        ${p.note ? `<div style="font-size:0.8rem;color:#4A6070;line-height:1.5;margin-bottom:8px">${p.note}</div>` : ''}
+        <div class="pv-constr-media-chips">${chipsHTML}</div>
+      </div>
+    </div>
+  `;
+}
+
+function handleVimeoLoad(iframe) {
+  // Try to detect if Vimeo loaded successfully via contentDocument or just assume ok
+  const id = iframe.closest('[id^="vwrap-"]')?.id?.replace('vwrap-','');
+  if (!id) return;
+  const statusEl = document.getElementById('vstatus-' + id);
+  if (statusEl && statusEl.style.display !== 'none') {
+    statusEl.innerHTML = '<span class="vimeo-status ok"><span class="vimeo-dot"></span>Vidéo accessible ✓</span>';
+  }
+}
+
+function handleVimeoError(iframe) {
+  const wrap = iframe.closest('[id^="vwrap-"]');
+  const id = wrap?.id?.replace('vwrap-','');
+  if (!id) return;
+  iframe.style.display = 'none';
+  const errEl = document.getElementById('verr-' + id);
+  if (errEl) errEl.style.display = 'flex';
+  const statusEl = document.getElementById('vstatus-' + id);
+  if (statusEl) statusEl.innerHTML = '<span class="vimeo-status err"><span class="vimeo-dot"></span>ID invalide ou vidéo privée</span>';
+}
+
+function checkVimeoStatuses() {
+  // After 1.5s, upgrade "checking" statuses to OK for iframes that didn't error
+  document.querySelectorAll('#preview-scrollarea .vimeo-status.checking').forEach(el => {
+    const wrap = el.closest('[id^="vstatus-"]');
+    const id = wrap?.id?.replace('vstatus-','');
+    // If error div is still hidden → assume OK
+    const errEl = document.getElementById('verr-' + id);
+    if (!errEl || errEl.style.display === 'none' || errEl.style.display === '') {
+      el.className = 'vimeo-status ok';
+      el.innerHTML = '<span class="vimeo-dot"></span>Vidéo accessible ✓';
+    }
+  });
 }
 </script>
 </body>
