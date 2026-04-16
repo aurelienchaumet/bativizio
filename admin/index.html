@@ -503,7 +503,7 @@ nav{padding:14px 10px;flex:1}
     <div class="modal-body">
       <div class="form-row full"><div class="form-group"><label class="form-label">Nom complet</label><input type="text" class="form-input" id="cl-nom" placeholder="Prénom Nom ou Société"></div></div>
       <div class="form-row full"><div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="cl-email" placeholder="contact@email.com"></div></div>
-      <div class="form-row full"><div class="form-group"><label class="form-label">Mot de passe initial</label><input type="text" class="form-input" id="cl-password" placeholder="Mot de passe temporaire"></div></div>
+
       <div class="form-row full"><div class="form-group"><label class="form-label">Rôle</label>
         <select class="form-select" id="cl-role" onchange="toggleNomConstructeur(this.value)">
           <option value="client">Client final (propriétaire)</option>
@@ -932,13 +932,12 @@ function toggleNomConstructeur(role) {
 async function saveClient() {
   const nom      = document.getElementById('cl-nom').value.trim();
   const email    = document.getElementById('cl-email').value.trim();
-  const password = document.getElementById('cl-password').value.trim();
   const role     = document.getElementById('cl-role').value;
   const logo_url = document.getElementById('cl-logo')?.value.trim() || null;
   const nom_constructeur = document.getElementById('cl-nom-constructeur')?.value.trim() || '';
 
-  if (!nom || !email || !password) {
-    showToast('Nom, email et mot de passe requis.', 'error');
+  if (!nom || !email) {
+    showToast('Nom et email requis.', 'error');
     return;
   }
 
@@ -951,7 +950,7 @@ async function saveClient() {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${session.access_token}`
     },
-    body: JSON.stringify({ nom, email, password, role, logo_url, nom_constructeur })
+    body: JSON.stringify({ nom, email, role, logo_url, nom_constructeur })
   });
 
   const result = await res.json();
@@ -961,9 +960,15 @@ async function saveClient() {
     return;
   }
 
-  showToast(`Accès créé et email envoyé à ${email} ✓`, 'success');
+  if (result.warning) {
+    showToast(`Compte créé, mais email non envoyé. Vérifiez la clé Brevo.`, 'error');
+    closeModal('modal-client');
+    loadDashboard();
+    return;
+  }
   closeModal('modal-client');
-  ['cl-nom','cl-email','cl-password','cl-logo'].forEach(f => {
+  showToast(`Invitation envoyée à ${email} ✓`, 'success');
+  ['cl-nom','cl-email','cl-logo'].forEach(f => {
     const el = document.getElementById(f);
     if (el) el.value = '';
   });
@@ -1036,7 +1041,7 @@ function openModal(id) {
 function closeModal(id) {
   document.getElementById(id).classList.remove('open');
   if (id === 'modal-client') {
-    ['cl-nom','cl-email','cl-password','cl-logo'].forEach(f => { const el = document.getElementById(f); if(el) el.value = ''; });
+    ['cl-nom','cl-email','cl-logo'].forEach(f => { const el = document.getElementById(f); if(el) el.value = ''; });
     document.getElementById('logo-field-row').style.display = 'none';
     document.getElementById('cl-role').value = 'client';
   }
