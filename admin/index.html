@@ -496,57 +496,54 @@ nav{padding:14px 10px;flex:1}
 
       <!-- ══ PAGE WORKFLOW ══ -->
       <div class="page" id="page-workflow">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px">
           <div>
-            <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--wave-light);margin-bottom:6px;font-family:'DM Mono',monospace">Opérationnel</div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--text)">Workflow passage</div>
-            <div style="font-size:0.8rem;color:var(--text-dim);margin-top:4px">Checklist complète · Terrain → Publication</div>
+            <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--wave-light);margin-bottom:5px;font-family:'DM Mono',monospace">Opérationnel</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--text)">Workflow passage</div>
+            <div style="font-size:0.78rem;color:var(--text-dim);margin-top:3px">Checklist complète · Terrain → Publication</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:0.6rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">Durée estimée</div>
-            <div style="font-size:1.3rem;font-family:'DM Mono',monospace;color:var(--wave-light)">230 min</div>
+            <div style="font-size:0.6rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px">Durée estimée</div>
+            <div style="font-size:1.2rem;font-family:'DM Mono',monospace;color:var(--wave-light)">230 min</div>
           </div>
         </div>
 
-        <!-- Méta passage -->
-        <div class="card" style="margin-bottom:16px;padding:16px 20px">
+        <!-- Méta -->
+        <div class="card" style="margin-bottom:14px;padding:14px 18px">
           <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-            <div style="display:flex;flex-direction:column;gap:4px">
-              <label style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Chantier</label>
-              <input id="wf-chantier" type="text" placeholder="Nom du chantier" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.8rem;outline:none;width:200px">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Chantier</label>
+              <input id="wf-chantier" type="text" placeholder="Nom du chantier" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.78rem;outline:none;width:190px">
             </div>
-            <div style="display:flex;flex-direction:column;gap:4px">
-              <label style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Passage N°</label>
-              <input id="wf-passage" type="text" value="01" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 10px;color:var(--wave-light);font-family:'DM Mono',monospace;font-size:0.8rem;outline:none;width:55px;text-align:center">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Passage N°</label>
+              <input id="wf-passage" type="text" value="01" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--wave-light);font-family:'DM Mono',monospace;font-size:0.78rem;outline:none;width:50px;text-align:center">
             </div>
-            <div style="display:flex;flex-direction:column;gap:4px">
-              <label style="font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Étape</label>
-              <input id="wf-etape" type="text" placeholder="ex. Charpente" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 12px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.8rem;outline:none;width:200px">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Étape</label>
+              <input id="wf-etape" type="text" placeholder="ex. Charpente" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:5px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.78rem;outline:none;width:190px">
             </div>
-            <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:6px;padding-top:18px">
-              <div style="display:flex;align-items:center;gap:10px">
-                <div style="flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden">
+            <div style="flex:1;min-width:160px;display:flex;flex-direction:column;gap:5px;padding-top:16px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="flex:1;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden">
                   <div id="wf-global-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#2E6B8A,#C8A96E);border-radius:2px;transition:width 0.3s"></div>
                 </div>
-                <span id="wf-global-label" style="font-size:0.7rem;font-family:'DM Mono',monospace;color:var(--wave-light);white-space:nowrap">0 / 0 · 0%</span>
+                <span id="wf-global-label" style="font-size:0.68rem;font-family:'DM Mono',monospace;color:var(--wave-light);white-space:nowrap">0%</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Layout phases -->
-        <div style="display:flex;gap:16px;align-items:flex-start">
-
-          <!-- Sidebar phases -->
-          <div style="width:190px;flex-shrink:0;display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <!-- Nav phases -->
+          <div style="width:185px;flex-shrink:0">
             <div id="wf-phase-nav"></div>
-            <div id="wf-sidebar-times" style="margin-top:12px;padding:12px;background:var(--surface);border:1px solid rgba(200,169,110,0.12);border-radius:6px">
-              <div style="font-size:0.58rem;color:var(--text-dim);letter-spacing:0.18em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px">Temps chronométré</div>
+            <div id="wf-sidebar-times" style="margin-top:10px;padding:11px;background:var(--surface);border:1px solid rgba(200,169,110,0.12);border-radius:6px">
+              <div style="font-size:0.55rem;color:var(--text-dim);letter-spacing:0.18em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:7px">Temps chronométré</div>
               <div id="wf-times-rows"></div>
             </div>
           </div>
-
-          <!-- Contenu phase active -->
+          <!-- Contenu phase -->
           <div id="wf-phase-content" style="flex:1"></div>
         </div>
       </div><!-- /page-workflow -->
@@ -747,11 +744,12 @@ function showPage(name, navEl) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + name)?.classList.add('active');
   if (navEl) navEl.classList.add('active');
-  const titles = { dashboard: 'Tableau de bord', chantiers: 'Chantiers', clients: 'Clients', detail: 'Détail chantier' };
+  const titles = { dashboard: 'Tableau de bord', chantiers: 'Chantiers', clients: 'Clients', detail: 'Détail chantier', workflow: 'Workflow passage' };
   document.getElementById('topbar-title').textContent = titles[name] || name;
   document.getElementById('topbar-sub').textContent = titles[name] || name;
   if (name === 'chantiers') loadChantiersPage();
   if (name === 'clients')   loadClientsPage();
+  if (name === 'workflow')  wfRender();
 }
 
 // ══ DASHBOARD ══
@@ -1455,118 +1453,85 @@ function checkVimeoStatuses() {
     }
   });
 }
+</script>
 
+<script>
 // ══ WORKFLOW PASSAGE ══
 const WF_PHASES = [
-  {
-    id:"terrain", label:"Terrain", icon:"◈", color:"#5AAABF", estimee:75,
-    steps:[
-      {id:"t1", label:"Vérification météo & vent (< 35 km/h)", note:"Annuler si vent > 35 km/h ou visibilité < 500m"},
-      {id:"t2", label:"Autorisation survol vérifiée (Géoportail Drone)", note:"Zone côtière — toujours vérifier avant départ"},
-      {id:"t3", label:"Contact chef de chantier — accès confirmé", note:""},
-      {id:"t4", label:"Arrivée sur site — état général noté", note:"Photo de référence avant vol"},
-      {id:"t5", label:"Vol drone — séquence complète (tour, plongée, staticam)", note:"Batteries : vérifier au décollage. Altitude max légale : 120m"},
-      {id:"t6", label:"Caméra 360° — passages intérieurs & extérieurs", note:"Min. 4 positions : façade, R+1 si acc., intérieur, vue générale"},
-      {id:"t7", label:"Vérification clips sur terrain (lecture rapide)", note:"Ne pas partir sans confirmer que la vidéo est exploitable"},
-    ]
-  },
-  {
-    id:"transfert", label:"Transfert & tri", icon:"◉", color:"#2E6B8A", estimee:25,
-    steps:[
-      {id:"tr1", label:"Copie brute vers dossier chantier", note:"Structure : /CHANTIERS/[NOM]/PASSAGE_[NN]/BRUT/"},
-      {id:"tr2", label:"Renommage fichiers (convention BatiVizIØ)", note:"Format : BVZ_[CODE]_P[NN]_DRONE_001.mp4 / _360_001.jpg"},
-      {id:"tr3", label:"Sélection clips retenus — rejets mis de côté", note:"Ne garder que les séquences nettes et stables"},
-      {id:"tr4", label:"Sauvegarde confirmée (2 emplacements)", note:"Disque local + cloud (ex. Backblaze B2)"},
-    ]
-  },
-  {
-    id:"montage", label:"Montage DaVinci", icon:"◑", color:"#C8A96E", estimee:90,
-    steps:[
-      {id:"m1", label:"Ouverture projet DaVinci — timeline passage", note:"Un projet par chantier. Une timeline par passage."},
-      {id:"m2", label:"Import clips sélectionnés dans la médiathèque", note:""},
-      {id:"m3", label:"Montage : intro logo BatiVizIØ (5 sec)", note:"Template : /TEMPLATES/intro_bvz.drp"},
-      {id:"m4", label:"Séquence principale : aérien → sol → extraits 360°", note:"Rythme cible : 2–3 min. Couper tout ce qui est redondant."},
-      {id:"m5", label:"Étalonnage couleur (LUT chantier BatiVizIØ)", note:"LUT maison appliquée en node 1. Corriger exposition si surexposé."},
-      {id:"m6", label:"Titres : nom chantier, date, étape", note:"Police DM Sans. Couleur #C8A96E sur fond semi-transparent."},
-      {id:"m7", label:"Audio : musique libre de droits, –18 LUFS", note:"Volume maîtrisé. Bibliothèque libre de droits uniquement."},
-      {id:"m8", label:"Outro logo BatiVizIØ (3 sec)", note:"Template : /TEMPLATES/outro_bvz.drp"},
-      {id:"m9", label:"Export H.264 — 1080p 25fps, preset BVZ_Vimeo_HD", note:"Preset sauvegardé dans DaVinci. Vérifier le débit : 15 Mbps."},
-    ]
-  },
-  {
-    id:"publication", label:"Upload & publication", icon:"◐", color:"#5AAABF", estimee:30,
-    steps:[
-      {id:"p1", label:"Upload Vimeo — titre : [NOM] – Passage [N] – [Étape]", note:"Confidentialité : Masqué (lien privé uniquement)"},
-      {id:"p2", label:"Vimeo ID noté (format : 123456789)", note:""},
-      {id:"p3", label:"Upload photos 360° — Supabase Storage", note:"Redimensionner à 4096px max avant upload si nécessaire"},
-      {id:"p4", label:"Mise à jour Supabase — table passages", note:"Champs : chantier_id, date, etape, vimeo_id, photos[], notes"},
-      {id:"p5", label:"Vérification portail propriétaire (connexion test)", note:"Confirmer vidéo + photos visibles. Tester sur mobile."},
-      {id:"p6", label:"Notification propriétaire envoyée (Brevo)", note:"Template : 'nouveau_passage'. Merger : prénom, étape, lien."},
-    ]
-  },
-  {
-    id:"cloture", label:"Clôture", icon:"◇", color:"#C8A96E", estimee:10,
-    steps:[
-      {id:"c1", label:"Fiche passage complétée (durée réelle, incidents)", note:"Remplir les notes ci-dessous avant de fermer"},
-      {id:"c2", label:"Compteur passage mis à jour (N/10 sur le chantier)", note:""},
-      {id:"c3", label:"Prochain passage estimé — noté dans l'agenda", note:"Fréquence cible : toutes les 5–6 semaines"},
-      {id:"c4", label:"Archivage dossier BRUT conservé 12 mois minimum", note:""},
-    ]
-  }
+  { id:"terrain", label:"Terrain", icon:"◈", color:"#5AAABF", estimee:75, steps:[
+    {id:"t1", label:"Vérification météo & vent (< 35 km/h)", note:"Annuler si vent > 35 km/h ou visibilité < 500m"},
+    {id:"t2", label:"Autorisation survol vérifiée (Géoportail Drone)", note:"Zone côtière — toujours vérifier avant départ"},
+    {id:"t3", label:"Contact chef de chantier — accès confirmé", note:""},
+    {id:"t4", label:"Arrivée sur site — état général noté", note:"Photo de référence avant vol"},
+    {id:"t5", label:"Vol drone — séquence complète (tour, plongée, staticam)", note:"Batteries : vérifier au décollage. Altitude max légale : 120m"},
+    {id:"t6", label:"Caméra 360° — passages intérieurs & extérieurs", note:"Min. 4 positions : façade, R+1 si acc., intérieur, vue générale"},
+    {id:"t7", label:"Vérification clips sur terrain (lecture rapide)", note:"Ne pas partir sans confirmer que la vidéo est exploitable"},
+  ]},
+  { id:"transfert", label:"Transfert & tri", icon:"◉", color:"#2E6B8A", estimee:25, steps:[
+    {id:"tr1", label:"Copie brute vers dossier chantier", note:"Structure : /CHANTIERS/[NOM]/PASSAGE_[NN]/BRUT/"},
+    {id:"tr2", label:"Renommage fichiers (convention BatiVizIØ)", note:"Format : BVZ_[CODE]_P[NN]_DRONE_001.mp4 / _360_001.jpg"},
+    {id:"tr3", label:"Sélection clips retenus — rejets mis de côté", note:"Ne garder que les séquences nettes et stables"},
+    {id:"tr4", label:"Sauvegarde confirmée (2 emplacements)", note:"Disque local + cloud (ex. Backblaze B2)"},
+  ]},
+  { id:"montage", label:"Montage DaVinci", icon:"◑", color:"#C8A96E", estimee:90, steps:[
+    {id:"m1", label:"Ouverture projet DaVinci — timeline passage", note:"Un projet par chantier. Une timeline par passage."},
+    {id:"m2", label:"Import clips sélectionnés dans la médiathèque", note:""},
+    {id:"m3", label:"Montage : intro logo BatiVizIØ (5 sec)", note:"Template : /TEMPLATES/intro_bvz.drp"},
+    {id:"m4", label:"Séquence principale : aérien → sol → extraits 360°", note:"Rythme cible : 2–3 min. Couper tout ce qui est redondant."},
+    {id:"m5", label:"Étalonnage couleur (LUT chantier BatiVizIØ)", note:"LUT maison appliquée en node 1. Corriger si surexposé."},
+    {id:"m6", label:"Titres : nom chantier, date, étape", note:"Police DM Sans. Couleur #C8A96E sur fond semi-transparent."},
+    {id:"m7", label:"Audio : musique libre de droits, –18 LUFS", note:"Bibliothèque libre de droits uniquement."},
+    {id:"m8", label:"Outro logo BatiVizIØ (3 sec)", note:"Template : /TEMPLATES/outro_bvz.drp"},
+    {id:"m9", label:"Export H.264 — 1080p 25fps, preset BVZ_Vimeo_HD", note:"Preset sauvegardé dans DaVinci. Débit cible : 15 Mbps."},
+  ]},
+  { id:"publication", label:"Upload & publication", icon:"◐", color:"#5AAABF", estimee:30, steps:[
+    {id:"p1", label:"Upload Vimeo — titre : [NOM] – Passage [N] – [Étape]", note:"Confidentialité : Masqué (lien privé uniquement)"},
+    {id:"p2", label:"Vimeo ID noté (format : 123456789)", note:""},
+    {id:"p3", label:"Upload photos 360° — Supabase Storage", note:"Redimensionner à 4096px max avant upload si nécessaire"},
+    {id:"p4", label:"Mise à jour Supabase — table passages", note:"Champs : chantier_id, date, etape, vimeo_id, photos[], notes"},
+    {id:"p5", label:"Vérification portail propriétaire (connexion test)", note:"Confirmer vidéo + photos visibles. Tester sur mobile."},
+    {id:"p6", label:"Notification propriétaire envoyée (Brevo)", note:"Template : 'nouveau_passage'. Merger : prénom, étape, lien."},
+  ]},
+  { id:"cloture", label:"Clôture", icon:"◇", color:"#C8A96E", estimee:10, steps:[
+    {id:"c1", label:"Fiche passage complétée (durée réelle, incidents)", note:"Remplir les notes ci-dessous avant de fermer"},
+    {id:"c2", label:"Compteur passage mis à jour (N/10 sur le chantier)", note:""},
+    {id:"c3", label:"Prochain passage estimé — noté dans l'agenda", note:"Fréquence cible : toutes les 5–6 semaines"},
+    {id:"c4", label:"Archivage dossier BRUT conservé 12 mois minimum", note:""},
+  ]},
 ];
 
-const wf = {
-  activePhase: "terrain",
-  checks: {},
-  timers: {},
-  running: {},
-  intervals: {},
-  noteOpen: {},
-  notes: ""
-};
+const wf = { activePhase:"terrain", checks:{}, timers:{}, running:{}, intervals:{}, noteOpen:{}, notes:"" };
 
-function wfFmt(s) {
-  return String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
-}
+function wfFmt(s) { return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
 function wfTotalSteps() { return WF_PHASES.reduce((a,p)=>a+p.steps.length,0); }
 function wfDoneSteps()  { return Object.values(wf.checks).filter(Boolean).length; }
-function wfPhasePct(ph) {
-  const d = ph.steps.filter(s=>wf.checks[s.id]).length;
-  return Math.round((d/ph.steps.length)*100);
-}
+function wfPhasePct(ph) { return Math.round(ph.steps.filter(s=>wf.checks[s.id]).length/ph.steps.length*100); }
 
 function wfRenderSidebar() {
   const nav = document.getElementById("wf-phase-nav");
   const timesEl = document.getElementById("wf-times-rows");
-  if (!nav || !timesEl) return;
-
-  nav.innerHTML = WF_PHASES.map(ph => {
-    const pct = wfPhasePct(ph);
-    const isActive = wf.activePhase === ph.id;
-    return `<div onclick="wfSelectPhase('${ph.id}')" style="
-        padding:10px 14px;cursor:pointer;border-radius:6px;margin-bottom:2px;
-        border-left:2px solid ${isActive ? ph.color : 'transparent'};
-        background:${isActive ? 'rgba(255,255,255,0.03)' : 'transparent'};
-        transition:all 0.15s">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
-        <span style="color:${ph.color};font-size:13px">${ph.icon}</span>
-        <span style="font-size:0.78rem;font-weight:500;color:${isActive ? 'var(--text)' : 'var(--text-muted)'}">${ph.label}</span>
+  if (!nav||!timesEl) return;
+  nav.innerHTML = WF_PHASES.map(ph=>{
+    const pct=wfPhasePct(ph), isActive=wf.activePhase===ph.id;
+    return `<div onclick="wfSelectPhase('${ph.id}')" style="padding:9px 12px;cursor:pointer;border-radius:6px;margin-bottom:2px;border-left:2px solid ${isActive?ph.color:'transparent'};background:${isActive?'rgba(255,255,255,0.03)':'transparent'};transition:all 0.15s">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+        <span style="color:${ph.color};font-size:12px">${ph.icon}</span>
+        <span style="font-size:0.76rem;font-weight:500;color:${isActive?'var(--text)':'var(--text-muted)'}">${ph.label}</span>
       </div>
-      <div style="height:2px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden;margin-bottom:4px">
+      <div style="height:2px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden;margin-bottom:3px">
         <div style="height:100%;width:${pct}%;background:${ph.color};opacity:0.7;transition:width 0.3s;border-radius:1px"></div>
       </div>
       <div style="display:flex;justify-content:space-between">
-        <span style="font-size:0.6rem;font-family:'DM Mono',monospace;color:var(--text-dim)">~${ph.estimee}min</span>
-        <span style="font-size:0.6rem;font-family:'DM Mono',monospace;color:${pct===100?'#4CAF80':'var(--text-dim)'}">${pct}%</span>
+        <span style="font-size:0.58rem;font-family:'DM Mono',monospace;color:var(--text-dim)">~${ph.estimee}min</span>
+        <span style="font-size:0.58rem;font-family:'DM Mono',monospace;color:${pct===100?'#4CAF80':'var(--text-dim)'}">${pct}%</span>
       </div>
     </div>`;
   }).join("");
-
-  timesEl.innerHTML = WF_PHASES.map(ph => {
-    const t = wf.timers[ph.id] || 0;
+  timesEl.innerHTML = WF_PHASES.map(ph=>{
+    const t=wf.timers[ph.id]||0;
     return `<div style="display:flex;justify-content:space-between;margin-bottom:3px">
-      <span style="font-size:0.65rem;color:var(--text-dim)">${ph.label}</span>
-      <span style="font-size:0.65rem;font-family:'DM Mono',monospace;color:${ph.color}">${t ? wfFmt(t) : '—'}</span>
+      <span style="font-size:0.62rem;color:var(--text-dim)">${ph.label}</span>
+      <span style="font-size:0.62rem;font-family:'DM Mono',monospace;color:${ph.color}">${t?wfFmt(t):'—'}</span>
     </div>`;
   }).join("");
 }
@@ -1576,167 +1541,105 @@ function wfRenderContent() {
   if (!el) return;
   const ph = WF_PHASES.find(p=>p.id===wf.activePhase);
   const idx = WF_PHASES.indexOf(ph);
-  const t = wf.timers[ph.id] || 0;
+  const t = wf.timers[ph.id]||0;
   const isRunning = wf.running[ph.id];
   const doneSt = ph.steps.filter(s=>wf.checks[s.id]).length;
 
-  const stepsHtml = ph.steps.map((step,i) => {
-    const done = !!wf.checks[step.id];
-    const noteOpen = !!wf.noteOpen[step.id];
-    return `<div style="
-        background:${done?'rgba(90,170,191,0.05)':'rgba(255,255,255,0.02)'};
-        border:1px solid ${done?'rgba(90,170,191,0.2)':'rgba(255,255,255,0.05)'};
-        border-radius:6px;padding:12px 16px;transition:all 0.2s;margin-bottom:7px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div onclick="wfToggleCheck('${step.id}')" style="
-            width:19px;height:19px;border-radius:4px;flex-shrink:0;cursor:pointer;
-            border:1.5px solid ${done?ph.color:'rgba(255,255,255,0.15)'};
-            background:${done?ph.color:'transparent'};
-            display:flex;align-items:center;justify-content:center;transition:all 0.15s">
-          ${done?`<span style="color:#0C151E;font-size:10px;font-weight:700">✓</span>`:''}
+  const stepsHtml = ph.steps.map((step,i)=>{
+    const done=!!wf.checks[step.id], noteOpen=!!wf.noteOpen[step.id];
+    return `<div style="background:${done?'rgba(90,170,191,0.05)':'rgba(255,255,255,0.02)'};border:1px solid ${done?'rgba(90,170,191,0.2)':'rgba(255,255,255,0.05)'};border-radius:6px;padding:11px 15px;margin-bottom:6px;transition:all 0.2s">
+      <div style="display:flex;align-items:center;gap:11px">
+        <div onclick="wfToggleCheck('${step.id}')" style="width:18px;height:18px;border-radius:4px;flex-shrink:0;cursor:pointer;border:1.5px solid ${done?ph.color:'rgba(255,255,255,0.15)'};background:${done?ph.color:'transparent'};display:flex;align-items:center;justify-content:center;transition:all 0.15s">
+          ${done?'<span style="color:#0C151E;font-size:10px;font-weight:700">✓</span>':''}
         </div>
-        <div style="flex:1;font-size:0.83rem;color:${done?'rgba(184,200,212,0.4)':'var(--text)'};text-decoration:${done?'line-through':'none'}">
-          <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(184,200,212,0.2);margin-right:6px">${String(i+1).padStart(2,"0")}</span>
-          ${step.label}
+        <div style="flex:1;font-size:0.82rem;color:${done?'rgba(184,200,212,0.4)':'var(--text)'};text-decoration:${done?'line-through':'none'}">
+          <span style="font-family:'DM Mono',monospace;font-size:0.58rem;color:rgba(184,200,212,0.2);margin-right:5px">${String(i+1).padStart(2,"0")}</span>${step.label}
         </div>
-        ${step.note ? `<button onclick="wfToggleNote('${step.id}')" style="
-            background:transparent;border:none;cursor:pointer;font-size:14px;padding:0 4px;
-            color:${noteOpen?ph.color:'rgba(184,200,212,0.25)'};transition:color 0.15s">ⓘ</button>` : ''}
+        ${step.note?`<button onclick="wfToggleNote('${step.id}')" style="background:transparent;border:none;cursor:pointer;font-size:13px;padding:0 3px;color:${noteOpen?ph.color:'rgba(184,200,212,0.25)'};transition:color 0.15s">ⓘ</button>`:''}
       </div>
-      ${step.note && noteOpen ? `<div style="
-          margin-top:9px;margin-left:31px;padding:7px 11px;
-          border-left:2px solid ${ph.color};border-radius:0 4px 4px 0;
-          background:rgba(46,107,138,0.1);
-          font-size:0.72rem;color:rgba(184,200,212,0.6);line-height:1.6;font-style:italic">
-        ${step.note}
-      </div>` : ''}
+      ${step.note&&noteOpen?`<div style="margin-top:8px;margin-left:29px;padding:6px 10px;border-left:2px solid ${ph.color};border-radius:0 4px 4px 0;background:rgba(46,107,138,0.1);font-size:0.7rem;color:rgba(184,200,212,0.6);line-height:1.6;font-style:italic">${step.note}</div>`:''}
     </div>`;
   }).join("");
 
-  const prevBtn = idx > 0
-    ? `<button onclick="wfSelectPhase('${WF_PHASES[idx-1].id}')" style="padding:9px 18px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif">← Phase précédente</button>`
-    : `<div></div>`;
-  const nextBtn = idx < WF_PHASES.length-1
-    ? `<button onclick="wfSelectPhase('${WF_PHASES[idx+1].id}')" style="padding:9px 18px;background:rgba(90,170,191,0.1);border:1px solid ${ph.color}40;border-radius:6px;color:${ph.color};font-size:0.78rem;cursor:pointer;font-family:'DM Sans',sans-serif">Phase suivante →</button>`
-    : `<div></div>`;
+  const prevBtn = idx>0 ? `<button onclick="wfSelectPhase('${WF_PHASES[idx-1].id}')" style="padding:8px 16px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-size:0.76rem;cursor:pointer">← Phase précédente</button>` : '<div></div>';
+  const nextBtn = idx<WF_PHASES.length-1 ? `<button onclick="wfSelectPhase('${WF_PHASES[idx+1].id}')" style="padding:8px 16px;background:rgba(90,170,191,0.1);border:1px solid ${ph.color}40;border-radius:6px;color:${ph.color};font-size:0.76rem;cursor:pointer">Phase suivante →</button>` : '<div></div>';
 
-  const clotureBlock = ph.id === "cloture" ? `
-    <div style="margin-top:24px;padding:18px;background:var(--surface);border:1px solid rgba(200,169,110,0.15);border-radius:8px">
-      <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--wave-light);margin-bottom:10px;font-family:'DM Mono',monospace">Notes de passage</div>
-      <textarea id="wf-notes" placeholder="Durée réelle, incidents, conditions météo, remarques chantier…"
-        style="width:100%;min-height:90px;resize:vertical;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:6px;padding:10px 13px;color:var(--text);font-size:0.75rem;font-family:'DM Mono',monospace;outline:none;line-height:1.7"
-        oninput="wf.notes=this.value">${wf.notes}</textarea>
-      <div style="display:flex;justify-content:flex-end;margin-top:10px">
-        <button id="wf-copy-btn" onclick="wfCopyRecap()" style="
-            padding:7px 15px;background:rgba(200,169,110,0.1);border:1px solid rgba(200,169,110,0.3);
-            border-radius:5px;color:var(--wave-light);font-size:0.7rem;cursor:pointer;
-            font-family:'DM Mono',monospace;letter-spacing:0.5px;transition:all 0.15s">Copier récap</button>
+  const clotureBlock = ph.id==="cloture" ? `
+    <div style="margin-top:20px;padding:16px;background:var(--surface);border:1px solid rgba(200,169,110,0.15);border-radius:8px">
+      <div style="font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--wave-light);margin-bottom:9px;font-family:'DM Mono',monospace">Notes de passage</div>
+      <textarea id="wf-notes" placeholder="Durée réelle, incidents, conditions météo, remarques chantier…" oninput="wf.notes=this.value"
+        style="width:100%;min-height:85px;resize:vertical;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:0.73rem;font-family:'DM Mono',monospace;outline:none;line-height:1.7">${wf.notes}</textarea>
+      <div style="display:flex;justify-content:flex-end;margin-top:9px">
+        <button id="wf-copy-btn" onclick="wfCopyRecap()" style="padding:6px 14px;background:rgba(200,169,110,0.1);border:1px solid rgba(200,169,110,0.3);border-radius:5px;color:var(--wave-light);font-size:0.68rem;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.5px">Copier récap</button>
       </div>
-    </div>` : "";
+    </div>` : '';
 
-  el.innerHTML = `
-    <div class="card">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px">
-        <div>
-          <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:${ph.color};margin-bottom:5px;font-family:'DM Mono',monospace">Phase ${idx+1} / ${WF_PHASES.length}</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--text);line-height:1">${ph.label}</div>
-          <div style="font-size:0.75rem;color:var(--text-dim);margin-top:5px">${doneSt} / ${ph.steps.length} étapes · ~${ph.estimee} min estimées</div>
-        </div>
-        <div style="text-align:right">
-          <div id="wf-timer-display" style="font-size:2.2rem;font-family:'DM Mono',monospace;letter-spacing:3px;color:${isRunning?ph.color:'#3A5A6A'};line-height:1;transition:color 0.2s">${wfFmt(t)}</div>
-          <div style="display:flex;gap:7px;margin-top:7px;justify-content:flex-end">
-            <button id="wf-timer-btn" onclick="wfToggleTimer('${ph.id}')" style="
-                padding:5px 14px;border-radius:4px;font-size:0.7rem;cursor:pointer;
-                font-family:'DM Mono',monospace;letter-spacing:0.5px;border:1px solid;
-                background:${isRunning?'rgba(200,169,110,0.15)':'rgba(90,170,191,0.15)'};
-                border-color:${isRunning?'rgba(200,169,110,0.4)':'rgba(90,170,191,0.4)'};
-                color:${isRunning?'#C8A96E':'#5AAABF'}">
-              ${isRunning?'⏸ Pause':'▶ Démarrer'}
-            </button>
-            <button onclick="wfResetTimer('${ph.id}')" style="padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text-dim);font-size:0.75rem;cursor:pointer">↺</button>
-          </div>
+  el.innerHTML = `<div class="card">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div style="font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:${ph.color};margin-bottom:4px;font-family:'DM Mono',monospace">Phase ${idx+1} / ${WF_PHASES.length}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--text);line-height:1">${ph.label}</div>
+        <div style="font-size:0.73rem;color:var(--text-dim);margin-top:4px">${doneSt} / ${ph.steps.length} étapes · ~${ph.estimee} min estimées</div>
+      </div>
+      <div style="text-align:right">
+        <div id="wf-timer-display" style="font-size:2rem;font-family:'DM Mono',monospace;letter-spacing:3px;color:${isRunning?ph.color:'#3A5A6A'};line-height:1;transition:color 0.2s">${wfFmt(t)}</div>
+        <div style="display:flex;gap:6px;margin-top:6px;justify-content:flex-end">
+          <button id="wf-timer-btn" onclick="wfToggleTimer('${ph.id}')" style="padding:5px 12px;border-radius:4px;font-size:0.68rem;cursor:pointer;font-family:'DM Mono',monospace;border:1px solid;background:${isRunning?'rgba(200,169,110,0.15)':'rgba(90,170,191,0.15)'};border-color:${isRunning?'rgba(200,169,110,0.4)':'rgba(90,170,191,0.4)'};color:${isRunning?'#C8A96E':'#5AAABF'}">${isRunning?'⏸ Pause':'▶ Démarrer'}</button>
+          <button onclick="wfResetTimer('${ph.id}')" style="padding:5px 9px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text-dim);font-size:0.73rem;cursor:pointer">↺</button>
         </div>
       </div>
-      <div>${stepsHtml}</div>
-      <div style="display:flex;justify-content:space-between;margin-top:24px">${prevBtn}${nextBtn}</div>
-      ${clotureBlock}
-    </div>`;
+    </div>
+    <div>${stepsHtml}</div>
+    <div style="display:flex;justify-content:space-between;margin-top:20px">${prevBtn}${nextBtn}</div>
+    ${clotureBlock}
+  </div>`;
 }
 
 function wfRenderGlobal() {
-  const bar = document.getElementById("wf-global-bar");
-  const lbl = document.getElementById("wf-global-label");
-  if (!bar || !lbl) return;
-  const done = wfDoneSteps(), total = wfTotalSteps();
-  const pct = Math.round((done/total)*100);
-  bar.style.width = pct + "%";
-  lbl.textContent = `${done} / ${total} · ${pct}%`;
+  const bar=document.getElementById("wf-global-bar"), lbl=document.getElementById("wf-global-label");
+  if (!bar||!lbl) return;
+  const done=wfDoneSteps(), total=wfTotalSteps(), pct=Math.round(done/total*100);
+  bar.style.width=pct+"%"; lbl.textContent=done+" / "+total+" · "+pct+"%";
 }
 
-function wfRender() {
-  wfRenderSidebar();
-  wfRenderContent();
-  wfRenderGlobal();
-}
-
-function wfSelectPhase(id) { wf.activePhase = id; wfRender(); }
-
-function wfToggleCheck(id) { wf.checks[id] = !wf.checks[id]; wfRender(); }
-
-function wfToggleNote(id) { wf.noteOpen[id] = !wf.noteOpen[id]; wfRender(); }
+function wfRender() { wfRenderSidebar(); wfRenderContent(); wfRenderGlobal(); }
+function wfSelectPhase(id) { wf.activePhase=id; wfRender(); }
+function wfToggleCheck(id) { wf.checks[id]=!wf.checks[id]; wfRender(); }
+function wfToggleNote(id)  { wf.noteOpen[id]=!wf.noteOpen[id]; wfRender(); }
 
 function wfToggleTimer(phaseId) {
   if (wf.running[phaseId]) {
-    clearInterval(wf.intervals[phaseId]);
-    wf.running[phaseId] = false;
-    wfRender();
+    clearInterval(wf.intervals[phaseId]); wf.running[phaseId]=false; wfRender();
   } else {
-    const offset = (wf.timers[phaseId]||0)*1000;
-    const start = Date.now()-offset;
-    wf.intervals[phaseId] = setInterval(()=>{
-      wf.timers[phaseId] = Math.floor((Date.now()-start)/1000);
-      const disp = document.getElementById("wf-timer-display");
-      if (disp) disp.textContent = wfFmt(wf.timers[phaseId]);
+    const offset=(wf.timers[phaseId]||0)*1000, start=Date.now()-offset;
+    wf.intervals[phaseId]=setInterval(()=>{
+      wf.timers[phaseId]=Math.floor((Date.now()-start)/1000);
+      const d=document.getElementById("wf-timer-display");
+      if(d) d.textContent=wfFmt(wf.timers[phaseId]);
       wfRenderSidebar();
-    }, 1000);
-    wf.running[phaseId] = true;
-    wfRender();
+    },1000);
+    wf.running[phaseId]=true; wfRender();
   }
 }
 
 function wfResetTimer(phaseId) {
-  clearInterval(wf.intervals[phaseId]);
-  wf.timers[phaseId] = 0;
-  wf.running[phaseId] = false;
-  wfRender();
+  clearInterval(wf.intervals[phaseId]); wf.timers[phaseId]=0; wf.running[phaseId]=false; wfRender();
 }
 
 function wfCopyRecap() {
-  const chantier = document.getElementById("wf-chantier")?.value || "—";
-  const passage  = document.getElementById("wf-passage")?.value  || "—";
-  const etape    = document.getElementById("wf-etape")?.value    || "—";
-  const date = new Date().toLocaleDateString("fr-FR");
-  const lines = [
-    `PASSAGE ${passage} — ${chantier.toUpperCase()} — ${etape}`,
-    date, "",
-    ...WF_PHASES.map(ph => {
-      const pct = wfPhasePct(ph);
-      const t = wf.timers[ph.id];
-      return `[${pct===100?"✓":pct+"%"}] ${ph.label} — ${t?wfFmt(t):"non chronométré"}`;
-    }),
-    "", "Notes :", wf.notes || "—"
+  const ch=document.getElementById("wf-chantier")?.value||"—";
+  const pa=document.getElementById("wf-passage")?.value||"—";
+  const et=document.getElementById("wf-etape")?.value||"—";
+  const lines=[
+    "PASSAGE "+pa+" — "+ch.toUpperCase()+" — "+et,
+    new Date().toLocaleDateString("fr-FR"),"",
+    ...WF_PHASES.map(ph=>"["+( wfPhasePct(ph)===100?"✓":wfPhasePct(ph)+"%" )+"] "+ph.label+" — "+(wf.timers[ph.id]?wfFmt(wf.timers[ph.id]):"non chronométré")),
+    "","Notes :",wf.notes||"—"
   ];
   navigator.clipboard.writeText(lines.join("\n")).then(()=>{
-    const btn = document.getElementById("wf-copy-btn");
-    if (btn) { btn.textContent = "✓ Copié"; btn.style.color="#4CAF80"; setTimeout(()=>{ btn.textContent="Copier récap"; btn.style.color=""; },2000); }
+    const btn=document.getElementById("wf-copy-btn");
+    if(btn){btn.textContent="✓ Copié";btn.style.color="#4CAF80";setTimeout(()=>{btn.textContent="Copier récap";btn.style.color="";},2000);}
   });
-}
-
-// Patch showPage pour initialiser le workflow à l'ouverture
-const _origShowPage = showPage;
-function showPage(name, navEl) {
-  _origShowPage(name, navEl);
-  if (name === "workflow") wfRender();
 }
 </script>
 </body>

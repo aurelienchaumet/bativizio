@@ -3,7 +3,7 @@
 
 window.addEventListener('DOMContentLoaded', async () => {
   const el = document.getElementById('demo-email-display');
-  if (el) el.textContent = 'demo' + '@' + 'bativizio.fr';
+  if (el) el.textContent = 'demo' + '@' + 'bativizio.io';
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
@@ -58,10 +58,10 @@ async function doLogin() {
 
 function fillDemo(type) {
   if (type === 'constructeur') {
-    document.getElementById('login-email').value = 'constructeur' + '@' + 'bativizio.fr';
+    document.getElementById('login-email').value = 'constructeur' + '@' + 'bativizio.io';
     document.getElementById('login-pass').value  = 'constructeur';
   } else {
-    document.getElementById('login-email').value = 'demo' + '@' + 'bativizio.fr';
+    document.getElementById('login-email').value = 'demo' + '@' + 'bativizio.io';
     document.getElementById('login-pass').value  = 'demo';
   }
   doLogin();

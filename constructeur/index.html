@@ -286,7 +286,7 @@ body{background:var(--white-sand);font-family:'DM Sans',sans-serif;color:var(--n
       <div style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--wave-light);font-family:'DM Mono',monospace;margin-bottom:8px;">Accès démonstration</div>
       <div style="font-size:0.8rem;color:var(--fog);margin-bottom:10px;line-height:1.5;">Découvrez la vue d'un constructeur avec le compte de démo :</div>
       <div style="font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--fog);margin-bottom:10px;line-height:1.8;">
-        <span style="color:var(--slate-light)">Email ·</span> constructeur@bativizio.fr<br>
+        <span style="color:var(--slate-light)">Email ·</span> constructeur@bativizio.io<br>
         <span style="color:var(--slate-light)">Mot de passe ·</span> constructeur
       </div>
       <button onclick="fillDemoConstructeur()" style="width:100%;padding:9px;background:var(--wave);color:var(--white);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.8rem;cursor:pointer;transition:background 0.2s;" onmouseover="this.style.background='var(--wave-light)'" onmouseout="this.style.background='var(--wave)'">
@@ -454,7 +454,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 // ── Login ──
 function fillDemoConstructeur() {
-  document.getElementById('login-email').value = 'constructeur@bativizio.fr';
+  document.getElementById('login-email').value = 'constructeur@bativizio.io';
   document.getElementById('login-pass').value = 'constructeur';
   doLogin();
 }
