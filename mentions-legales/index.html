@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentions légales — BatiVizIØ</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80' fill='none'%3E%3Crect width='80' height='80' rx='16' fill='%23152333'/%3E%3Cpath d='M40 28 L60 44 L60 62 L20 62 L20 44 Z' fill='%232E6B8A' opacity='0.2'/%3E%3Crect x='20' y='44' width='40' height='18' stroke='%23E8F0F5' stroke-width='3' fill='none'/%3E%3Cpolyline points='16,46 40,28 64,46' stroke='%23E8F0F5' stroke-width='3' fill='none'/%3E%3Crect x='33' y='50' width='14' height='12' stroke='%23E8F0F5' stroke-width='2.5' fill='none'/%3E%3Ccircle cx='58' cy='15' r='9' stroke='%234A8FAD' stroke-width='3' fill='none'/%3E%3Ccircle cx='58' cy='15' r='3.5' fill='%234A8FAD'/%3E%3Cline x1='8' y1='68' x2='72' y2='68' stroke='%234A8FAD' stroke-width='3'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0C151E;
+    --bg-card:   #111c27;
+    --border:    rgba(46,107,138,0.18);
+    --gold:      #C8A96E;
+    --gold-dim:  rgba(200,169,110,0.12);
+    --wave:      #2E6B8A;
+    --wave-lt:   #5AAABF;
+    --text:      #E8F0F5;
+    --text-muted:#8DAABF;
+    --text-dim:  #4a6478;
+    --radius:    10px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 40px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(12,21,30,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-brand svg { flex-shrink: 0; }
+
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  .brand-name span { color: var(--gold); }
+
+  .nav-back {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-back:hover { color: var(--wave-lt); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 140px 40px 60px;
+    max-width: 820px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--wave-lt);
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 500;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    max-width: 520px;
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 60px 40px 100px;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 56px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--wave-lt);
+    opacity: 0.7;
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+
+  .section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 16px;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 40px;
+  }
+
+  @media (max-width: 600px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+
+  .card-field label {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 5px;
+  }
+
+  .card-field span {
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+
+  .card-field span.placeholder {
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  .card-field span.gold { color: var(--gold); }
+
+  /* ── PROSE ── */
+  .prose p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+
+  .prose p:last-child { margin-bottom: 0; }
+
+  .prose strong { color: var(--text); font-weight: 500; }
+
+  .prose a {
+    color: var(--wave-lt);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(90,170,191,0.25);
+    transition: border-color 0.2s;
+  }
+
+  .prose a:hover { border-color: var(--wave-lt); }
+
+  /* ── INLINE LIST ── */
+  .data-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .data-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .data-list li::before {
+    content: '—';
+    color: var(--wave);
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+  }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight {
+    background: linear-gradient(135deg, rgba(46,107,138,0.08), rgba(12,21,30,0));
+    border: 1px solid rgba(46,107,138,0.25);
+    border-left: 3px solid var(--wave-lt);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+
+  .highlight p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .highlight p strong { color: var(--wave-lt); }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    max-width: 820px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+
+  .footer-updated {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .nav { padding: 0 20px; }
+    .hero { padding: 120px 20px 48px; }
+    .content { padding: 48px 20px 80px; }
+    .card { padding: 20px; }
+    .footer { padding: 28px 20px; flex-direction: column; align-items: flex-start; }
+  }
+
+  /* ── FADE IN ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section {
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.10s; }
+  .section:nth-child(3) { animation-delay: 0.15s; }
+  .section:nth-child(4) { animation-delay: 0.20s; }
+  .section:nth-child(5) { animation-delay: 0.25s; }
+  .section:nth-child(6) { animation-delay: 0.30s; }
+  .section:nth-child(7) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav-brand">
+    <svg width="28" height="28" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logo-bg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#152333"/><stop offset="100%" stop-color="#090f18"/>
+        </linearGradient>
+        <linearGradient id="logo-wave" x1="8" y1="0" x2="72" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#2E6B8A"/><stop offset="100%" stop-color="#5AAABF"/>
+        </linearGradient>
+        <linearGradient id="logo-fill" x1="20" y1="22" x2="60" y2="62" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#4A8FAD" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#2E6B8A" stop-opacity="0.07"/>
+        </linearGradient>
+        <linearGradient id="logo-lens" x1="48" y1="6" x2="66" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#5AAABF"/><stop offset="100%" stop-color="#2E6B8A"/>
+        </linearGradient>
+      </defs>
+      <rect width="80" height="80" rx="16" fill="url(#logo-bg)"/>
+      <path d="M40 28 L60 44 L60 62 L20 62 L20 44 Z" fill="url(#logo-fill)"/>
+      <rect x="20" y="44" width="40" height="18" stroke="#E8F0F5" stroke-width="2" fill="none" stroke-linejoin="miter"/>
+      <polyline points="16,46 40,28 64,46" stroke="#E8F0F5" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+      <rect x="33" y="50" width="14" height="12" stroke="#E8F0F5" stroke-width="1.5" fill="none" rx="1"/>
+      <circle cx="58" cy="16" r="9" stroke="url(#logo-lens)" stroke-width="2" fill="none"/>
+      <circle cx="58" cy="16" r="5.5" stroke="url(#logo-lens)" stroke-width="1.5" fill="#2E6B8A" fill-opacity="0.2"/>
+      <circle cx="58" cy="16" r="2" fill="#4A8FAD" opacity="0.9"/>
+      <circle cx="55.5" cy="13.5" r="1" fill="white" opacity="0.35"/>
+      <line x1="8" y1="68" x2="72" y2="68" stroke="url(#logo-wave)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="13" y1="72" x2="67" y2="72" stroke="url(#logo-wave)" stroke-width="1.2" stroke-linecap="round" opacity="0.5"/>
+    </svg>
+    <span class="brand-name">BatiViz<span>IØ</span></span>
+  </a>
+  <a href="/" class="nav-back">← Retour au site</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-tag">Informations légales</div>
+  <h1>Mentions<br><em>légales</em></h1>
+  <p class="hero-sub">Conformément à la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), les informations suivantes sont portées à la connaissance des utilisateurs du site bativizio.fr.</p>
+</header>
+
+<!-- CONTENT -->
+<main class="content">
+
+  <!-- 1. ÉDITEUR -->
+  <section class="section" id="editeur">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Éditeur du site</h2>
+    </div>
+    <div class="card">
+      <div class="card-grid">
+        <div class="card-field">
+          <label>Nom commercial</label>
+          <span class="gold">BatiVizIØ</span>
+        </div>
+        <div class="card-field">
+          <label>Forme juridique</label>
+          <span>Auto-entrepreneur (EI)</span>
+        </div>
+        <div class="card-field">
+          <label>Exploitant</label>
+          <span>Aurélien [NOM]</span>
+        </div>
+        <div class="card-field">
+          <label>SIRET</label>
+          <span class="placeholder">En cours d'immatriculation</span>
+        </div>
+        <div class="card-field">
+          <label>Adresse</label>
+          <span>[Adresse complète]<br>Île d'Oléron, France</span>
+        </div>
+        <div class="card-field">
+          <label>Contact</label>
+          <span><a href="mailto:contact@bativizio.fr">contact@bativizio.fr</a></span>
+        </div>
+        <div class="card-field">
+          <label>Régime TVA</label>
+          <span>TVA non applicable — art. 293B du CGI</span>
+        </div>
+        <div class="card-field">
+          <label>Code APE</label>
+          <span>7420Z — Activités photographiques</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. HÉBERGEMENT -->
+  <section class="section" id="hebergement">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Hébergement</h2>
+    </div>
+    <div class="card">
+      <div class="card-grid">
+        <div class="card-field">
+          <label>Hébergeur</label>
+          <span>Vercel Inc.</span>
+        </div>
+        <div class="card-field">
+          <label>Adresse</label>
+          <span>340 Pine Street, Suite 701<br>San Francisco, CA 94104 — États-Unis</span>
+        </div>
+        <div class="card-field">
+          <label>Site</label>
+          <span><a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a></span>
+        </div>
+        <div class="card-field">
+          <label>Base de données</label>
+          <span>Supabase Inc. — infrastructure AWS EU (Paris)</span>
+        </div>
+      </div>
+    </div>
+    <div class="highlight">
+      <p>Les données des utilisateurs (comptes, chantiers, médias) sont hébergées sur des serveurs localisés dans la région <strong>eu-west-3 (Paris)</strong>, conformément aux exigences du RGPD.</p>
+    </div>
+  </section>
+
+  <!-- 3. PROPRIÉTÉ INTELLECTUELLE -->
+  <section class="section" id="propriete">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Propriété intellectuelle</h2>
+    </div>
+    <div class="prose">
+      <p>L'ensemble du contenu du site bativizio.fr — marque, logo, textes, graphismes, interface, code source, vidéos et photographies — est la propriété exclusive de BatiVizIØ (Aurélien [NOM]), ou fait l'objet d'une autorisation d'utilisation.</p>
+      <p>Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans autorisation écrite préalable de l'éditeur.</p>
+      <p><strong>Contenus produits pour les clients :</strong> les vidéos drone et photographies 360° réalisées sur chantier restent la propriété de BatiVizIØ jusqu'au règlement complet de la prestation. À compter du solde, les droits d'utilisation sont cédés au constructeur et/ou au propriétaire concerné, dans le cadre exclusif du suivi du chantier visé.</p>
+    </div>
+  </section>
+
+  <!-- 4. DONNÉES PERSONNELLES -->
+  <section class="section" id="donnees">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Données personnelles &amp; RGPD</h2>
+    </div>
+    <div class="prose">
+      <p>BatiVizIØ collecte et traite des données personnelles dans le cadre de la fourniture du service de suivi de chantier. Ces traitements sont effectués en conformité avec le Règlement Général sur la Protection des Données (RGPD — UE 2016/679) et la loi Informatique et Libertés.</p>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="card-grid">
+        <div class="card-field">
+          <label>Responsable de traitement</label>
+          <span>Aurélien [NOM] — BatiVizIØ</span>
+        </div>
+        <div class="card-field">
+          <label>Finalités</label>
+          <span>Accès au portail client, envoi de notifications de passage, facturation</span>
+        </div>
+        <div class="card-field">
+          <label>Données collectées</label>
+          <span>Nom, adresse email, adresse du chantier</span>
+        </div>
+        <div class="card-field">
+          <label>Durée de conservation</label>
+          <span>Durée du contrat + 3 ans (obligation comptable)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:20px">
+      <p><strong>Droits des personnes concernées :</strong> conformément au RGPD, vous disposez d'un droit d'accès, de rectification, d'effacement, de portabilité et d'opposition sur vos données. Pour exercer ces droits, contactez : <a href="mailto:contact@bativizio.fr">contact@bativizio.fr</a>.</p>
+      <p>En cas de désaccord persistant, vous pouvez introduire une réclamation auprès de la <a href="https://www.cnil.fr" target="_blank" rel="noopener">CNIL</a> (Commission Nationale de l'Informatique et des Libertés).</p>
+    </div>
+
+    <ul class="data-list">
+      <li>Les accès au portail propriétaire sont strictement individuels : chaque client ne peut accéder qu'aux médias de son propre chantier.</li>
+      <li>Aucune donnée n'est cédée à des tiers à des fins commerciales.</li>
+      <li>Les vidéos sont hébergées sur Vimeo (Vimeo LLC, New York) avec accès privé par lien sécurisé.</li>
+      <li>Les emails transactionnels sont routés via Brevo (Sendinblue SAS, Paris) conformément à leur politique RGPD.</li>
+    </ul>
+  </section>
+
+  <!-- 5. COOKIES -->
+  <section class="section" id="cookies">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Cookies</h2>
+    </div>
+    <div class="prose">
+      <p>Le site bativizio.fr utilise uniquement des cookies techniques strictement nécessaires au fonctionnement du service (maintien de la session d'authentification via Supabase). Aucun cookie publicitaire, analytique tiers ou traceur marketing n'est déposé.</p>
+      <p>Ces cookies de session expirent à la fermeture du navigateur ou au bout de 7 jours selon les paramètres de connexion. Vous pouvez à tout moment les supprimer depuis les paramètres de votre navigateur, ce qui entraînera votre déconnexion du portail.</p>
+    </div>
+  </section>
+
+  <!-- 6. RESPONSABILITÉ -->
+  <section class="section" id="responsabilite">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Limitation de responsabilité</h2>
+    </div>
+    <div class="prose">
+      <p>BatiVizIØ s'efforce d'assurer l'exactitude et la mise à jour des informations diffusées sur ce site. Toutefois, l'éditeur ne peut garantir l'exactitude, la complétude ou l'actualité des informations disponibles et décline toute responsabilité pour les éventuelles imprécisions.</p>
+      <p>Les contenus visuels (vidéos drone, photos 360°) représentent l'état du chantier à la date de la prise de vue. Ils n'ont pas valeur de document technique ou contractuel de réception des travaux.</p>
+      <p>BatiVizIØ ne saurait être tenu responsable des interruptions de service dues à des problèmes techniques liés à l'hébergeur (Vercel), à la base de données (Supabase) ou à la plateforme vidéo (Vimeo).</p>
+    </div>
+  </section>
+
+  <!-- 7. DROIT APPLICABLE -->
+  <section class="section" id="droit">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Droit applicable &amp; juridiction</h2>
+    </div>
+    <div class="prose">
+      <p>Les présentes mentions légales sont régies par le droit français. En cas de litige relatif à l'utilisation du site ou du service, et à défaut de résolution amiable, les tribunaux compétents du ressort de la Cour d'appel de Poitiers seront seuls compétents.</p>
+      <p>Pour tout litige de consommation, vous pouvez également recourir à la médiation en ligne via la plateforme européenne <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span class="footer-copy">© <span id="year"></span> BatiVizIØ — Aurélien [NOM]</span>
+  <span class="footer-updated">Dernière mise à jour : avril 2026</span>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
