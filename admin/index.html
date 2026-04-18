@@ -304,6 +304,57 @@ nav{padding:14px 10px;flex:1}
 .pv-constr-passage-dt{font-size:0.68rem;color:#6B8599;font-family:'DM Mono',monospace}
 .pv-constr-media-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .pv-constr-chip{display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:12px;font-size:0.68rem;font-family:'DM Mono',monospace;background:#EAF3F8;color:#2E6B8A;border:1px solid #D8E4EC}
+
+/* ══ DEVIS ══ */
+.badge-statut{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase}
+.badge-statut::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge-brouillon{background:rgba(184,200,212,0.08);color:var(--text-muted);border:1px solid var(--border2)}
+.badge-envoyé{background:var(--wave-dim);color:var(--wave-light);border:1px solid rgba(46,107,138,0.3)}
+.badge-accepté{background:var(--green-dim);color:var(--green);border:1px solid rgba(58,155,111,0.3)}
+.badge-refusé{background:var(--red-dim);color:var(--red);border:1px solid rgba(192,80,64,0.25)}
+.c-gold{color:#C8A96E}
+.calc-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px;margin-top:16px}
+.calc-line{display:flex;justify-content:space-between;font-size:0.82rem;padding:4px 0;color:var(--text-muted)}
+.calc-line.total{font-weight:600;color:#C8A96E;border-top:1px solid var(--border);margin-top:8px;padding-top:10px;font-size:0.95rem}
+.calc-mono{font-family:'DM Mono',monospace;font-size:0.8rem}
+
+/* PDF OVERLAY */
+#pdf-overlay{display:none;position:fixed;inset:0;z-index:200;background:#fff;overflow-y:auto}
+#pdf-overlay.open{display:block}
+.pdf-close-bar{background:var(--surface);padding:10px 20px;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--border)}
+.pdf-close-bar span{color:var(--text-muted);font-size:0.82rem;flex:1}
+.pdf-doc{width:210mm;min-height:297mm;margin:20px auto;padding:18mm;background:#fff;color:#111;font-family:'DM Sans',sans-serif;font-size:11pt;box-shadow:0 4px 40px rgba(0,0,0,0.15)}
+.pdf-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10mm;padding-bottom:6mm;border-bottom:2px solid #0C151E}
+.pdf-brand{font-family:'Cormorant Garamond',serif;font-size:26pt;color:#0C151E}
+.pdf-brand span{color:#C8A96E}
+.pdf-tagline{font-family:'DM Mono',monospace;font-size:7pt;color:#2E6B8A;letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+.pdf-meta{text-align:right}
+.pdf-meta h2{font-family:'Cormorant Garamond',serif;font-size:18pt;color:#0C151E;font-weight:600;margin-bottom:4px}
+.pdf-meta .numero{font-family:'DM Mono',monospace;font-size:9pt;color:#2E6B8A}
+.pdf-meta .date-pdf{font-size:9pt;color:#555;margin-top:4px}
+.pdf-parties{display:grid;grid-template-columns:1fr 1fr;gap:12mm;margin-bottom:10mm}
+.pdf-partie-label{font-family:'DM Mono',monospace;font-size:7pt;color:#2E6B8A;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;border-bottom:1px solid #e0e0e0;padding-bottom:4px}
+.pdf-partie-name{font-weight:600;font-size:11pt;margin-bottom:2px}
+.pdf-partie-detail{font-size:9pt;color:#555;line-height:1.6}
+.pdf-table-wrap{margin-bottom:8mm}
+.pdf-table{width:100%;border-collapse:collapse}
+.pdf-table thead th{background:#0C151E;color:#fff;padding:8px 12px;text-align:left;font-size:9pt;font-family:'DM Mono',monospace;letter-spacing:.05em}
+.pdf-table tbody td{padding:8px 12px;border-bottom:1px solid #eee;font-size:10pt}
+.pdf-table tfoot td{padding:8px 12px;font-weight:600;background:#f7f7f7}
+.pdf-table .right{text-align:right}
+.pdf-table .mono-pdf{font-family:'DM Mono',monospace}
+.pdf-ech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.pdf-ech-item{border:1px solid #e0e0e0;border-radius:6px;padding:10px 12px}
+.pdf-ech-n{font-family:'DM Mono',monospace;font-size:8pt;color:#2E6B8A;margin-bottom:4px}
+.pdf-ech-pct{font-family:'Cormorant Garamond',serif;font-size:14pt;font-weight:600;color:#0C151E}
+.pdf-ech-montant{font-family:'DM Mono',monospace;font-size:9pt;color:#C8A96E;margin-top:2px}
+.pdf-ech-when{font-size:8pt;color:#888;margin-top:4px}
+.pdf-conditions{font-size:8pt;color:#777;line-height:1.7;margin-bottom:6mm}
+.pdf-footer-bar{margin-top:auto;padding-top:6mm;border-top:1px solid #e0e0e0;display:flex;justify-content:space-between;font-size:8pt;color:#aaa}
+.pdf-sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:20mm;margin-top:4mm}
+.pdf-sign-box{border-top:1px solid #333;padding-top:4px;font-size:8pt;color:#555}
+@media print{.pdf-close-bar{display:none!important}.pdf-doc{margin:0;box-shadow:none;padding:12mm 15mm}}
+
 </style>
 </head>
 <body>
@@ -401,7 +452,7 @@ nav{padding:14px 10px;flex:1}
       <div class="nav-item" onclick="showPage('chantiers',this)"><span class="nav-icon">🏗</span> Chantiers <span class="nav-badge" id="nb-chantiers">—</span></div>
       <div class="nav-item" onclick="showPage('clients',this)"><span class="nav-icon">👤</span> Clients</div>
       <div class="nav-section">Facturation</div>
-      <div class="nav-item" onclick="window.location.href='/admin/devis'"><span class="nav-icon">📄</span> Devis</div>
+      <div class="nav-item" id="nav-devis" onclick="showPage('devis',this)"><span class="nav-icon">📄</span> Devis <span class="nav-badge" id="nb-devis" style="display:none">—</span></div>
     </nav>
     <div class="sidebar-footer">
       <div class="user-pill">
@@ -425,8 +476,8 @@ nav{padding:14px 10px;flex:1}
         <div class="topbar-bc">BatiVizIØ › <span id="topbar-sub">Overview</span></div>
       </div>
       <div class="topbar-right">
-        <button class="btn btn-ghost" onclick="openModal('modal-chantier')">+ Nouveau chantier</button>
-        <button class="btn btn-wave" onclick="openModalPassage()">+ Ajouter un passage</button>
+        <button class="btn btn-ghost" id="topbar-btn-chantier" onclick="openModal('modal-chantier')">+ Nouveau chantier</button>
+        <button class="btn btn-wave" id="topbar-btn-passage" onclick="openModalPassage()">+ Ajouter un passage</button><button class="btn btn-wave" id="topbar-btn-devis" style="display:none" onclick="openDevisModal()">+ Nouveau devis</button>
       </div>
     </div>
 
@@ -491,6 +542,42 @@ nav{padding:14px 10px;flex:1}
             <thead><tr><th>Nom</th><th>Email</th><th>Chantier</th><th>Statut</th><th>Actions</th></tr></thead>
             <tbody id="clients-tbody"></tbody>
           </table>
+        </div>
+      </div>
+
+
+      <!-- ══ PAGE DEVIS ══ -->
+      <div class="page" id="page-devis">
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-label">Total devis</div><div class="stat-value" id="dv-stat-total">—</div><div class="stat-sub">tous statuts</div></div>
+          <div class="stat-card"><div class="stat-label">Acceptés</div><div class="stat-value c-green" id="dv-stat-acceptes">—</div><div class="stat-sub">signés</div></div>
+          <div class="stat-card"><div class="stat-label">En attente</div><div class="stat-value c-wave" id="dv-stat-attente">—</div><div class="stat-sub">envoyés</div></div>
+          <div class="stat-card"><div class="stat-label">CA validé</div><div class="stat-value c-gold" id="dv-stat-ca">—</div><div class="stat-sub">HT net</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Tous les devis</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <select id="dv-filter" class="btn btn-ghost btn-sm" style="cursor:pointer" onchange="filterDevis()">
+                <option value="">Tous les statuts</option>
+                <option value="brouillon">Brouillon</option>
+                <option value="envoyé">Envoyé</option>
+                <option value="accepté">Accepté</option>
+                <option value="refusé">Refusé</option>
+              </select>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>N° devis</th><th>Chantier</th><th>Constructeur</th><th>Type</th>
+                  <th>Montant HT</th><th>Statut</th><th>Émis le</th><th>Validité</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="dv-list"><tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text-dim)">Chargement…</td></tr></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -636,6 +723,99 @@ nav{padding:14px 10px;flex:1}
   </div>
 </div>
 
+
+<!-- ══ PDF OVERLAY ══ -->
+<div id="pdf-overlay">
+  <div class="pdf-close-bar">
+    <span>Aperçu du devis — imprimez ou enregistrez en PDF depuis votre navigateur (Ctrl+P)</span>
+    <button class="btn btn-wave btn-sm" onclick="window.print()">🖨 Imprimer / PDF</button>
+    <button class="btn btn-ghost btn-sm" onclick="closePdf()">✕ Fermer</button>
+  </div>
+  <div class="pdf-doc" id="pdf-doc-content"></div>
+</div>
+
+<!-- ══ MODAL DEVIS ══ -->
+<div class="modal-overlay" id="modal-devis">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-devis-title">Nouveau devis</div>
+      <button class="modal-close" onclick="closeModal('modal-devis')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="dv-edit-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Chantier</label>
+          <select class="form-select" id="dv-chantier" onchange="onDvChantierChange()">
+            <option value="">Sélectionner…</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Constructeur</label>
+          <input type="text" class="form-input" id="dv-constructeur" readonly placeholder="Auto" style="opacity:.6">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Type d'offre</label>
+          <select class="form-select" id="dv-type" onchange="dvRecalc()">
+            <option value="forfait">Forfait 12 mois</option>
+            <option value="unitaire">Unitaire</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nombre de passages</label>
+          <input type="number" class="form-input" id="dv-passages" value="10" min="1" max="50" oninput="dvRecalc()">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Prix unitaire HT (€)</label>
+          <input type="number" class="form-input" id="dv-prix" value="250" step="10" oninput="dvRecalc()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Statut</label>
+          <select class="form-select" id="dv-statut">
+            <option value="brouillon">Brouillon</option>
+            <option value="envoyé">Envoyé</option>
+            <option value="accepté">Accepté</option>
+            <option value="refusé">Refusé</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Date d'émission</label>
+          <input type="date" class="form-input" id="dv-emission">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Valide jusqu'au</label>
+          <input type="date" class="form-input" id="dv-validite">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Notes internes</label>
+          <textarea class="form-textarea" id="dv-notes" placeholder="Remarques, conditions particulières…" style="min-height:64px"></textarea>
+        </div>
+      </div>
+      <div class="calc-box">
+        <div class="calc-line"><span>Type</span><span class="calc-mono" id="dv-c-type">Forfait 12 mois</span></div>
+        <div class="calc-line"><span>Passages × Prix unitaire</span><span class="calc-mono" id="dv-c-detail">10 × 250 €</span></div>
+        <div class="calc-line total"><span>Montant HT net</span><span class="calc-mono" id="dv-c-total">2 500 €</span></div>
+        <div class="calc-line"><span style="font-size:0.75rem">Versement 1 — À la signature (30%)</span><span class="calc-mono" id="dv-c-v1">750 €</span></div>
+        <div class="calc-line"><span style="font-size:0.75rem">Versement 2 — Au 7ème passage (40%)</span><span class="calc-mono" id="dv-c-v2">1 000 €</span></div>
+        <div class="calc-line"><span style="font-size:0.75rem">Solde — Fin de chantier (30%)</span><span class="calc-mono" id="dv-c-v3">750 €</span></div>
+        <div class="calc-line" style="font-size:0.72rem;opacity:.5;margin-top:4px"><span>TVA non applicable — art. 293B CGI</span></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-devis')">Annuler</button>
+      <button class="btn btn-wave" onclick="saveDevis()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"><span class="toast-icon" id="toast-icon">✓</span><span id="toast-text"></span></div>
 
@@ -690,11 +870,19 @@ function showPage(name, navEl) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + name)?.classList.add('active');
   if (navEl) navEl.classList.add('active');
-  const titles = { dashboard: 'Tableau de bord', chantiers: 'Chantiers', clients: 'Clients', detail: 'Détail chantier' };
+  const titles = { dashboard: 'Tableau de bord', chantiers: 'Chantiers', clients: 'Clients', detail: 'Détail chantier', devis: 'Devis' };
   document.getElementById('topbar-title').textContent = titles[name] || name;
   document.getElementById('topbar-sub').textContent = titles[name] || name;
   if (name === 'chantiers') loadChantiersPage();
   if (name === 'clients')   loadClientsPage();
+  if (name === 'devis')     loadDevisPage();
+  // Topbar right buttons
+  const dvBtn = document.getElementById('topbar-btn-devis');
+  const chBtn = document.getElementById('topbar-btn-chantier');
+  const pBtn  = document.getElementById('topbar-btn-passage');
+  if(dvBtn)  dvBtn.style.display  = name === 'devis' ? '' : 'none';
+  if(chBtn)  chBtn.style.display  = name === 'devis' ? 'none' : '';
+  if(pBtn)   pBtn.style.display   = name === 'devis' ? 'none' : '';
 }
 
 // ══ DASHBOARD ══
@@ -1398,6 +1586,266 @@ function checkVimeoStatuses() {
     }
   });
 }
+
+// ══ DEVIS ══
+let allDevis = [];
+let dvChantiers = [];
+
+async function loadDevisPage() {
+  // Charger chantiers pour le select si pas encore fait
+  if (!dvChantiers.length) {
+    const { data } = await sb.from('chantiers')
+      .select('id, adresse, ville, code_postal, constructeur_id, profiles!chantiers_constructeur_id_fkey(id, nom)')
+      .order('adresse');
+    dvChantiers = data || [];
+    const sel = document.getElementById('dv-chantier');
+    sel.innerHTML = '<option value="">Sélectionner…</option>';
+    dvChantiers.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.dataset.constructeurId  = c.profiles?.id  || '';
+      opt.dataset.constructeurNom = c.profiles?.nom  || '';
+      opt.dataset.adresse = c.adresse || '';
+      opt.dataset.ville   = c.ville   || '';
+      opt.dataset.cp      = c.code_postal || '';
+      opt.textContent = (c.adresse || '—') + (c.ville ? ', ' + c.ville : '');
+      sel.appendChild(opt);
+    });
+  }
+
+  const { data } = await sb.from('devis_complet').select('*').order('created_at', { ascending: false });
+  allDevis = data || [];
+  renderDevis(allDevis);
+  updateDevisStats(allDevis);
+  document.getElementById('nb-devis').textContent = allDevis.length;
+  document.getElementById('nb-devis').style.display = allDevis.length ? '' : 'none';
+}
+
+function updateDevisStats(list) {
+  document.getElementById('dv-stat-total').textContent    = list.length;
+  document.getElementById('dv-stat-acceptes').textContent = list.filter(d => d.statut === 'accepté').length;
+  document.getElementById('dv-stat-attente').textContent  = list.filter(d => d.statut === 'envoyé').length;
+  const ca = list.filter(d => d.statut === 'accepté').reduce((s, d) => s + parseFloat(d.montant_ht || 0), 0);
+  document.getElementById('dv-stat-ca').textContent = dvFmtEur(ca);
+}
+
+function renderDevis(list) {
+  const tbody = document.getElementById('dv-list');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">📄</div><div class="empty-text">Aucun devis — créez-en un avec le bouton en haut à droite</div></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(d => `
+    <tr>
+      <td class="strong" style="font-family:'DM Mono',monospace;font-size:0.78rem">${d.numero_devis}</td>
+      <td class="strong">${d.chantier_adresse || '—'}<br><span style="font-size:0.72rem;color:var(--text-dim);font-family:'DM Mono',monospace">${d.chantier_cp||''} ${d.chantier_ville||''}</span></td>
+      <td>${d.constructeur_nom || '—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:0.75rem">${d.type_offre === 'forfait' ? '📅 Forfait' : '🔹 Unitaire'}</td>
+      <td style="color:#C8A96E;font-family:'DM Mono',monospace;font-size:0.82rem">${dvFmtEur(d.montant_ht)}</td>
+      <td>${dvBadge(d.statut)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:0.75rem">${dvFmtDate(d.date_emission)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:0.75rem;${dvExpired(d)?'color:var(--red)':''}">${dvFmtDate(d.date_validite)}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-ghost btn-sm" onclick='dvPreviewPdf(${JSON.stringify(d).replace(/'/g,"&#39;")})'>👁 PDF</button>
+          <button class="btn btn-ghost btn-sm" onclick='dvEditDevis(${JSON.stringify(d).replace(/'/g,"&#39;")})'>✏</button>
+          <button class="btn btn-danger btn-sm" onclick="dvDelete('${d.id}')">🗑</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterDevis() {
+  const f = document.getElementById('dv-filter').value;
+  renderDevis(f ? allDevis.filter(d => d.statut === f) : allDevis);
+}
+
+function openDevisModal() {
+  document.getElementById('dv-edit-id').value = '';
+  document.getElementById('modal-devis-title').textContent = 'Nouveau devis';
+  document.getElementById('dv-chantier').value = '';
+  document.getElementById('dv-constructeur').value = '';
+  document.getElementById('dv-type').value = 'forfait';
+  document.getElementById('dv-passages').value = 10;
+  document.getElementById('dv-prix').value = 250;
+  document.getElementById('dv-statut').value = 'brouillon';
+  document.getElementById('dv-notes').value = '';
+  const today = new Date();
+  const val   = new Date(today); val.setDate(val.getDate() + 30);
+  document.getElementById('dv-emission').value = dvFmtISO(today);
+  document.getElementById('dv-validite').value = dvFmtISO(val);
+  dvRecalc();
+  openModal('modal-devis');
+}
+
+function dvEditDevis(d) {
+  document.getElementById('dv-edit-id').value = d.id;
+  document.getElementById('modal-devis-title').textContent = 'Modifier — ' + d.numero_devis;
+  document.getElementById('dv-chantier').value   = d.chantier_id;
+  document.getElementById('dv-constructeur').value = d.constructeur_nom || '';
+  document.getElementById('dv-type').value       = d.type_offre;
+  document.getElementById('dv-passages').value   = d.nb_passages;
+  document.getElementById('dv-prix').value       = d.prix_unitaire_ht;
+  document.getElementById('dv-statut').value     = d.statut;
+  document.getElementById('dv-notes').value      = d.notes || '';
+  document.getElementById('dv-emission').value   = d.date_emission;
+  document.getElementById('dv-validite').value   = d.date_validite;
+  dvRecalc();
+  openModal('modal-devis');
+}
+
+function onDvChantierChange() {
+  const sel = document.getElementById('dv-chantier');
+  const opt = sel.options[sel.selectedIndex];
+  document.getElementById('dv-constructeur').value = opt.dataset.constructeurNom || '';
+}
+
+function dvRecalc() {
+  const passages = parseInt(document.getElementById('dv-passages').value) || 0;
+  const prix     = parseFloat(document.getElementById('dv-prix').value) || 0;
+  const type     = document.getElementById('dv-type').value;
+  const total    = passages * prix;
+  document.getElementById('dv-c-type').textContent   = type === 'forfait' ? 'Forfait 12 mois' : 'Unitaire';
+  document.getElementById('dv-c-detail').textContent = passages + ' × ' + dvFmtEur(prix);
+  document.getElementById('dv-c-total').textContent  = dvFmtEur(total);
+  document.getElementById('dv-c-v1').textContent     = dvFmtEur(Math.round(total * 0.30 * 100) / 100);
+  document.getElementById('dv-c-v2').textContent     = dvFmtEur(Math.round(total * 0.40 * 100) / 100);
+  document.getElementById('dv-c-v3').textContent     = dvFmtEur(Math.round(total * 0.30 * 100) / 100);
+}
+
+async function saveDevis() {
+  const chantierId = document.getElementById('dv-chantier').value;
+  if (!chantierId) { showToast('Sélectionnez un chantier.', 'error'); return; }
+  const sel = document.getElementById('dv-chantier');
+  const opt = sel.options[sel.selectedIndex];
+  const payload = {
+    chantier_id:      chantierId,
+    constructeur_id:  opt.dataset.constructeurId,
+    type_offre:       document.getElementById('dv-type').value,
+    nb_passages:      parseInt(document.getElementById('dv-passages').value),
+    prix_unitaire_ht: parseFloat(document.getElementById('dv-prix').value),
+    statut:           document.getElementById('dv-statut').value,
+    date_emission:    document.getElementById('dv-emission').value,
+    date_validite:    document.getElementById('dv-validite').value,
+    notes:            document.getElementById('dv-notes').value || null,
+  };
+  const editId = document.getElementById('dv-edit-id').value;
+  let error;
+  if (editId) {
+    ({ error } = await sb.from('devis').update(payload).eq('id', editId));
+  } else {
+    ({ error } = await sb.from('devis').insert(payload));
+  }
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+  closeModal('modal-devis');
+  showToast(editId ? 'Devis modifié ✓' : 'Devis créé ✓', 'success');
+  await loadDevisPage();
+}
+
+async function dvDelete(id) {
+  if (!confirm('Supprimer ce devis définitivement ?')) return;
+  const { error } = await sb.from('devis').delete().eq('id', id);
+  if (error) { showToast('Erreur : ' + error.message, 'error'); return; }
+  showToast('Devis supprimé', 'success');
+  await loadDevisPage();
+}
+
+function dvPreviewPdf(d) {
+  const montant = parseFloat(d.montant_ht || 0);
+  const v1 = Math.round(montant * 0.30 * 100) / 100;
+  const v2 = Math.round(montant * 0.40 * 100) / 100;
+  const v3 = Math.round(montant * 0.30 * 100) / 100;
+  document.getElementById('pdf-doc-content').innerHTML = `
+    <div class="pdf-header">
+      <div>
+        <div class="pdf-brand">BatiViz<span>IØ</span></div>
+        <div class="pdf-tagline">Suivi de chantier par drone · Île d'Oléron</div>
+        <div style="margin-top:8px;font-size:8pt;color:#555;line-height:1.7">
+          Aurélien Chaumet<br>Auto-entrepreneur — SIRET en cours<br>contact@bativizio.fr
+        </div>
+      </div>
+      <div class="pdf-meta">
+        <h2>DEVIS</h2>
+        <div class="numero">${d.numero_devis}</div>
+        <div class="date-pdf">Émis le ${dvFmtDate(d.date_emission)}</div>
+        <div class="date-pdf" style="color:#C8A96E">Valable jusqu'au ${dvFmtDate(d.date_validite)}</div>
+      </div>
+    </div>
+    <div class="pdf-parties">
+      <div>
+        <div class="pdf-partie-label">Prestataire</div>
+        <div class="pdf-partie-name">BatiVizIØ</div>
+        <div class="pdf-partie-detail">Aurélien Chaumet<br>105 impasse des bons voisins<br>17190 Saint-Georges-d'Oléron<br>contact@bativizio.fr<br>bativizio.fr</div>
+      </div>
+      <div>
+        <div class="pdf-partie-label">Client</div>
+        <div class="pdf-partie-name">${d.constructeur_nom || '—'}</div>
+        <div class="pdf-partie-detail"><strong>Chantier :</strong> ${d.chantier_adresse || '—'}<br>${d.chantier_cp||''} ${d.chantier_ville||''}</div>
+      </div>
+    </div>
+    <div style="margin-bottom:8mm">
+      <div class="pdf-partie-label">Objet</div>
+      <div style="font-size:10pt">Service de suivi de chantier par drone et caméra 360° — ${d.type_offre === 'forfait' ? 'Forfait 12 mois' : 'Commande unitaire'}</div>
+    </div>
+    <div class="pdf-table-wrap">
+      <table class="pdf-table">
+        <thead><tr><th>Désignation</th><th class="right">Qté</th><th class="right">Prix unit. HT</th><th class="right">Total HT</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Passage de chantier BatiVizIØ</strong><br><span style="font-size:8.5pt;color:#666">Prise de vue drone + photos 360° · Montage · Mise en ligne Vimeo · Accès client sécurisé</span></td>
+            <td class="right mono-pdf">${d.nb_passages}</td>
+            <td class="right mono-pdf">${dvFmtEur(d.prix_unitaire_ht)}</td>
+            <td class="right mono-pdf" style="font-weight:600">${dvFmtEur(montant)}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="text-align:right;font-size:8pt;color:#888">TVA non applicable — art. 293B CGI</td>
+            <td class="right mono-pdf" style="font-size:12pt;color:#0C151E">${dvFmtEur(montant)}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div style="margin-bottom:10mm">
+      <div class="pdf-partie-label" style="margin-bottom:6px">Échéancier de paiement</div>
+      <div class="pdf-ech-grid">
+        <div class="pdf-ech-item"><div class="pdf-ech-n">Versement 1</div><div class="pdf-ech-pct">30%</div><div class="pdf-ech-montant">${dvFmtEur(v1)}</div><div class="pdf-ech-when">À la signature du devis</div></div>
+        <div class="pdf-ech-item"><div class="pdf-ech-n">Versement 2</div><div class="pdf-ech-pct">40%</div><div class="pdf-ech-montant">${dvFmtEur(v2)}</div><div class="pdf-ech-when">Au 7ème passage</div></div>
+        <div class="pdf-ech-item"><div class="pdf-ech-n">Solde</div><div class="pdf-ech-pct">30%</div><div class="pdf-ech-montant">${dvFmtEur(v3)}</div><div class="pdf-ech-when">À la fin du chantier</div></div>
+      </div>
+    </div>
+    <div class="pdf-conditions">
+      <strong>Conditions :</strong> Devis valable 30 jours à compter de la date d'émission. Paiement par virement bancaire. En cas de résiliation anticipée, les passages déjà réalisés sont dus au tarif unitaire de 250 € HT. Clause d'ajustement bilatérale applicable selon accord mutuel.<br><br>
+      <strong>Confidentialité :</strong> Les contenus produits sont strictement privés et accessibles uniquement au propriétaire concerné via son espace personnel sécurisé.
+    </div>
+    ${d.notes ? '<div class="pdf-conditions"><strong>Note :</strong> ' + d.notes + '</div>' : ''}
+    <div style="margin-top:10mm">
+      <div style="font-size:8pt;color:#888;margin-bottom:6mm">Pour acceptation, veuillez signer et renvoyer ce devis avec la mention « Bon pour accord ».</div>
+      <div class="pdf-sign-grid">
+        <div class="pdf-sign-box">Signature du client<br><br><br><br></div>
+        <div class="pdf-sign-box">Signature BatiVizIØ<br><br><br><br></div>
+      </div>
+    </div>
+    <div class="pdf-footer-bar">
+      <span>BatiVizIØ · bativizio.fr · contact@bativizio.fr</span>
+      <span>${d.numero_devis} · ${dvFmtDate(d.date_emission)}</span>
+    </div>
+  `;
+  document.getElementById('pdf-overlay').classList.add('open');
+}
+
+function closePdf() { document.getElementById('pdf-overlay').classList.remove('open'); }
+
+function dvBadge(s) {
+  const labels = { brouillon:'Brouillon', 'envoyé':'Envoyé', 'accepté':'Accepté', 'refusé':'Refusé' };
+  return '<span class="badge-statut badge-' + s + '">' + (labels[s]||s) + '</span>';
+}
+function dvFmtEur(n) { return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:0}).format(n||0); }
+function dvFmtDate(s) { if(!s) return '—'; return new Date(s).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}); }
+function dvFmtISO(d) { return d.toISOString().split('T')[0]; }
+function dvExpired(d) { return d.statut === 'envoyé' && new Date(d.date_validite) < new Date(); }
+
 </script>
 </body>
 </html>
