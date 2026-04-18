@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BatiVizIØ — Devis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/shared.js"></script>
+<style>
+:root {
+  --navy:   #0C151E;
+  --navy2:  #152333;
+  --navy3:  #1E3247;
+  --gold:   #C8A96E;
+  --gold2:  #E2C98D;
+  --wave:   #2E6B8A;
+  --wave2:  #5AAABF;
+  --fog:    #B8C8D4;
+  --white:  #EDF2F6;
+  --green:  #3D9E6E;
+  --red:    #C0392B;
+  --amber:  #D4820A;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+}
+
+/* ── LAYOUT ── */
+.layout { display:flex; min-height:100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px;
+  background: var(--navy2);
+  border-right: 1px solid rgba(46,107,138,0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  flex-shrink: 0;
+}
+.sidebar-logo {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 20px 24px;
+  border-bottom: 1px solid rgba(46,107,138,0.15);
+  margin-bottom: 16px;
+}
+.brand { font-family:'Cormorant Garamond',serif; font-size:18px; letter-spacing:.03em; }
+.brand span { color: var(--gold); }
+.tag { font-family:'DM Mono',monospace; font-size:9px; color:var(--wave2); letter-spacing:.12em; text-transform:uppercase; margin-top:2px; }
+.nav-section { font-family:'DM Mono',monospace; font-size:9px; color:rgba(184,200,212,0.4); letter-spacing:.12em; text-transform:uppercase; padding:8px 20px 4px; }
+.nav-item {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 20px; cursor:pointer; font-size:13px; color:var(--fog);
+  border-left:2px solid transparent; transition:all .15s;
+}
+.nav-item:hover { background:rgba(46,107,138,0.1); color:var(--white); }
+.nav-item.active { background:rgba(46,107,138,0.15); color:var(--wave2); border-left-color:var(--wave2); }
+.nav-badge {
+  margin-left:auto; background:rgba(46,107,138,0.3); color:var(--wave2);
+  font-family:'DM Mono',monospace; font-size:10px; padding:1px 7px; border-radius:10px;
+}
+.sidebar-footer { margin-top:auto; padding:16px 20px 0; border-top:1px solid rgba(46,107,138,0.15); }
+.user-pill { display:flex; align-items:center; gap:10px; }
+.user-avatar { width:32px;height:32px;border-radius:50%;background:var(--wave);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0; }
+.user-name { font-size:12px;font-weight:500; }
+.user-role { font-size:10px;color:var(--fog);opacity:.6; }
+.logout-btn { margin-left:auto;background:none;border:none;color:var(--fog);cursor:pointer;font-size:16px;opacity:.5;transition:opacity .2s; }
+.logout-btn:hover { opacity:1; }
+
+/* ── MAIN ── */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 28px; border-bottom:1px solid rgba(46,107,138,0.2);
+  background:var(--navy2);
+}
+.topbar-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:600; }
+.topbar-bc { font-family:'DM Mono',monospace; font-size:10px; color:var(--fog); opacity:.5; margin-top:2px; }
+.topbar-right { display:flex; gap:10px; }
+
+.content { flex:1; overflow-y:auto; padding:28px; }
+
+/* ── BUTTONS ── */
+.btn { padding:8px 16px; border-radius:6px; font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; border:none; transition:all .15s; font-weight:500; }
+.btn-ghost { background:rgba(46,107,138,0.12); color:var(--wave2); border:1px solid rgba(46,107,138,0.25); }
+.btn-ghost:hover { background:rgba(46,107,138,0.22); }
+.btn-wave { background:var(--wave); color:#fff; }
+.btn-wave:hover { background:var(--wave2); }
+.btn-gold { background:var(--gold); color:var(--navy); font-weight:600; }
+.btn-gold:hover { background:var(--gold2); }
+.btn-sm { padding:5px 12px; font-size:12px; }
+.btn-danger { background:rgba(192,57,43,0.15); color:#e74c3c; border:1px solid rgba(192,57,43,0.25); }
+.btn-danger:hover { background:rgba(192,57,43,0.25); }
+
+/* ── STATS ── */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.stat-card { background:var(--navy2); border:1px solid rgba(46,107,138,0.2); border-radius:10px; padding:18px 20px; }
+.stat-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--fog); opacity:.6; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
+.stat-value { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:600; line-height:1; }
+.stat-sub { font-size:11px; color:var(--fog); opacity:.5; margin-top:4px; }
+.c-gold { color:var(--gold); }
+.c-green { color:var(--green); }
+.c-wave { color:var(--wave2); }
+.c-red { color:var(--red); }
+
+/* ── CARD ── */
+.card { background:var(--navy2); border:1px solid rgba(46,107,138,0.2); border-radius:10px; }
+.card-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid rgba(46,107,138,0.12); }
+.card-title { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; }
+thead th { font-family:'DM Mono',monospace; font-size:10px; color:var(--fog); opacity:.5; letter-spacing:.08em; text-transform:uppercase; padding:10px 16px; text-align:left; border-bottom:1px solid rgba(46,107,138,0.12); white-space:nowrap; }
+tbody tr { border-bottom:1px solid rgba(46,107,138,0.08); transition:background .12s; }
+tbody tr:hover { background:rgba(46,107,138,0.06); }
+tbody td { padding:12px 16px; font-size:13px; white-space:nowrap; }
+.mono { font-family:'DM Mono',monospace; font-size:12px; }
+.td-actions { display:flex; gap:6px; }
+
+/* ── BADGE STATUT ── */
+.badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.06em; text-transform:uppercase; }
+.badge-brouillon { background:rgba(184,200,212,0.1); color:var(--fog); border:1px solid rgba(184,200,212,0.2); }
+.badge-envoyé    { background:rgba(46,107,138,0.15); color:var(--wave2); border:1px solid rgba(46,107,138,0.3); }
+.badge-accepté   { background:rgba(61,158,110,0.15); color:var(--green); border:1px solid rgba(61,158,110,0.3); }
+.badge-refusé    { background:rgba(192,57,43,0.12); color:#e74c3c; border:1px solid rgba(192,57,43,0.25); }
+.badge::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+/* ── MODAL ── */
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(12,21,30,0.85); z-index:100; align-items:center; justify-content:center; }
+.modal-bg.open { display:flex; }
+.modal { background:var(--navy2); border:1px solid rgba(46,107,138,0.3); border-radius:14px; width:560px; max-width:95vw; max-height:90vh; overflow-y:auto; }
+.modal-head { display:flex; align-items:center; justify-content:space-between; padding:20px 24px 16px; border-bottom:1px solid rgba(46,107,138,0.15); }
+.modal-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; }
+.modal-close { background:none; border:none; color:var(--fog); font-size:20px; cursor:pointer; opacity:.5; }
+.modal-close:hover { opacity:1; }
+.modal-body { padding:24px; }
+.modal-footer { display:flex; gap:10px; justify-content:flex-end; padding:16px 24px; border-top:1px solid rgba(46,107,138,0.15); }
+
+/* ── FORM ── */
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.form-row.full { grid-template-columns:1fr; }
+.field label { display:block; font-family:'DM Mono',monospace; font-size:10px; color:var(--fog); opacity:.6; letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px; }
+.field input, .field select, .field textarea {
+  width:100%; background:rgba(46,107,138,0.08); border:1px solid rgba(46,107,138,0.2);
+  border-radius:6px; padding:9px 12px; color:var(--white); font-family:'DM Sans',sans-serif; font-size:13px;
+  outline:none; transition:border-color .15s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color:var(--wave2); }
+.field select option { background:var(--navy2); }
+.field textarea { resize:vertical; min-height:72px; }
+.field .hint { font-size:11px; color:var(--fog); opacity:.5; margin-top:5px; }
+
+/* ── CALCUL PREVIEW ── */
+.calc-box { background:rgba(46,107,138,0.08); border:1px solid rgba(46,107,138,0.18); border-radius:8px; padding:16px; margin-top:16px; }
+.calc-line { display:flex; justify-content:space-between; font-size:13px; padding:4px 0; }
+.calc-line.total { font-weight:600; color:var(--gold); border-top:1px solid rgba(46,107,138,0.2); margin-top:8px; padding-top:10px; font-size:15px; }
+.calc-line.sub { color:var(--fog); font-size:12px; }
+.calc-label { color:var(--fog); }
+.calc-value { font-family:'DM Mono',monospace; }
+
+/* ── EMPTY / LOADING ── */
+.empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 24px; gap:10px; }
+.empty-icon { font-size:32px; opacity:.3; }
+.empty-text { font-size:13px; color:var(--fog); opacity:.5; }
+.loading { color:var(--fog); opacity:.5; font-size:13px; padding:20px; text-align:center; }
+
+/* ══════════════════════════════════════════════
+   VUE PDF (masquée par défaut, visible à l'impression)
+══════════════════════════════════════════════ */
+#pdf-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: #fff;
+  overflow-y: auto;
+}
+#pdf-overlay.open { display: block; }
+.pdf-close-bar {
+  background: var(--navy2);
+  padding: 10px 20px;
+  display: flex; gap: 10px; align-items: center;
+}
+.pdf-close-bar span { color:var(--fog); font-size:13px; flex:1; }
+
+.pdf-doc {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 20px auto;
+  padding: 18mm 18mm 18mm;
+  background: #fff;
+  color: #111;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11pt;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.15);
+}
+
+.pdf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10mm;
+  padding-bottom: 6mm;
+  border-bottom: 2px solid #0C151E;
+}
+.pdf-brand { font-family:'Cormorant Garamond',serif; font-size:26pt; color:#0C151E; letter-spacing:-.01em; }
+.pdf-brand span { color:#C8A96E; }
+.pdf-tagline { font-family:'DM Mono',monospace; font-size:7pt; color:#2E6B8A; letter-spacing:.1em; text-transform:uppercase; margin-top:4px; }
+.pdf-meta { text-align:right; }
+.pdf-meta h2 { font-family:'Cormorant Garamond',serif; font-size:18pt; color:#0C151E; font-weight:600; margin-bottom:4px; }
+.pdf-meta .numero { font-family:'DM Mono',monospace; font-size:9pt; color:#2E6B8A; }
+.pdf-meta .date { font-size:9pt; color:#555; margin-top:4px; }
+
+.pdf-parties {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12mm;
+  margin-bottom: 10mm;
+}
+.pdf-partie { }
+.pdf-partie-label {
+  font-family:'DM Mono',monospace; font-size:7pt;
+  color:#2E6B8A; letter-spacing:.1em; text-transform:uppercase;
+  margin-bottom:5px;
+  border-bottom: 1px solid #e0e0e0; padding-bottom:4px;
+}
+.pdf-partie-name { font-weight:600; font-size:11pt; margin-bottom:2px; }
+.pdf-partie-detail { font-size:9pt; color:#555; line-height:1.6; }
+
+.pdf-objet { margin-bottom:8mm; }
+.pdf-objet-label { font-family:'DM Mono',monospace; font-size:7pt; color:#2E6B8A; letter-spacing:.1em; text-transform:uppercase; margin-bottom:5px; }
+.pdf-objet-val { font-size:10pt; }
+
+.pdf-table { width:100%; border-collapse:collapse; margin-bottom:8mm; }
+.pdf-table thead th { background:#0C151E; color:#fff; padding:8px 12px; text-align:left; font-size:9pt; font-family:'DM Mono',monospace; letter-spacing:.05em; }
+.pdf-table tbody td { padding:8px 12px; border-bottom:1px solid #eee; font-size:10pt; }
+.pdf-table tbody tr:last-child td { border-bottom:2px solid #0C151E; }
+.pdf-table tfoot td { padding:8px 12px; font-weight:600; background:#f7f7f7; }
+.pdf-table .right { text-align:right; }
+.pdf-table .mono { font-family:'DM Mono',monospace; }
+
+.pdf-echeancier { margin-bottom:10mm; }
+.pdf-ech-title { font-family:'DM Mono',monospace; font-size:7pt; color:#2E6B8A; letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; border-bottom:1px solid #e0e0e0; padding-bottom:4px; }
+.pdf-ech-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.pdf-ech-item { border:1px solid #e0e0e0; border-radius:6px; padding:10px 12px; }
+.pdf-ech-n { font-family:'DM Mono',monospace; font-size:8pt; color:#2E6B8A; margin-bottom:4px; }
+.pdf-ech-pct { font-size:14pt; font-weight:600; color:#0C151E; font-family:'Cormorant Garamond',serif; }
+.pdf-ech-montant { font-family:'DM Mono',monospace; font-size:9pt; color:#C8A96E; margin-top:2px; }
+.pdf-ech-when { font-size:8pt; color:#888; margin-top:4px; }
+
+.pdf-conditions { font-size:8pt; color:#777; line-height:1.7; margin-bottom:6mm; }
+.pdf-conditions strong { color:#333; }
+
+.pdf-footer {
+  margin-top: auto;
+  padding-top: 6mm;
+  border-top: 1px solid #e0e0e0;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 8pt; color: #aaa;
+}
+.pdf-sign { margin-top:10mm; }
+.pdf-sign-grid { display:grid; grid-template-columns:1fr 1fr; gap:20mm; margin-top:4mm; }
+.pdf-sign-box { border-top:1px solid #333; padding-top:4px; font-size:8pt; color:#555; }
+
+@media print {
+  .pdf-close-bar { display:none !important; }
+  .pdf-doc { margin:0; box-shadow:none; padding:12mm 15mm; }
+  body { background:#fff; }
+  #pdf-overlay { position:static; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ PDF OVERLAY ══ -->
+<div id="pdf-overlay">
+  <div class="pdf-close-bar">
+    <span>Aperçu du devis — imprimez ou enregistrez en PDF depuis votre navigateur</span>
+    <button class="btn btn-wave btn-sm" onclick="window.print()">🖨 Imprimer / PDF</button>
+    <button class="btn btn-ghost btn-sm" onclick="closePdf()">✕ Fermer</button>
+  </div>
+  <div class="pdf-doc" id="pdf-doc-content">
+    <!-- Rempli dynamiquement -->
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div class="layout" id="app" style="display:none">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="32" height="32" viewBox="0 0 80 80" fill="none">
+        <rect width="80" height="80" rx="16" fill="#152333"/>
+        <path d="M40 28 L60 44 L60 62 L20 62 L20 44 Z" fill="#2E6B8A" opacity="0.2"/>
+        <rect x="20" y="44" width="40" height="18" stroke="#E8F0F5" stroke-width="3" fill="none"/>
+        <polyline points="16,46 40,28 64,46" stroke="#E8F0F5" stroke-width="3" fill="none"/>
+        <rect x="33" y="50" width="14" height="12" stroke="#E8F0F5" stroke-width="2.5" fill="none"/>
+        <circle cx="58" cy="15" r="9" stroke="#4A8FAD" stroke-width="3" fill="none"/>
+        <circle cx="58" cy="15" r="3.5" fill="#4A8FAD"/>
+        <line x1="8" y1="68" x2="72" y2="68" stroke="#4A8FAD" stroke-width="3"/>
+      </svg>
+      <div>
+        <div class="brand">BatiViz<span>IØ</span></div>
+        <div class="tag">Administration</div>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-section">Principal</div>
+      <div class="nav-item" onclick="goTo('../')">⬛ Tableau de bord</div>
+      <div class="nav-item" onclick="goTo('../#chantiers')">🏗 Chantiers</div>
+      <div class="nav-item" onclick="goTo('../#clients')">👤 Clients</div>
+      <div class="nav-section" style="margin-top:8px">Facturation</div>
+      <div class="nav-item active">📄 Devis <span class="nav-badge" id="nb-devis">—</span></div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-pill">
+        <div class="user-avatar">BV</div>
+        <div style="flex:1">
+          <div class="user-name">BatiVizIØ</div>
+          <div class="user-role">Administrateur</div>
+        </div>
+        <button class="logout-btn" onclick="logout()" title="Déconnexion">⏻</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Devis</div>
+        <div class="topbar-bc">BatiVizIØ › Facturation › Devis</div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-wave" onclick="openModal()">+ Nouveau devis</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Total devis</div><div class="stat-value" id="s-total">—</div><div class="stat-sub">tous statuts</div></div>
+        <div class="stat-card"><div class="stat-label">Acceptés</div><div class="stat-value c-green" id="s-acceptes">—</div><div class="stat-sub">signés</div></div>
+        <div class="stat-card"><div class="stat-label">En attente</div><div class="stat-value c-wave" id="s-attente">—</div><div class="stat-sub">envoyés</div></div>
+        <div class="stat-card"><div class="stat-label">CA validé</div><div class="stat-value c-gold" id="s-ca">—</div><div class="stat-sub">HT net</div></div>
+      </div>
+
+      <!-- LISTE -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Tous les devis</div>
+          <div style="display:flex;gap:8px">
+            <select id="filter-statut" class="btn btn-ghost btn-sm" style="cursor:pointer" onchange="filterDevis()">
+              <option value="">Tous les statuts</option>
+              <option value="brouillon">Brouillon</option>
+              <option value="envoyé">Envoyé</option>
+              <option value="accepté">Accepté</option>
+              <option value="refusé">Refusé</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>N° devis</th>
+                <th>Chantier</th>
+                <th>Constructeur</th>
+                <th>Type</th>
+                <th>Montant HT</th>
+                <th>Statut</th>
+                <th>Émis le</th>
+                <th>Validité</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="devis-list">
+              <tr><td colspan="9" class="loading">Chargement…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL NOUVEAU DEVIS ══ -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">Nouveau devis</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id">
+
+      <div class="form-row">
+        <div class="field">
+          <label>Chantier</label>
+          <select id="f-chantier" onchange="onChantierChange()">
+            <option value="">Sélectionner…</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Constructeur</label>
+          <input type="text" id="f-constructeur" readonly placeholder="Auto (lié au chantier)" style="opacity:.6">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Type d'offre</label>
+          <select id="f-type" onchange="recalc()">
+            <option value="forfait">Forfait 12 mois</option>
+            <option value="unitaire">Unitaire</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Nombre de passages</label>
+          <input type="number" id="f-passages" value="10" min="1" max="50" oninput="recalc()">
+          <div class="hint">10 passages = forfait standard</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Prix unitaire HT (€)</label>
+          <input type="number" id="f-prix" value="250" step="10" oninput="recalc()">
+        </div>
+        <div class="field">
+          <label>Statut</label>
+          <select id="f-statut">
+            <option value="brouillon">Brouillon</option>
+            <option value="envoyé">Envoyé</option>
+            <option value="accepté">Accepté</option>
+            <option value="refusé">Refusé</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Date d'émission</label>
+          <input type="date" id="f-emission">
+        </div>
+        <div class="field">
+          <label>Valide jusqu'au</label>
+          <input type="date" id="f-validite">
+        </div>
+      </div>
+
+      <div class="form-row full">
+        <div class="field">
+          <label>Notes internes</label>
+          <textarea id="f-notes" placeholder="Remarques, conditions particulières…"></textarea>
+        </div>
+      </div>
+
+      <!-- CALCUL LIVE -->
+      <div class="calc-box">
+        <div class="calc-line sub"><span class="calc-label">Type</span><span class="calc-value" id="c-type">Forfait</span></div>
+        <div class="calc-line"><span class="calc-label">Passages × Prix unitaire</span><span class="calc-value" id="c-detail">10 × 250 €</span></div>
+        <div class="calc-line total"><span class="calc-label">Montant HT net</span><span class="calc-value" id="c-total">2 500 €</span></div>
+        <div class="calc-line sub"><span class="calc-label">Versement 1 (30%)</span><span class="calc-value" id="c-v1">750 €</span></div>
+        <div class="calc-line sub"><span class="calc-label">Versement 2 (40%)</span><span class="calc-value" id="c-v2">1 000 €</span></div>
+        <div class="calc-line sub"><span class="calc-label">Versement 3 (30%)</span><span class="calc-value" id="c-v3">750 €</span></div>
+        <div class="calc-line sub" style="margin-top:8px;font-size:11px;opacity:.6"><span>TVA non applicable — art. 293B CGI</span></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-wave" onclick="saveDevis()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG SUPABASE ──
+const SUPA_URL = 'https://cajgqzzyxykzxsudpmms.supabase.co';
+const SUPA_KEY = 'YOUR_SUPABASE_ANON_KEY'; // ← à remplacer
+
+const { createClient } = supabase;
+const sb = createClient(SUPA_URL, SUPA_KEY);
+
+let allDevis = [];
+let chantiers = [];
+
+// ── INIT ──
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = '/connexion/'; return; }
+
+  const { data: profile } = await sb.from('profiles').select('role').eq('id', session.user.id).single();
+  if (!profile || profile.role !== 'admin') { window.location.href = '/connexion/'; return; }
+
+  document.getElementById('app').style.display = 'flex';
+
+  await loadChantiers();
+  await loadDevis();
+  setDefaultDates();
+}
+
+async function loadChantiers() {
+  const { data } = await sb
+    .from('chantiers')
+    .select('id, adresse, ville, code_postal, constructeur_id, profiles!chantiers_constructeur_id_fkey(id, nom)')
+    .order('adresse');
+  chantiers = data || [];
+
+  const sel = document.getElementById('f-chantier');
+  chantiers.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.id;
+    opt.dataset.constructeurId  = c.profiles?.id  || '';
+    opt.dataset.constructeurNom = c.profiles?.nom  || '';
+    opt.dataset.adresse         = c.adresse        || '';
+    opt.dataset.ville           = c.ville          || '';
+    opt.textContent = (c.adresse || '—') + (c.ville ? ', ' + c.ville : '');
+    sel.appendChild(opt);
+  });
+}
+
+async function loadDevis() {
+  const { data } = await sb
+    .from('devis_complet')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  allDevis = data || [];
+  renderDevis(allDevis);
+  updateStats(allDevis);
+  document.getElementById('nb-devis').textContent = allDevis.length;
+}
+
+function updateStats(list) {
+  document.getElementById('s-total').textContent    = list.length;
+  document.getElementById('s-acceptes').textContent = list.filter(d => d.statut === 'accepté').length;
+  document.getElementById('s-attente').textContent  = list.filter(d => d.statut === 'envoyé').length;
+  const ca = list.filter(d => d.statut === 'accepté').reduce((s, d) => s + parseFloat(d.montant_ht || 0), 0);
+  document.getElementById('s-ca').textContent = fmtEur(ca);
+}
+
+function renderDevis(list) {
+  const tbody = document.getElementById('devis-list');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="empty-icon">📄</div><div class="empty-text">Aucun devis</div></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(d => `
+    <tr>
+      <td class="mono">${d.numero_devis}</td>
+      <td>${d.chantier_adresse || '—'}<br><span style="font-size:11px;opacity:.5">${d.chantier_cp || ''} ${d.chantier_ville || ''}</span></td>
+      <td>${d.constructeur_nom || '—'}</td>
+      <td class="mono" style="font-size:11px">${d.type_offre === 'forfait' ? '📅 Forfait' : '🔹 Unitaire'}</td>
+      <td class="mono" style="color:var(--gold)">${fmtEur(d.montant_ht)}</td>
+      <td>${badgeStatut(d.statut)}</td>
+      <td class="mono" style="font-size:11px">${fmtDate(d.date_emission)}</td>
+      <td class="mono" style="font-size:11px;${isExpired(d) ? 'color:var(--red)' : ''}">${fmtDate(d.date_validite)}</td>
+      <td>
+        <div class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="previewPdf(${JSON.stringify(d).replace(/"/g,'&quot;')})">👁 PDF</button>
+          <button class="btn btn-ghost btn-sm" onclick="editDevis(${JSON.stringify(d).replace(/"/g,'&quot;')})">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteDevis('${d.id}')">🗑</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterDevis() {
+  const f = document.getElementById('filter-statut').value;
+  renderDevis(f ? allDevis.filter(d => d.statut === f) : allDevis);
+}
+
+// ── MODAL ──
+function setDefaultDates() {
+  const today = new Date();
+  const validite = new Date(today); validite.setDate(validite.getDate() + 30);
+  document.getElementById('f-emission').value = fmtISO(today);
+  document.getElementById('f-validite').value = fmtISO(validite);
+}
+
+function openModal() {
+  document.getElementById('edit-id').value = '';
+  document.getElementById('modal-title').textContent = 'Nouveau devis';
+  document.getElementById('f-chantier').value = '';
+  document.getElementById('f-constructeur').value = '';
+  document.getElementById('f-type').value = 'forfait';
+  document.getElementById('f-passages').value = 10;
+  document.getElementById('f-prix').value = 250;
+  document.getElementById('f-statut').value = 'brouillon';
+  document.getElementById('f-notes').value = '';
+  setDefaultDates();
+  recalc();
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function editDevis(d) {
+  document.getElementById('edit-id').value = d.id;
+  document.getElementById('modal-title').textContent = 'Modifier — ' + d.numero_devis;
+  document.getElementById('f-chantier').value = d.chantier_id;
+  document.getElementById('f-constructeur').value = d.constructeur_nom || '';
+  document.getElementById('f-type').value = d.type_offre;
+  document.getElementById('f-passages').value = d.nb_passages;
+  document.getElementById('f-prix').value = d.prix_unitaire_ht;
+  document.getElementById('f-statut').value = d.statut;
+  document.getElementById('f-notes').value = d.notes || '';
+  document.getElementById('f-emission').value = d.date_emission;
+  document.getElementById('f-validite').value = d.date_validite;
+  recalc();
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal-bg').classList.remove('open'); }
+
+function onChantierChange() {
+  const sel = document.getElementById('f-chantier');
+  const opt = sel.options[sel.selectedIndex];
+  document.getElementById('f-constructeur').value = opt.dataset.constructeurNom || '';
+}
+
+function recalc() {
+  const passages = parseInt(document.getElementById('f-passages').value) || 0;
+  const prix     = parseFloat(document.getElementById('f-prix').value) || 0;
+  const type     = document.getElementById('f-type').value;
+  const total    = passages * prix;
+
+  document.getElementById('c-type').textContent   = type === 'forfait' ? 'Forfait 12 mois' : 'Unitaire';
+  document.getElementById('c-detail').textContent = `${passages} × ${fmtEur(prix)}`;
+  document.getElementById('c-total').textContent  = fmtEur(total);
+  document.getElementById('c-v1').textContent     = fmtEur(Math.round(total * 0.30 * 100) / 100);
+  document.getElementById('c-v2').textContent     = fmtEur(Math.round(total * 0.40 * 100) / 100);
+  document.getElementById('c-v3').textContent     = fmtEur(Math.round(total * 0.30 * 100) / 100);
+}
+
+// ── SAVE ──
+async function saveDevis() {
+  const chantierId = document.getElementById('f-chantier').value;
+  if (!chantierId) { alert('Sélectionnez un chantier.'); return; }
+
+  const sel  = document.getElementById('f-chantier');
+  const opt  = sel.options[sel.selectedIndex];
+  const constructeurId = opt.dataset.constructeurId;
+
+  const payload = {
+    chantier_id:      chantierId,
+    constructeur_id:  constructeurId,
+    type_offre:       document.getElementById('f-type').value,
+    nb_passages:      parseInt(document.getElementById('f-passages').value),
+    prix_unitaire_ht: parseFloat(document.getElementById('f-prix').value),
+    statut:           document.getElementById('f-statut').value,
+    date_emission:    document.getElementById('f-emission').value,
+    date_validite:    document.getElementById('f-validite').value,
+    notes:            document.getElementById('f-notes').value || null,
+  };
+
+  const editId = document.getElementById('edit-id').value;
+  let error;
+  if (editId) {
+    ({ error } = await sb.from('devis').update(payload).eq('id', editId));
+  } else {
+    ({ error } = await sb.from('devis').insert(payload));
+  }
+
+  if (error) { alert('Erreur : ' + error.message); return; }
+  closeModal();
+  await loadDevis();
+}
+
+async function deleteDevis(id) {
+  if (!confirm('Supprimer ce devis ?')) return;
+  await sb.from('devis').delete().eq('id', id);
+  await loadDevis();
+}
+
+// ── PDF ──
+function previewPdf(d) {
+  const montant = parseFloat(d.montant_ht || 0);
+  const v1 = Math.round(montant * 0.30 * 100) / 100;
+  const v2 = Math.round(montant * 0.40 * 100) / 100;
+  const v3 = Math.round(montant * 0.30 * 100) / 100;
+
+  document.getElementById('pdf-doc-content').innerHTML = `
+    <div class="pdf-header">
+      <div>
+        <div class="pdf-brand">BatiViz<span>IØ</span></div>
+        <div class="pdf-tagline">Suivi de chantier par drone · Île d'Oléron</div>
+        <div style="margin-top:8px;font-size:8pt;color:#555;line-height:1.7">
+          Aurélien [Nom]<br>
+          Auto-entrepreneur — SIRET en cours<br>
+          contact@bativizio.fr
+        </div>
+      </div>
+      <div class="pdf-meta">
+        <h2>DEVIS</h2>
+        <div class="numero">${d.numero_devis}</div>
+        <div class="date">Émis le ${fmtDate(d.date_emission)}</div>
+        <div class="date" style="color:#C8A96E">Valable jusqu'au ${fmtDate(d.date_validite)}</div>
+      </div>
+    </div>
+
+    <div class="pdf-parties">
+      <div class="pdf-partie">
+        <div class="pdf-partie-label">Prestataire</div>
+        <div class="pdf-partie-name">BatiVizIØ</div>
+        <div class="pdf-partie-detail">
+          Aurélien [Nom]<br>
+          Île d'Oléron (17310)<br>
+          contact@bativizio.fr<br>
+          bativizio.fr
+        </div>
+      </div>
+      <div class="pdf-partie">
+        <div class="pdf-partie-label">Client</div>
+        <div class="pdf-partie-name">${d.constructeur_nom || '—'}</div>
+        <div class="pdf-partie-detail">
+          <strong>Chantier :</strong> ${d.chantier_adresse || '—'}<br>
+          ${d.chantier_cp ? d.chantier_cp + ' ' : ''}${d.chantier_ville || ''}
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-objet">
+      <div class="pdf-objet-label">Objet</div>
+      <div class="pdf-objet-val">
+        Service de suivi de chantier par drone et caméra 360° — 
+        ${d.type_offre === 'forfait' ? 'Forfait 12 mois' : 'Commande unitaire'}
+      </div>
+    </div>
+
+    <table class="pdf-table">
+      <thead>
+        <tr>
+          <th>Désignation</th>
+          <th class="right">Qté</th>
+          <th class="right">Prix unit. HT</th>
+          <th class="right">Total HT</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Passage de chantier BatiVizIØ</strong><br>
+            <span style="font-size:8.5pt;color:#666">
+              Prise de vue drone + photos 360° · Montage · Mise en ligne Vimeo<br>
+              Mise à jour espace client sécurisé · Notification propriétaire
+            </span>
+          </td>
+          <td class="right mono">${d.nb_passages}</td>
+          <td class="right mono">${fmtEur(d.prix_unitaire_ht)}</td>
+          <td class="right mono" style="font-weight:600">${fmtEur(montant)}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="text-align:right;font-size:8pt;color:#888">
+            TVA non applicable — art. 293B CGI
+          </td>
+          <td class="right mono" style="color:#0C151E;font-size:12pt">${fmtEur(montant)}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="pdf-echeancier">
+      <div class="pdf-ech-title">Échéancier de paiement</div>
+      <div class="pdf-ech-grid">
+        <div class="pdf-ech-item">
+          <div class="pdf-ech-n">Versement 1</div>
+          <div class="pdf-ech-pct">30%</div>
+          <div class="pdf-ech-montant">${fmtEur(v1)}</div>
+          <div class="pdf-ech-when">À la signature du devis</div>
+        </div>
+        <div class="pdf-ech-item">
+          <div class="pdf-ech-n">Versement 2</div>
+          <div class="pdf-ech-pct">40%</div>
+          <div class="pdf-ech-montant">${fmtEur(v2)}</div>
+          <div class="pdf-ech-when">À mi-parcours (passage 5)</div>
+        </div>
+        <div class="pdf-ech-item">
+          <div class="pdf-ech-n">Versement 3</div>
+          <div class="pdf-ech-pct">30%</div>
+          <div class="pdf-ech-montant">${fmtEur(v3)}</div>
+          <div class="pdf-ech-when">Au dernier passage</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-conditions">
+      <strong>Conditions :</strong> Devis valable 30 jours à compter de la date d'émission.
+      Paiement par virement bancaire. En cas de résiliation anticipée, les passages déjà réalisés sont dus au tarif unitaire de 250 € HT.
+      Clause d'ajustement bilatérale applicable selon accord mutuel.
+      <br><br>
+      <strong>Confidentialité :</strong> Les contenus produits sont strictement privés et accessibles uniquement au propriétaire concerné via son espace personnel sécurisé.
+    </div>
+
+    ${d.notes ? `<div class="pdf-conditions"><strong>Note :</strong> ${d.notes}</div>` : ''}
+
+    <div class="pdf-sign">
+      <div style="font-size:8pt;color:#888;margin-bottom:6mm">
+        Pour acceptation, veuillez signer et renvoyer ce devis avec la mention « Bon pour accord ».
+      </div>
+      <div class="pdf-sign-grid">
+        <div class="pdf-sign-box">Signature du client<br><br><br><br></div>
+        <div class="pdf-sign-box">Signature BatiVizIØ<br><br><br><br></div>
+      </div>
+    </div>
+
+    <div class="pdf-footer">
+      <span>BatiVizIØ · bativizio.fr · contact@bativizio.fr</span>
+      <span>${d.numero_devis} · ${fmtDate(d.date_emission)}</span>
+    </div>
+  `;
+
+  document.getElementById('pdf-overlay').classList.add('open');
+}
+
+function closePdf() { document.getElementById('pdf-overlay').classList.remove('open'); }
+
+// ── UTILS ──
+function fmtEur(n) {
+  return new Intl.NumberFormat('fr-FR', { style:'currency', currency:'EUR', minimumFractionDigits:0 }).format(n || 0);
+}
+function fmtDate(s) {
+  if (!s) return '—';
+  return new Date(s).toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' });
+}
+function fmtISO(d) { return d.toISOString().split('T')[0]; }
+function isExpired(d) {
+  return d.statut === 'envoyé' && new Date(d.date_validite) < new Date();
+}
+function badgeStatut(s) {
+  const labels = { brouillon:'Brouillon', envoyé:'Envoyé', accepté:'Accepté', refusé:'Refusé' };
+  return `<span class="badge badge-${s}">${labels[s] || s}</span>`;
+}
+function goTo(url) { window.location.href = url; }
+async function logout() {
+  await sb.auth.signOut();
+  window.location.href = '/connexion/';
+}
+
+init();
+</script>
+</body>
+</html>
