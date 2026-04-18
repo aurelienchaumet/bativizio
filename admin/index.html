@@ -962,9 +962,9 @@ function showPage(name, navEl) {
   const dvBtn = document.getElementById('topbar-btn-devis');
   const chBtn = document.getElementById('topbar-btn-chantier');
   const pBtn  = document.getElementById('topbar-btn-passage');
-  if(dvBtn)  dvBtn.style.display  = name === 'devis' ? '' : 'none';
-  if(chBtn)  chBtn.style.display  = name === 'devis' ? 'none' : '';
-  if(pBtn)   pBtn.style.display   = name === 'devis' ? 'none' : '';
+  if(dvBtn)  dvBtn.style.display  = name === 'devis'    ? '' : 'none';
+  if(chBtn)  chBtn.style.display  = (name === 'devis' || name === 'workflow') ? 'none' : '';
+  if(pBtn)   pBtn.style.display   = (name === 'devis' || name === 'workflow') ? 'none' : '';
 }
 
 // ══ DASHBOARD ══
