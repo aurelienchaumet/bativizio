@@ -629,7 +629,6 @@ nav{padding:14px 10px;flex:1}
                 <option>Façade</option><option>Aménagements extérieurs</option><option>Livraison</option>
               </select>
             </div>
-            <div id="wf-chantier-info" style="display:none;padding:6px 12px;background:rgba(46,107,138,0.08);border:1px solid rgba(46,107,138,0.2);border-radius:5px;font-size:0.7rem;color:var(--text-dim);font-family:'DM Mono',monospace;line-height:1.6"></div>
             <div style="flex:1;min-width:130px;display:flex;flex-direction:column;gap:5px;padding-bottom:2px">
               <div style="display:flex;align-items:center;gap:8px">
                 <div style="flex:1;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden">
@@ -2015,21 +2014,13 @@ async function wfLoadChantiers() {
 
 async function wfOnChantierChange() {
   const id    = document.getElementById("wf-chantier-id")?.value;
-  const info  = document.getElementById("wf-chantier-info");
   const pasEl = document.getElementById("wf-passage");
 
   wf.selectedChantierId = id || null;
 
   if (!id) {
-    if (info) info.style.display = "none";
     if (pasEl) pasEl.innerHTML = "<option value=''>—</option>";
     wfResetState(); return;
-  }
-
-  const c = wf.chantiers.find(c=>c.id===id);
-  if (info && c) {
-    info.style.display = "block";
-    info.innerHTML = `${c.adresse}${c.ville?", "+c.ville:""}${c.client?" · "+c.client:""}`;
   }
 
   // Brouillon existant ?
