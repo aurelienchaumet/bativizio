@@ -467,9 +467,9 @@ tbody td { padding:12px 16px; font-size:13px; white-space:nowrap; }
         <div class="calc-line sub"><span class="calc-label">Type</span><span class="calc-value" id="c-type">Forfait</span></div>
         <div class="calc-line"><span class="calc-label">Passages × Prix unitaire</span><span class="calc-value" id="c-detail">10 × 250 €</span></div>
         <div class="calc-line total"><span class="calc-label">Montant HT net</span><span class="calc-value" id="c-total">2 500 €</span></div>
-        <div class="calc-line sub"><span class="calc-label">Versement 1 (30%)</span><span class="calc-value" id="c-v1">750 €</span></div>
-        <div class="calc-line sub"><span class="calc-label">Versement 2 (40%)</span><span class="calc-value" id="c-v2">1 000 €</span></div>
-        <div class="calc-line sub"><span class="calc-label">Versement 3 (30%)</span><span class="calc-value" id="c-v3">750 €</span></div>
+        <div class="calc-line sub"><span class="calc-label">Versement 1 — À la signature (30%)</span><span class="calc-value" id="c-v1">750 €</span></div>
+        <div class="calc-line sub"><span class="calc-label">Versement 2 — Au 7ème passage (40%)</span><span class="calc-value" id="c-v2">1 000 €</span></div>
+        <div class="calc-line sub"><span class="calc-label">Solde — Fin de chantier (30%)</span><span class="calc-value" id="c-v3">750 €</span></div>
         <div class="calc-line sub" style="margin-top:8px;font-size:11px;opacity:.6"><span>TVA non applicable — art. 293B CGI</span></div>
       </div>
     </div>
@@ -685,7 +685,7 @@ function previewPdf(d) {
         <div class="pdf-brand">BatiViz<span>IØ</span></div>
         <div class="pdf-tagline">Suivi de chantier par drone · Île d'Oléron</div>
         <div style="margin-top:8px;font-size:8pt;color:#555;line-height:1.7">
-          Aurélien [Nom]<br>
+          Aurélien Chaumet<br>
           Auto-entrepreneur — SIRET en cours<br>
           contact@bativizio.fr
         </div>
@@ -703,8 +703,9 @@ function previewPdf(d) {
         <div class="pdf-partie-label">Prestataire</div>
         <div class="pdf-partie-name">BatiVizIØ</div>
         <div class="pdf-partie-detail">
-          Aurélien [Nom]<br>
-          Île d'Oléron (17310)<br>
+          Aurélien Chaumet<br>
+          105 impasse des bons voisins<br>
+          1710 Saint-Georges-d'Oléron<br>
           contact@bativizio.fr<br>
           bativizio.fr
         </div>
@@ -773,13 +774,13 @@ function previewPdf(d) {
           <div class="pdf-ech-n">Versement 2</div>
           <div class="pdf-ech-pct">40%</div>
           <div class="pdf-ech-montant">${fmtEur(v2)}</div>
-          <div class="pdf-ech-when">À mi-parcours (passage 5)</div>
+          <div class="pdf-ech-when">Au 7ème passage</div>
         </div>
         <div class="pdf-ech-item">
-          <div class="pdf-ech-n">Versement 3</div>
+          <div class="pdf-ech-n">Solde</div>
           <div class="pdf-ech-pct">30%</div>
           <div class="pdf-ech-montant">${fmtEur(v3)}</div>
-          <div class="pdf-ech-when">Au dernier passage</div>
+          <div class="pdf-ech-when">À la fin du chantier</div>
         </div>
       </div>
     </div>
