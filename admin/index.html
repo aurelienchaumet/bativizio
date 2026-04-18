@@ -453,6 +453,8 @@ nav{padding:14px 10px;flex:1}
       <div class="nav-item" onclick="showPage('clients',this)"><span class="nav-icon">👤</span> Clients</div>
       <div class="nav-section">Facturation</div>
       <div class="nav-item" id="nav-devis" onclick="showPage('devis',this)"><span class="nav-icon">📄</span> Devis <span class="nav-badge" id="nb-devis" style="display:none">—</span></div>
+      <div class="nav-section">Opérationnel</div>
+      <div class="nav-item" onclick="showPage('workflow',this)"><span class="nav-icon">◈</span> Workflow passage</div>
     </nav>
     <div class="sidebar-footer">
       <div class="user-pill">
@@ -580,6 +582,85 @@ nav{padding:14px 10px;flex:1}
           </div>
         </div>
       </div>
+
+      <!-- ══ PAGE WORKFLOW ══ -->
+      <div class="page" id="page-workflow">
+
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <div style="font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--wave-light);margin-bottom:4px;font-family:'DM Mono',monospace">Opérationnel</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--text)">Workflow passage</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="text-align:right;margin-right:4px">
+              <div style="font-size:0.56rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:2px">Durée estimée</div>
+              <div style="font-size:1.1rem;font-family:'DM Mono',monospace;color:var(--wave-light)">230 min</div>
+            </div>
+            <div id="wf-draft-indicator" style="display:none;padding:5px 10px;background:rgba(200,169,110,0.08);border:1px solid rgba(200,169,110,0.25);border-radius:5px;font-size:0.65rem;font-family:'DM Mono',monospace;color:var(--wave-light)">brouillon</div>
+            <button onclick="wfSauvegarder()" id="btn-wf-save" style="padding:8px 14px;background:rgba(46,107,138,0.12);border:1px solid rgba(46,107,138,0.35);border-radius:6px;color:var(--wave-light);font-size:0.76rem;cursor:pointer;font-family:'DM Mono',monospace;white-space:nowrap">↓ Sauvegarder</button>
+            <button onclick="wfCloture()" id="btn-wf-cloture" style="padding:8px 14px;background:rgba(200,169,110,0.12);border:1px solid rgba(200,169,110,0.35);border-radius:6px;color:var(--wave-light);font-size:0.76rem;cursor:pointer;font-family:'DM Mono',monospace;white-space:nowrap">✓ Clôturer</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:14px;padding:13px 16px">
+          <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Chantier</label>
+              <select id="wf-chantier-id" onchange="wfOnChantierChange()" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.76rem;outline:none;width:230px;cursor:pointer">
+                <option value="">— Choisir un chantier —</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Passage N°</label>
+              <select id="wf-passage" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 10px;color:var(--wave-light);font-family:'DM Mono',monospace;font-size:0.76rem;outline:none;width:110px;cursor:pointer">
+                <option value="">—</option>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:3px">
+              <label style="font-size:0.56rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Étape</label>
+              <select id="wf-etape" style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:6px 10px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.76rem;outline:none;width:210px;cursor:pointer">
+                <option value="">— Choisir une étape —</option>
+                <option>Terrassement</option><option>Fondations</option><option>Dalle</option>
+                <option>Gros œuvre</option><option>Charpente</option><option>Toiture</option>
+                <option>Hors d'eau / Hors d'air</option><option>Menuiseries extérieures</option>
+                <option>Cloisonnement</option><option>Électricité / Plomberie</option>
+                <option>Isolation</option><option>Plâtrerie / Enduits</option>
+                <option>Revêtements sol</option><option>Menuiseries intérieures</option>
+                <option>Façade</option><option>Aménagements extérieurs</option><option>Livraison</option>
+              </select>
+            </div>
+            <div style="flex:1;min-width:130px;display:flex;flex-direction:column;gap:5px;padding-bottom:2px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="flex:1;height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden">
+                  <div id="wf-global-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#2E6B8A,#C8A96E);border-radius:2px;transition:width 0.3s"></div>
+                </div>
+                <span id="wf-global-label" style="font-size:0.66rem;font-family:'DM Mono',monospace;color:var(--wave-light);white-space:nowrap">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:14px;align-items:flex-start">
+          <div style="width:182px;flex-shrink:0">
+            <div id="wf-phase-nav"></div>
+            <div style="margin-top:10px;padding:10px;background:var(--surface);border:1px solid rgba(200,169,110,0.12);border-radius:6px">
+              <div style="font-size:0.54rem;color:var(--text-dim);letter-spacing:0.18em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:7px">Temps chronométré</div>
+              <div id="wf-times-rows"></div>
+            </div>
+          </div>
+          <div id="wf-phase-content" style="flex:1"></div>
+        </div>
+
+        <div id="wf-historique-block" style="margin-top:28px;display:none">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="height:1px;flex:1;background:var(--border)"></div>
+            <span style="font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace">Historique</span>
+            <div style="height:1px;flex:1;background:var(--border)"></div>
+          </div>
+          <div id="wf-historique-list" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+
+      </div><!-- /page-workflow -->
 
     </div><!-- /content -->
   </div><!-- /main -->
@@ -870,19 +951,20 @@ function showPage(name, navEl) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + name)?.classList.add('active');
   if (navEl) navEl.classList.add('active');
-  const titles = { dashboard: 'Tableau de bord', chantiers: 'Chantiers', clients: 'Clients', detail: 'Détail chantier', devis: 'Devis' };
+  const titles = { dashboard: 'Tableau de bord', chantiers: 'Chantiers', clients: 'Clients', detail: 'Détail chantier', devis: 'Devis', workflow: 'Workflow passage' };
   document.getElementById('topbar-title').textContent = titles[name] || name;
   document.getElementById('topbar-sub').textContent = titles[name] || name;
   if (name === 'chantiers') loadChantiersPage();
   if (name === 'clients')   loadClientsPage();
   if (name === 'devis')     loadDevisPage();
+  if (name === 'workflow')  wfLoadPage();
   // Topbar right buttons
   const dvBtn = document.getElementById('topbar-btn-devis');
   const chBtn = document.getElementById('topbar-btn-chantier');
   const pBtn  = document.getElementById('topbar-btn-passage');
-  if(dvBtn)  dvBtn.style.display  = name === 'devis' ? '' : 'none';
-  if(chBtn)  chBtn.style.display  = name === 'devis' ? 'none' : '';
-  if(pBtn)   pBtn.style.display   = name === 'devis' ? 'none' : '';
+  if(dvBtn)  dvBtn.style.display  = name === 'devis'    ? '' : 'none';
+  if(chBtn)  chBtn.style.display  = (name === 'devis' || name === 'workflow') ? 'none' : '';
+  if(pBtn)   pBtn.style.display   = (name === 'devis' || name === 'workflow') ? 'none' : '';
 }
 
 // ══ DASHBOARD ══
@@ -1846,6 +1928,449 @@ function dvFmtDate(s) { if(!s) return '—'; return new Date(s).toLocaleDateStri
 function dvFmtISO(d) { return d.toISOString().split('T')[0]; }
 function dvExpired(d) { return d.statut === 'envoyé' && new Date(d.date_validite) < new Date(); }
 
+</script>
+
+<script>
+// ══ WORKFLOW PASSAGE ══
+
+const WF_PHASES = [
+  { id:"terrain", label:"Terrain", icon:"◈", color:"#5AAABF", estimee:75, steps:[
+    {id:"t1", label:"Vérification météo & vent (< 35 km/h)", note:"Annuler si vent > 35 km/h ou visibilité < 500m"},
+    {id:"t2", label:"Autorisation survol vérifiée (Géoportail Drone)", note:"Zone côtière — toujours vérifier avant départ"},
+    {id:"t3", label:"Contact chef de chantier — accès confirmé", note:""},
+    {id:"t4", label:"Arrivée sur site — état général noté", note:"Photo de référence avant vol"},
+    {id:"t5", label:"Vol drone — séquence complète (tour, plongée, staticam)", note:"Batteries : vérifier au décollage. Altitude max légale : 120m"},
+    {id:"t6", label:"Caméra 360° — passages intérieurs & extérieurs", note:"Min. 4 positions : façade, R+1 si acc., intérieur, vue générale"},
+    {id:"t7", label:"Vérification clips sur terrain (lecture rapide)", note:"Ne pas partir sans confirmer que la vidéo est exploitable"},
+  ]},
+  { id:"transfert", label:"Transfert & tri", icon:"◉", color:"#2E6B8A", estimee:25, steps:[
+    {id:"tr1", label:"Copie brute vers dossier chantier", note:"Structure : /CHANTIERS/[NOM]/PASSAGE_[NN]/BRUT/"},
+    {id:"tr2", label:"Renommage fichiers (convention BatiVizIØ)", note:"Format : BVZ_[CODE]_P[NN]_DRONE_001.mp4"},
+    {id:"tr3", label:"Sélection clips retenus — rejets mis de côté", note:"Ne garder que les séquences nettes et stables"},
+    {id:"tr4", label:"Sauvegarde confirmée (2 emplacements)", note:"Disque local + cloud (ex. Backblaze B2)"},
+  ]},
+  { id:"montage", label:"Montage DaVinci", icon:"◑", color:"#C8A96E", estimee:90, steps:[
+    {id:"m1", label:"Ouverture projet DaVinci — timeline passage", note:"Un projet par chantier. Une timeline par passage."},
+    {id:"m2", label:"Import clips sélectionnés dans la médiathèque", note:""},
+    {id:"m3", label:"Montage : intro logo BatiVizIØ (5 sec)", note:"Template : /TEMPLATES/intro_bvz.drp"},
+    {id:"m4", label:"Séquence principale : aérien → sol → extraits 360°", note:"Rythme cible : 2–3 min. Couper tout ce qui est redondant."},
+    {id:"m5", label:"Étalonnage couleur (LUT chantier BatiVizIØ)", note:"LUT maison en node 1. Corriger si surexposé."},
+    {id:"m6", label:"Titres : nom chantier, date, étape", note:"Police DM Sans. Couleur #C8A96E sur fond semi-transparent."},
+    {id:"m7", label:"Audio : musique libre de droits, –18 LUFS", note:"Bibliothèque libre de droits uniquement."},
+    {id:"m8", label:"Outro logo BatiVizIØ (3 sec)", note:"Template : /TEMPLATES/outro_bvz.drp"},
+    {id:"m9", label:"Export H.264 — 1080p 25fps, preset BVZ_Vimeo_HD", note:"Débit cible : 15 Mbps. Preset sauvegardé dans DaVinci."},
+  ]},
+  { id:"publication", label:"Upload & publication", icon:"◐", color:"#5AAABF", estimee:30, steps:[
+    {id:"p1", label:"Upload Vimeo — titre : [NOM] – Passage [N] – [Étape]", note:"Confidentialité : Masqué (lien privé uniquement)"},
+    {id:"p2", label:"Vimeo ID noté (format : 123456789)", note:""},
+    {id:"p3", label:"Upload photos 360° — Supabase Storage", note:"Redimensionner à 4096px max avant upload si nécessaire"},
+    {id:"p4", label:"Mise à jour Supabase — table passages", note:"Champs : chantier_id, date, etape, vimeo_id, photos[], notes"},
+    {id:"p5", label:"Vérification portail propriétaire (connexion test)", note:"Confirmer vidéo + photos visibles. Tester sur mobile."},
+    {id:"p6", label:"Notification propriétaire envoyée (Brevo)", note:"Template : 'nouveau_passage'. Merger : prénom, étape, lien."},
+  ]},
+  { id:"cloture", label:"Clôture", icon:"◇", color:"#C8A96E", estimee:10, steps:[
+    {id:"c1", label:"Fiche passage complétée (durée réelle, incidents)", note:"Remplir les notes ci-dessous avant de clôturer"},
+    {id:"c2", label:"Compteur passage mis à jour (N/10 sur le chantier)", note:""},
+    {id:"c3", label:"Prochain passage estimé — noté dans l'agenda", note:"Fréquence cible : toutes les 5–6 semaines"},
+    {id:"c4", label:"Archivage dossier BRUT conservé 12 mois minimum", note:""},
+  ]},
+];
+
+const WF_TOTAL_STEPS = WF_PHASES.reduce((a,p)=>a+p.steps.length,0);
+
+const wf = {
+  activePhase:"terrain", checks:{}, timers:{}, running:{},
+  intervals:{}, noteOpen:{}, notes:"",
+  historique:[], histoOpen:{},
+  chantiers:[], selectedChantierId:null,
+  draftId:null
+};
+
+function wfFmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+function wfDoneSteps(){return Object.values(wf.checks).filter(Boolean).length;}
+function wfPhasePct(ph){return Math.round(ph.steps.filter(s=>wf.checks[s.id]).length/ph.steps.length*100);}
+
+// ── CHARGEMENT ──
+async function wfLoadPage() {
+  wfRender();
+  await Promise.all([wfLoadChantiers(), wfLoadHistorique()]);
+}
+
+async function wfLoadChantiers() {
+  const { data, error } = await sb
+    .from("chantiers")
+    .select("id, adresse, ville, profiles!chantiers_client_id_fkey(nom)")
+    .order("created_at", { ascending: false });
+  if (error) { console.error("wfLoadChantiers:", error); return; }
+  wf.chantiers = (data||[]).map(c=>({
+    id:c.id, label:c.adresse+(c.ville?", "+c.ville:""),
+    adresse:c.adresse, ville:c.ville||"", client:c.profiles?.nom||""
+  }));
+  const sel = document.getElementById("wf-chantier-id");
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— Choisir un chantier —</option>' +
+    wf.chantiers.map(c=>`<option value="${c.id}">${c.label}${c.client?" · "+c.client:""}</option>`).join("");
+}
+
+async function wfOnChantierChange() {
+  const id    = document.getElementById("wf-chantier-id")?.value;
+  const pasEl = document.getElementById("wf-passage");
+
+  wf.selectedChantierId = id || null;
+
+  if (!id) {
+    if (pasEl) pasEl.innerHTML = "<option value=''>—</option>";
+    wfResetState(); return;
+  }
+
+  // Brouillon existant ?
+  const { data: drafts } = await sb.from("workflow_logs")
+    .select("*").eq("chantier_id", id).eq("statut","brouillon")
+    .order("created_at",{ascending:false}).limit(1);
+  const draft = drafts?.[0];
+
+  // Passages clôturés pour calculer le prochain N°
+  const { data: closed } = await sb.from("workflow_logs")
+    .select("passage").eq("chantier_id",id).eq("statut","cloture");
+  const next = (closed||[]).length + 1;
+
+  if (pasEl) {
+    pasEl.innerHTML = "";
+    for (let i = next; i <= 10; i++) {
+      const opt = document.createElement("option");
+      opt.value = String(i).padStart(2,"0");
+      opt.textContent = String(i).padStart(2,"0") + (i===next?" ← prochain":"");
+      pasEl.appendChild(opt);
+    }
+    if (next > 10) pasEl.innerHTML = '<option value="10">10 / 10 — forfait complet</option>';
+  }
+
+  if (draft) {
+    const resume = confirm(
+      `Un brouillon existe pour ce chantier (sauvegardé le ${new Date(draft.created_at).toLocaleDateString("fr-FR")}).\n\nReprendre où tu t'étais arrêté ?`
+    );
+    if (resume) { wfRestoreDraft(draft); return; }
+  }
+
+  wfResetState();
+}
+
+function wfRestoreDraft(draft) {
+  wf.draftId     = draft.id;
+  wf.checks      = draft.checks || {};
+  wf.notes       = draft.notes || "";
+  wf.activePhase = draft.active_phase || "terrain";
+  const pasEl   = document.getElementById("wf-passage");
+  const etapeEl = document.getElementById("wf-etape");
+  if (pasEl && draft.passage)
+    [...pasEl.options].forEach(o=>{ if(o.value===draft.passage) o.selected=true; });
+  if (etapeEl && draft.etape)
+    [...etapeEl.options].forEach(o=>{ if(o.value===draft.etape) o.selected=true; });
+  wfSetDraftIndicator(true);
+  wfRender();
+}
+
+function wfResetState() {
+  wf.draftId = null; wf.checks = {}; wf.noteOpen = {}; wf.notes = "";
+  wf.activePhase = "terrain";
+  Object.keys(wf.intervals).forEach(k=>clearInterval(wf.intervals[k]));
+  wf.intervals = {}; wf.timers = {}; wf.running = {};
+  wfSetDraftIndicator(false);
+  wfRender();
+}
+
+function wfSetDraftIndicator(on) {
+  const el = document.getElementById("wf-draft-indicator");
+  if (el) el.style.display = on ? "block" : "none";
+}
+
+// ── SAUVEGARDE BROUILLON ──
+async function wfSauvegarder() {
+  const chantierId = wf.selectedChantierId;
+  const passage    = document.getElementById("wf-passage")?.value || "";
+  const etape      = document.getElementById("wf-etape")?.value || "";
+  if (!chantierId) { alert("Sélectionne un chantier avant de sauvegarder."); return; }
+
+  const btn = document.getElementById("btn-wf-save");
+  if (btn) { btn.textContent = "Sauvegarde…"; btn.disabled = true; }
+
+  const chantier = wf.chantiers.find(c=>c.id===chantierId);
+  const notesVal = document.getElementById("wf-notes")?.value || wf.notes || "";
+  const payload = {
+    chantier_id:  chantierId, chantier: chantier?.label||"—",
+    passage, etape: etape||null,
+    date_passage: new Date().toISOString().split("T")[0],
+    statut: "brouillon",
+    steps_done: wfDoneSteps(), steps_total: WF_TOTAL_STEPS,
+    duree_min: Math.round(Object.values(wf.timers).reduce((a,t)=>a+(t||0),0)/60)||null,
+    phases: WF_PHASES.map(ph=>({label:ph.label,color:ph.color,pct:wfPhasePct(ph),temps:wf.timers[ph.id]||0})),
+    checks: wf.checks, active_phase: wf.activePhase, notes: notesVal||null
+  };
+
+  let error;
+  if (wf.draftId) {
+    ({error} = await sb.from("workflow_logs").update(payload).eq("id",wf.draftId));
+  } else {
+    await sb.from("workflow_logs").delete().eq("chantier_id",chantierId).eq("statut","brouillon");
+    const {data:saved, error:err} = await sb.from("workflow_logs").insert(payload).select().single();
+    error = err;
+    if (saved) wf.draftId = saved.id;
+  }
+
+  if (error) {
+    console.error("wfSauvegarder:", error);
+    alert("Erreur sauvegarde : " + error.message);
+    if (btn) { btn.textContent = "↓ Sauvegarder"; btn.disabled = false; }
+    return;
+  }
+
+  wfSetDraftIndicator(true);
+  if (btn) {
+    btn.textContent = "✓ Sauvegardé"; btn.style.color = "#4CAF80"; btn.style.borderColor = "rgba(76,175,80,0.4)";
+    btn.disabled = false;
+    setTimeout(()=>{ btn.textContent="↓ Sauvegarder"; btn.style.color=""; btn.style.borderColor=""; },2000);
+  }
+}
+
+// ── CLÔTURE ──
+async function wfCloture() {
+  const chantierId = wf.selectedChantierId;
+  const passage    = document.getElementById("wf-passage")?.value || "";
+  const etape      = document.getElementById("wf-etape")?.value || "";
+  const done       = wfDoneSteps();
+  if (!chantierId) { alert("Sélectionne un chantier avant de clôturer."); return; }
+  if (!passage)    { alert("Sélectionne un numéro de passage."); return; }
+  if (done === 0)  { alert("Aucune étape cochée — rien à clôturer."); return; }
+
+  const btn = document.getElementById("btn-wf-cloture");
+  if (btn) { btn.textContent = "Archivage…"; btn.disabled = true; }
+
+  const chantier = wf.chantiers.find(c=>c.id===chantierId);
+  const notesVal = document.getElementById("wf-notes")?.value || wf.notes || "";
+  const payload = {
+    chantier_id: chantierId, chantier: chantier?.label||"—",
+    passage, etape: etape||null,
+    date_passage: new Date().toISOString().split("T")[0],
+    statut: "cloture",
+    steps_done: done, steps_total: WF_TOTAL_STEPS,
+    duree_min: Math.round(Object.values(wf.timers).reduce((a,t)=>a+(t||0),0)/60)||null,
+    phases: WF_PHASES.map(ph=>({label:ph.label,color:ph.color,pct:wfPhasePct(ph),temps:wf.timers[ph.id]||0})),
+    checks: null, active_phase: null, notes: notesVal||null
+  };
+
+  let saved, error;
+  if (wf.draftId) {
+    ({data:saved, error} = await sb.from("workflow_logs").update(payload).eq("id",wf.draftId).select().single());
+  } else {
+    ({data:saved, error} = await sb.from("workflow_logs").insert(payload).select().single());
+  }
+
+  if (error) {
+    console.error("wfCloture:", error);
+    alert("Erreur archivage : " + error.message);
+    if (btn) { btn.textContent = "✓ Clôturer"; btn.disabled = false; }
+    return;
+  }
+
+  wf.historique.unshift({
+    id:saved.id, chantier:saved.chantier, passage:saved.passage, etape:saved.etape||"—",
+    date: new Date(saved.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),
+    done:saved.steps_done, total:saved.steps_total, totalMin:saved.duree_min,
+    notes:saved.notes||"", phases:saved.phases
+  });
+
+  wfResetState();
+  await wfOnChantierChange();
+  wfRenderHistorique();
+
+  if (btn) {
+    btn.innerHTML = "✓ Archivé"; btn.style.color = "#4CAF80"; btn.style.borderColor = "rgba(76,175,80,0.4)";
+    btn.disabled = false;
+    setTimeout(()=>{ btn.innerHTML="✓ Clôturer"; btn.style.color=""; btn.style.borderColor=""; },2500);
+  }
+}
+
+// ── HISTORIQUE ──
+async function wfLoadHistorique() {
+  const {data,error} = await sb.from("workflow_logs").select("*")
+    .eq("statut","cloture").order("created_at",{ascending:false}).limit(50);
+  if (error) { console.error("wfLoadHistorique:", error); return; }
+  wf.historique = (data||[]).map(r=>({
+    id:r.id, chantier:r.chantier, passage:r.passage, etape:r.etape||"—",
+    date: new Date(r.created_at).toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"}),
+    done:r.steps_done, total:r.steps_total, totalMin:r.duree_min, notes:r.notes||"", phases:r.phases||[]
+  }));
+  wfRenderHistorique();
+}
+
+function wfRenderHistorique() {
+  const block=document.getElementById("wf-historique-block");
+  const list=document.getElementById("wf-historique-list");
+  if(!block||!list) return;
+  if(wf.historique.length===0){block.style.display="none";return;}
+  block.style.display="block";
+  list.innerHTML=wf.historique.map((e,i)=>{
+    const phasesHtml=(e.phases||[]).map(ph=>`
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+        <div style="width:70px;font-size:0.6rem;color:var(--text-dim);font-family:'DM Mono',monospace;white-space:nowrap">${ph.label}</div>
+        <div style="flex:1;height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden">
+          <div style="height:100%;width:${ph.pct}%;background:${ph.color};opacity:0.7;border-radius:1px"></div>
+        </div>
+        <span style="font-size:0.6rem;font-family:'DM Mono',monospace;color:${ph.pct===100?'#4CAF80':'var(--text-dim)'};">${ph.pct===100?"✓":ph.pct+"%"}</span>
+        <span style="font-size:0.6rem;font-family:'DM Mono',monospace;color:var(--text-dim);width:36px;text-align:right">${ph.temps?wfFmt(ph.temps):"—"}</span>
+      </div>`).join("");
+    const expanded=!!wf.histoOpen[i];
+    return `<div class="card" style="padding:0;overflow:hidden">
+      <div onclick="wfToggleHisto(${i})" style="display:flex;align-items:center;gap:12px;padding:11px 15px;cursor:pointer;user-select:none">
+        <div style="width:3px;align-self:stretch;background:rgba(200,169,110,0.35);border-radius:2px;flex-shrink:0"></div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:1px">
+            <span style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--wave-light)">P${e.passage}</span>
+            <span style="font-size:0.8rem;color:var(--text);font-weight:500">${e.chantier}</span>
+            <span style="font-size:0.7rem;color:var(--text-muted)">— ${e.etape}</span>
+          </div>
+          <div style="font-size:0.62rem;color:var(--text-dim)">${e.date}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <span style="font-size:0.66rem;font-family:'DM Mono',monospace;color:${e.done===e.total?'#4CAF80':'var(--wave-light)'}">${e.done}/${e.total}</span>
+          ${e.totalMin?`<span style="font-size:0.66rem;font-family:'DM Mono',monospace;color:var(--text-dim)">${e.totalMin} min</span>`:''}
+          <span style="color:var(--text-dim);font-size:0.68rem;display:inline-block;transform:rotate(${expanded?'90':'0'}deg);transition:transform 0.2s">▶</span>
+        </div>
+      </div>
+      ${expanded?`<div style="border-top:1px solid var(--border);padding:11px 15px 13px">
+        <div style="margin-bottom:9px">${phasesHtml}</div>
+        ${e.notes?`<div style="padding:7px 10px;background:rgba(200,169,110,0.05);border-left:2px solid rgba(200,169,110,0.3);border-radius:0 4px 4px 0;font-size:0.68rem;color:var(--text-dim);line-height:1.6;font-style:italic;margin-bottom:8px">${e.notes}</div>`:''}
+        <div style="display:flex;justify-content:flex-end">
+          <button onclick="wfCopyEntry(${i})" style="padding:4px 11px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text-dim);font-size:0.63rem;cursor:pointer;font-family:'DM Mono',monospace">Copier récap</button>
+        </div>
+      </div>`:''}
+    </div>`;
+  }).join("");
+}
+
+function wfToggleHisto(i){wf.histoOpen[i]=!wf.histoOpen[i];wfRenderHistorique();}
+function wfCopyEntry(i){
+  const e=wf.historique[i];
+  navigator.clipboard.writeText([
+    `PASSAGE ${e.passage} — ${e.chantier.toUpperCase()} — ${e.etape}`,
+    e.date,"",...(e.phases||[]).map(ph=>`[${ph.pct===100?"✓":ph.pct+"%"}] ${ph.label} — ${ph.temps?wfFmt(ph.temps):"non chronométré"}`),
+    `Total : ${e.totalMin||"—"} min`,"","Notes :",e.notes||"—"
+  ].join("\n"));
+}
+
+// ── RENDER ──
+function wfRenderSidebar(){
+  const nav=document.getElementById("wf-phase-nav");
+  const timesEl=document.getElementById("wf-times-rows");
+  if(!nav||!timesEl) return;
+  nav.innerHTML=WF_PHASES.map(ph=>{
+    const pct=wfPhasePct(ph),isActive=wf.activePhase===ph.id;
+    return `<div onclick="wfSelectPhase('${ph.id}')" style="padding:9px 11px;cursor:pointer;border-radius:6px;margin-bottom:2px;border-left:2px solid ${isActive?ph.color:'transparent'};background:${isActive?'rgba(255,255,255,0.03)':'transparent'};transition:all 0.15s">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+        <span style="color:${ph.color};font-size:12px">${ph.icon}</span>
+        <span style="font-size:0.75rem;font-weight:500;color:${isActive?'var(--text)':'var(--text-muted)'}">${ph.label}</span>
+      </div>
+      <div style="height:2px;background:rgba(255,255,255,0.06);border-radius:1px;overflow:hidden;margin-bottom:3px">
+        <div style="height:100%;width:${pct}%;background:${ph.color};opacity:0.7;transition:width 0.3s;border-radius:1px"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="font-size:0.57rem;font-family:'DM Mono',monospace;color:var(--text-dim)">~${ph.estimee}min</span>
+        <span style="font-size:0.57rem;font-family:'DM Mono',monospace;color:${pct===100?'#4CAF80':'var(--text-dim)'}">${pct}%</span>
+      </div>
+    </div>`;
+  }).join("");
+  timesEl.innerHTML=WF_PHASES.map(ph=>{
+    const t=wf.timers[ph.id]||0;
+    return `<div style="display:flex;justify-content:space-between;margin-bottom:3px">
+      <span style="font-size:0.61rem;color:var(--text-dim)">${ph.label}</span>
+      <span style="font-size:0.61rem;font-family:'DM Mono',monospace;color:${ph.color}">${t?wfFmt(t):'—'}</span>
+    </div>`;
+  }).join("");
+}
+
+function wfRenderContent(){
+  const el=document.getElementById("wf-phase-content");
+  if(!el) return;
+  const ph=WF_PHASES.find(p=>p.id===wf.activePhase);
+  const idx=WF_PHASES.indexOf(ph);
+  const t=wf.timers[ph.id]||0,isRunning=wf.running[ph.id];
+  const doneSt=ph.steps.filter(s=>wf.checks[s.id]).length;
+  const stepsHtml=ph.steps.map((step,i)=>{
+    const done=!!wf.checks[step.id],noteOpen=!!wf.noteOpen[step.id];
+    return `<div style="background:${done?'rgba(90,170,191,0.05)':'rgba(255,255,255,0.02)'};border:1px solid ${done?'rgba(90,170,191,0.2)':'rgba(255,255,255,0.05)'};border-radius:6px;padding:10px 14px;margin-bottom:5px;transition:all 0.2s">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div onclick="wfToggleCheck('${step.id}')" style="width:17px;height:17px;border-radius:3px;flex-shrink:0;cursor:pointer;border:1.5px solid ${done?ph.color:'rgba(255,255,255,0.15)'};background:${done?ph.color:'transparent'};display:flex;align-items:center;justify-content:center;transition:all 0.15s">
+          ${done?'<span style="color:#0C151E;font-size:9px;font-weight:700">✓</span>':''}
+        </div>
+        <div style="flex:1;font-size:0.8rem;color:${done?'rgba(184,200,212,0.4)':'var(--text)'};text-decoration:${done?'line-through':'none'}">
+          <span style="font-family:'DM Mono',monospace;font-size:0.57rem;color:rgba(184,200,212,0.2);margin-right:4px">${String(i+1).padStart(2,"0")}</span>${step.label}
+        </div>
+        ${step.note?`<button onclick="wfToggleNote('${step.id}')" style="background:transparent;border:none;cursor:pointer;font-size:13px;padding:0 3px;color:${noteOpen?ph.color:'rgba(184,200,212,0.22)'};transition:color 0.15s">ⓘ</button>`:''}
+      </div>
+      ${step.note&&noteOpen?`<div style="margin-top:7px;margin-left:27px;padding:6px 10px;border-left:2px solid ${ph.color};border-radius:0 4px 4px 0;background:rgba(46,107,138,0.1);font-size:0.68rem;color:rgba(184,200,212,0.6);line-height:1.6;font-style:italic">${step.note}</div>`:''}
+    </div>`;
+  }).join("");
+  const prevBtn=idx>0?`<button onclick="wfSelectPhase('${WF_PHASES[idx-1].id}')" style="padding:7px 14px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);font-size:0.74rem;cursor:pointer">← Précédente</button>`:'<div></div>';
+  const nextBtn=idx<WF_PHASES.length-1?`<button onclick="wfSelectPhase('${WF_PHASES[idx+1].id}')" style="padding:7px 14px;background:rgba(90,170,191,0.1);border:1px solid ${ph.color}40;border-radius:6px;color:${ph.color};font-size:0.74rem;cursor:pointer">Suivante →</button>`:'<div></div>';
+  const notesBlock=ph.id==="cloture"?`
+    <div style="margin-top:18px;padding:14px;background:var(--surface);border:1px solid rgba(200,169,110,0.15);border-radius:8px">
+      <div style="font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--wave-light);margin-bottom:8px;font-family:'DM Mono',monospace">Notes de passage</div>
+      <textarea id="wf-notes" placeholder="Durée réelle, incidents, météo, remarques…" oninput="wf.notes=this.value"
+        style="width:100%;min-height:80px;resize:vertical;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:6px;padding:8px 11px;color:var(--text);font-size:0.71rem;font-family:'DM Mono',monospace;outline:none;line-height:1.7">${wf.notes}</textarea>
+      <div style="margin-top:10px;padding:9px 12px;background:rgba(200,169,110,0.05);border:1px solid rgba(200,169,110,0.18);border-radius:6px;font-size:0.7rem;color:var(--wave-light);text-align:center">
+        Quand tout est coché, clique sur <strong>✓ Clôturer</strong> en haut à droite.
+      </div>
+    </div>`:'';
+  el.innerHTML=`<div class="card">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div style="font-size:0.56rem;letter-spacing:0.2em;text-transform:uppercase;color:${ph.color};margin-bottom:4px;font-family:'DM Mono',monospace">Phase ${idx+1} / ${WF_PHASES.length}</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;color:var(--text);line-height:1">${ph.label}</div>
+        <div style="font-size:0.71rem;color:var(--text-dim);margin-top:4px">${doneSt} / ${ph.steps.length} étapes · ~${ph.estimee} min estimées</div>
+      </div>
+      <div style="text-align:right">
+        <div id="wf-timer-display" style="font-size:1.9rem;font-family:'DM Mono',monospace;letter-spacing:3px;color:${isRunning?ph.color:'#3A5A6A'};line-height:1;transition:color 0.2s">${wfFmt(t)}</div>
+        <div style="display:flex;gap:5px;margin-top:6px;justify-content:flex-end">
+          <button onclick="wfToggleTimer('${ph.id}')" style="padding:5px 11px;border-radius:4px;font-size:0.66rem;cursor:pointer;font-family:'DM Mono',monospace;border:1px solid;background:${isRunning?'rgba(200,169,110,0.15)':'rgba(90,170,191,0.15)'};border-color:${isRunning?'rgba(200,169,110,0.4)':'rgba(90,170,191,0.4)'};color:${isRunning?'#C8A96E':'#5AAABF'}">${isRunning?'⏸ Pause':'▶ Start'}</button>
+          <button onclick="wfResetTimer('${ph.id}')" style="padding:5px 8px;background:transparent;border:1px solid var(--border);border-radius:4px;color:var(--text-dim);font-size:0.71rem;cursor:pointer">↺</button>
+        </div>
+      </div>
+    </div>
+    ${stepsHtml}
+    <div style="display:flex;justify-content:space-between;margin-top:18px">${prevBtn}${nextBtn}</div>
+    ${notesBlock}
+  </div>`;
+}
+
+function wfRenderGlobal(){
+  const bar=document.getElementById("wf-global-bar"),lbl=document.getElementById("wf-global-label");
+  if(!bar||!lbl) return;
+  const done=wfDoneSteps(),pct=Math.round(done/WF_TOTAL_STEPS*100);
+  bar.style.width=pct+"%"; lbl.textContent=done+" / "+WF_TOTAL_STEPS+" · "+pct+"%";
+}
+
+function wfRender(){wfRenderSidebar();wfRenderContent();wfRenderGlobal();}
+function wfSelectPhase(id){wf.activePhase=id;wfRender();}
+function wfToggleCheck(id){wf.checks[id]=!wf.checks[id];wfRender();}
+function wfToggleNote(id){wf.noteOpen[id]=!wf.noteOpen[id];wfRender();}
+
+function wfToggleTimer(phaseId){
+  if(wf.running[phaseId]){
+    clearInterval(wf.intervals[phaseId]);wf.running[phaseId]=false;wfRender();
+  } else {
+    const offset=(wf.timers[phaseId]||0)*1000,start=Date.now()-offset;
+    wf.intervals[phaseId]=setInterval(()=>{
+      wf.timers[phaseId]=Math.floor((Date.now()-start)/1000);
+      const d=document.getElementById("wf-timer-display");
+      if(d) d.textContent=wfFmt(wf.timers[phaseId]);
+      wfRenderSidebar();
+    },1000);
+    wf.running[phaseId]=true;wfRender();
+  }
+}
+function wfResetTimer(phaseId){
+  clearInterval(wf.intervals[phaseId]);wf.timers[phaseId]=0;wf.running[phaseId]=false;wfRender();
+}
 </script>
 </body>
 </html>
