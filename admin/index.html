@@ -1793,7 +1793,7 @@ function dvPreviewPdf(d) {
         <thead><tr><th>Désignation</th><th class="right">Qté</th><th class="right">Prix unit. HT</th><th class="right">Total HT</th></tr></thead>
         <tbody>
           <tr>
-            <td><strong>Passage de chantier BatiVizIØ</strong><br><span style="font-size:8.5pt;color:#666">Prise de vue drone + photos 360° · Montage · Mise en ligne Vimeo · Accès client sécurisé</span></td>
+            <td><strong>Suivi immersif BatiVizIØ</strong><br><span style="font-size:8.5pt;color:#666">10 à 12 passages inclus<br>Prise de vue drone + photos 360° · Montage · Mise en ligne Vimeo · Accès client sécurisé</span></td>
             <td class="right mono-pdf">${d.nb_passages}</td>
             <td class="right mono-pdf">${dvFmtEur(d.prix_unitaire_ht)}</td>
             <td class="right mono-pdf" style="font-weight:600">${dvFmtEur(montant)}</td>
@@ -1817,7 +1817,7 @@ function dvPreviewPdf(d) {
     </div>
     <div class="pdf-conditions">
       <strong>Conditions :</strong> Devis valable 30 jours à compter de la date d'émission. Paiement par virement bancaire. En cas de résiliation anticipée, les passages déjà réalisés sont dus au tarif unitaire de 250 € HT. Clause d'ajustement bilatérale applicable selon accord mutuel.<br><br>
-      <strong>Confidentialité :</strong> Les contenus produits sont strictement privés et accessibles uniquement au propriétaire concerné via son espace personnel sécurisé.
+      <strong>Confidentialité :</strong> Les contenus produits sont strictement privés et accessibles uniquement au constructeur et au propriétaire concerné via son espace personnel sécurisé.
     </div>
     ${d.notes ? '<div class="pdf-conditions"><strong>Note :</strong> ' + d.notes + '</div>' : ''}
     <div style="margin-top:10mm">
