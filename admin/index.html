@@ -729,7 +729,7 @@ nav{padding:14px 10px;flex:1}
       <div style="font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)">Vidéos YouTube</div>
       <div class="media-list" id="media-list"></div>
       <button class="add-media-btn" onclick="addMediaRow()">+ Ajouter un média</button>
-      <div class="form-hint" style="margin-top:8px">Vidéos : ID Vimeo (les chiffres après vimeo.com/) · Photos : URL directe (Google Photos, Imgur…)</div>
+      <div class="form-hint" style="margin-top:8px">Vidéos 360° et drone : URL embed Bunny Stream · Photos : URL directe</div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal('modal-passage')">Annuler</button>
@@ -1070,7 +1070,7 @@ async function openChantierDetail(id) {
     const date = new Date(p.date_passage).toLocaleDateString('fr-FR', {day:'numeric',month:'long',year:'numeric'});
     const medias = (p.medias||[]).map(m => {
       const icon = m.type==='360' ? '⬤' : m.type==='photo' ? '📷' : '🚁';
-      return `<div class="media-chip"><span>${icon}</span>${m.nom||m.url_youtube||m.url_photo||''}</div>`;
+      return `<div class="media-chip"><span>${icon}</span>${m.nom||m.type}</div>`;
     }).join('');
     return `
       <div class="passage-card">
@@ -1202,9 +1202,7 @@ async function savePassage() {
     const nom  = row.querySelector('.media-nom').value.trim();
     const type = row.querySelector('.media-type-sel').value;
     if (!url) return;
-    const entry = { passage_id: passageId, nom: nom || null, type };
-    if (type === 'photo') { entry.url_photo = url; }
-    else                  { entry.url_youtube = url; }
+    const entry = { passage_id: passageId, nom: nom || null, type, url_media: url };
     medias.push(entry);
   });
   if (medias.length) await sb.from('medias').insert(medias);
@@ -1396,16 +1394,20 @@ function addMediaRow(media = null) {
   const el = document.getElementById('media-list');
   const row = document.createElement('div');
   row.className = 'media-row';
-  const isPhoto = media?.type === 'photo';
-  const urlVal  = isPhoto ? (media?.url_photo||'') : (media?.url_youtube||'');
+  const type   = media?.type || 'drone';
+  const urlVal = media?.url_media || '';
+  const ph = type === 'photo'
+    ? 'URL directe de la photo'
+    : 'URL Bunny Stream (iframe.mediadelivery.net/embed/…)';
+  const urlColor = type === 'photo' ? 'var(--green)' : 'var(--wave-light)';
   row.innerHTML = `
     <select class="media-type-sel" onchange="toggleMediaInput(this)">
-      <option value="drone" ${media?.type==='drone'?'selected':''}>🚁 Drone</option>
-      <option value="360"   ${media?.type==='360'  ?'selected':''}>⬤ 360°</option>
-      <option value="photo" ${isPhoto              ?'selected':''}>📷 Photo</option>
+      <option value="drone" ${type==='drone'?'selected':''}>🚁 Drone</option>
+      <option value="360"   ${type==='360'  ?'selected':''}>⬤ 360°</option>
+      <option value="photo" ${type==='photo'?'selected':''}>📷 Photo</option>
     </select>
     <input class="media-nom" placeholder="Nom (optionnel)" value="${media?.nom||''}">
-    <input class="media-url yt-id" placeholder="${isPhoto ? 'URL de la photo' : 'ID Vimeo (ex: 1182198506)'}" value="${urlVal}" style="color:${isPhoto?'var(--green)':'var(--wave-light)'}">
+    <input class="media-url yt-id" placeholder="${ph}" value="${urlVal}" style="color:${urlColor}">
     <button class="media-del" onclick="this.closest('.media-row').remove()">✕</button>`;
   el.appendChild(row);
 }
@@ -1414,10 +1416,10 @@ function toggleMediaInput(sel) {
   const row   = sel.closest('.media-row');
   const input = row.querySelector('.media-url');
   if (sel.value === 'photo') {
-    input.placeholder = 'URL de la photo (Google Photos, Imgur…)';
+    input.placeholder = 'URL directe de la photo';
     input.style.color = 'var(--green)';
   } else {
-    input.placeholder = 'ID Vimeo (ex: 1182198506)';
+    input.placeholder = 'URL Bunny Stream (iframe.mediadelivery.net/embed/…)';
     input.style.color = 'var(--wave-light)';
   }
 }
@@ -1507,8 +1509,7 @@ function renderPreview() {
   } else {
     area.innerHTML = buildConstructeurPreview(previewPassageData, previewChantierData);
   }
-  // Check Vimeo statuses
-  setTimeout(checkVimeoStatuses, 1500);
+  
 }
 
 function buildProprietairePreview(p, c) {
@@ -1522,30 +1523,29 @@ function buildProprietairePreview(p, c) {
   let mediaHTML = '';
   if (videos.length) {
     const [first, ...rest] = videos;
-    const typeLabel = first.type === '360' ? 'Vidéo 360°' : 'Vue drone';
-    const vimeoId = first.url_youtube || '';
+    const typeLabel = first.type === '360' ? 'Visite 360°' : 'Vue drone';
+    const bunnyUrl = first.url_media || '';
     mediaHTML += `
       <div class="pv-media-section">
         <div class="pv-video-label">${typeLabel}${first.nom ? ' — ' + first.nom : ''}</div>
         <div class="pv-video-wrap" id="vwrap-${first.id}">
           <iframe
-            src="https://player.vimeo.com/video/${vimeoId}?autoplay=0&loop=0&color=4A8FAD&title=0&byline=0&portrait=0"
+            src="${bunnyUrl}"
             allow="autoplay;fullscreen;picture-in-picture" allowfullscreen
-            data-vimeo-id="${vimeoId}" class="vimeo-iframe"
-            onload="handleVimeoLoad(this)" onerror="handleVimeoError(this)">
+            class="bunny-iframe">
           </iframe>
-          <div class="pv-video-error" id="verr-${first.id}">⚠ ID Vimeo invalide ou vidéo non trouvée<br><span style="font-size:0.7rem;margin-top:4px;display:block">ID : ${vimeoId || '(vide)'}</span></div>
+          
         </div>
-        <div id="vstatus-${first.id}"><span class="vimeo-status checking"><span class="vimeo-dot"></span>Vérification…</span></div>`;
+        `;
     if (rest.length) {
       mediaHTML += `<div style="margin-top:10px"><div class="pv-video-label">Autres vidéos du passage</div><div class="pv-thumb-row">`;
       rest.forEach(m => {
         const tl = m.type === '360' ? '⬤ 360°' : '🚁 Drone';
         mediaHTML += `<div class="pv-thumb" id="vwrap-${m.id}" title="Cliquer pour ouvrir dans un lightbox">
-          <iframe src="https://player.vimeo.com/video/${m.url_youtube}?autoplay=0&title=0&byline=0&portrait=0" allow="fullscreen" data-vimeo-id="${m.url_youtube}" class="vimeo-iframe" onload="handleVimeoLoad(this)" onerror="handleVimeoError(this)"></iframe>
+          <iframe src="${m.url_media}"></iframe>
           <div class="pv-thumb-label">${tl}${m.nom ? ' · '+m.nom : ''}</div>
         </div>
-        <div id="vstatus-${m.id}" style="display:none"><span class="vimeo-status checking"><span class="vimeo-dot"></span></span></div>`;
+        `;
       });
       mediaHTML += `</div></div>`;
     }
@@ -1557,7 +1557,7 @@ function buildProprietairePreview(p, c) {
       <div class="pv-video-label" style="margin-bottom:8px">Photos du passage</div>
       <div class="pv-photo-grid">`;
     photos.forEach(ph => {
-      mediaHTML += `<div class="pv-photo-item"><img src="${ph.url_photo}" alt="${ph.nom||'Photo'}" loading="lazy" onerror="this.style.background='#D8E4EC';this.style.display='none';this.parentNode.innerHTML='<div style=\\'padding:8px;font-size:0.65rem;color:#6B8599;text-align:center\\'>⚠ Image<br>inaccessible</div>'"></div>`;
+      mediaHTML += `<div class="pv-photo-item"><img src="${ph.url_media}" alt="${ph.nom||'Photo'}" loading="lazy" onerror="this.style.background='#D8E4EC';this.style.display='none';this.parentNode.innerHTML='<div style=\\'padding:8px;font-size:0.65rem;color:#6B8599;text-align:center\\'>⚠ Image<br>inaccessible</div>'"></div>`;
     });
     mediaHTML += `</div></div>`;
   }
@@ -1605,7 +1605,7 @@ function buildConstructeurPreview(p, c) {
 
   const chipsHTML = allMedias.length ? allMedias.map(m => {
     const icon = m.type==='360'?'⬤':m.type==='photo'?'📷':'🚁';
-    const id = m.type==='photo' ? (m.url_photo||'').slice(0,30)+'…' : (m.url_youtube||'');
+    const id = (m.url_media||'').slice(0,40)+'…';
     return `<span class="pv-constr-chip">${icon} ${m.nom||m.type} <span style="opacity:0.5;margin-left:4px">${id}</span></span>`;
   }).join('') : '<span style="font-size:0.75rem;color:#6B8599">Aucun média</span>';
 
