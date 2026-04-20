@@ -6,36 +6,93 @@ const sb = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhamdxenp5eHlrenhzdWRwbW1zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4MjU3NzEsImV4cCI6MjA5MTQwMTc3MX0.3kuRoLsmdDU8Hd-U4b7S8q1GSZwsf46SN7JOEFMKrz0'
 );
 
-// ── Grille vidéos ──
+// ── Grille vidéos (Bunny Stream) ──
+// Bunny fournit deux types d'URL :
+//   - iframe embed : https://iframe.mediadelivery.net/embed/LIBRARY_ID/VIDEO_ID
+//   - HLS direct   : https://VIDEO_ID.mediadelivery.net/VIDEO_ID/playlist.m3u8
+// Pour les vidéos drone on utilise l'iframe Bunny directement.
+// Pour les vidéos 360° on utilise l'iframe Bunny (le player videojs-vr
+// est disponible dans client/index.html via les balises <script> ajoutées).
+
 function buildMediaGrid(medias) {
   if (!medias.length) return '';
-  const [first, ...rest] = medias;
-  const featClass = rest.length === 0 ? 'solo' : 'featured';
-  const firstCard = `
-    <div class="media-card ${featClass}" style="cursor:default;">
-      <iframe src="https://player.vimeo.com/video/${first.url_youtube}?autoplay=0&loop=0&color=4A8FAD&title=0&byline=0&portrait=0"
-        style="width:100%;height:100%;border:none;display:block;"
-        allow="autoplay;fullscreen;picture-in-picture;xr-spatial-tracking" allowfullscreen
-        title="${(first.nom||'').replace(/"/g,'&quot;')}">
-      </iframe>
-    </div>`;
-  const restCards = rest.map(m => {
-    const thumbClass = m.type === '360' ? 'thumb-360' : 'thumb-drone';
-    const typeLabel  = m.type === '360' ? 'Vidéo 360°' : 'Vue drone';
-    const nom = (m.nom||'').replace(/'/g,"\\'");
-    return `
-      <div class="media-card" onclick="openVimeo('${m.url_youtube}','${nom}')">
-        <div class="${thumbClass}"></div>
-        <div class="media-overlay">
-          <div class="media-info">
-            <div class="media-type">${typeLabel}</div>
-            <div class="media-name">${m.nom||''}</div>
-          </div>
-        </div>
-        <div class="play-btn">▶</div>
+  const videos360  = medias.filter(m => m.type === '360');
+  const videosDrone = medias.filter(m => m.type === 'drone');
+  let html = '';
+
+  // ── Section 360° ──
+  if (videos360.length) {
+    html += `<div class="media-section-label">⦿ Visite 360°</div>`;
+    videos360.forEach((m, i) => {
+      const videoId = `vjs360-${i}-${Date.now()}`;
+      // Si l'URL est un embed Bunny (iframe), on l'affiche en iframe normale
+      // Le player 360° interactif nécessite une URL directe HLS ou MP4
+      const isBunnyEmbed = m.url_media && m.url_media.includes('iframe.mediadelivery.net');
+      if (isBunnyEmbed) {
+        // Bunny iframe embed — affichage direct (pas de navigation sphérique)
+        html += `
+          <div class="media-card solo" style="cursor:default;">
+            <iframe src="${m.url_media}"
+              style="width:100%;height:100%;border:none;display:block;"
+              allow="autoplay;fullscreen;picture-in-picture" allowfullscreen
+              title="${(m.nom||'Visite 360°').replace(/"/g,'&quot;')}">
+            </iframe>
+          </div>`;
+      } else {
+        // URL directe MP4/HLS — player videojs-vr sphérique
+        html += `
+          <div class="media-card solo" style="cursor:default;overflow:visible;">
+            <video id="${videoId}" class="video-js vjs-default-skin vjs-big-play-centered"
+              controls preload="auto" crossorigin="anonymous" playsinline
+              style="width:100%;height:100%;">
+              <source src="${m.url_media}" type="${m.url_media.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4'}">
+            </video>
+          </div>`;
+        // Init différé pour que le DOM soit prêt
+        setTimeout(() => {
+          if (typeof videojs !== 'undefined' && document.getElementById(videoId)) {
+            const p = videojs(videoId, { fluid: false, responsive: true });
+            if (typeof p.vr === 'function') p.vr({ projection: 'equirectangular' });
+          }
+        }, 200);
+      }
+    });
+  }
+
+  // ── Section vidéo drone ──
+  if (videosDrone.length) {
+    html += `<div class="media-section-label" style="margin-top:${videos360.length?'20px':'0'}">🎬 Vidéo drone</div>`;
+    const [first, ...rest] = videosDrone;
+    const featClass = rest.length === 0 ? 'solo' : 'featured';
+    html += `
+      <div class="media-card ${featClass}" style="cursor:default;">
+        <iframe src="${first.url_media}"
+          style="width:100%;height:100%;border:none;display:block;"
+          allow="autoplay;fullscreen;picture-in-picture" allowfullscreen
+          title="${(first.nom||'Vidéo drone').replace(/"/g,'&quot;')}">
+        </iframe>
       </div>`;
-  }).join('');
-  return `<div class="media-grid">${firstCard}${restCards}</div>`;
+    if (rest.length) {
+      html += `<div class="media-grid" style="margin-top:10px">`;
+      rest.forEach(m => {
+        const nom = (m.nom||'').replace(/'/g,"\\'");
+        html += `
+          <div class="media-card" onclick="openBunny('${m.url_media}','${nom}')">
+            <div class="thumb-drone"></div>
+            <div class="media-overlay">
+              <div class="media-info">
+                <div class="media-type">Vue drone</div>
+                <div class="media-name">${m.nom||''}</div>
+              </div>
+            </div>
+            <div class="play-btn">▶</div>
+          </div>`;
+      });
+      html += `</div>`;
+    }
+  }
+
+  return html ? `<div class="media-grid">${html}</div>` : '';
 }
 
 // ── Grille photos ──
@@ -43,7 +100,7 @@ function buildPhotoGrid(photos, panelIndex) {
   if (!photos.length) return '';
   const thumbs = photos.map((p, i) => `
     <div class="photo-thumb" onclick="openPhotoLightbox(${panelIndex},${i})">
-      <img src="${p.url_photo}" alt="${(p.nom||'Photo '+(i+1)).replace(/"/g,'&quot;')}" loading="lazy">
+      <img src="${p.url_media}" alt="${(p.nom||'Photo '+(i+1)).replace(/"/g,'&quot;')}" loading="lazy">
       <div class="photo-overlay"><span class="photo-zoom-icon">+</span></div>
     </div>`
   ).join('');
@@ -60,10 +117,9 @@ function switchTab(i) {
   document.querySelectorAll('.content-panel').forEach((p,j) => p.classList.toggle('active', i===j));
 }
 
-// ── Lightbox Vimeo ──
-function openVimeo(id, title) {
-  document.getElementById('lightbox-iframe').src =
-    `https://player.vimeo.com/video/${id}?autoplay=1&color=4A8FAD&title=0&byline=0&portrait=0`;
+// ── Lightbox Bunny ──
+function openBunny(url, title) {
+  document.getElementById('lightbox-iframe').src = url;
   document.getElementById('lightbox-title').textContent = title || '';
   document.getElementById('lightbox').classList.add('open');
 }
@@ -79,7 +135,7 @@ let lbPhotos = [], lbIndex = 0;
 function openPhotoLightbox(panelIndex, index) {
   const panel = document.getElementById(`panel-${panelIndex}`);
   const imgs  = panel ? [...panel.querySelectorAll('.photo-thumb img')] : [];
-  lbPhotos = imgs.map(img => ({ url_photo: img.src, nom: img.alt }));
+  lbPhotos = imgs.map(img => ({ url_media: img.src, nom: img.alt }));
   lbIndex  = index;
   updatePhotoLightbox();
   document.getElementById('photo-lightbox').classList.add('open');
@@ -88,7 +144,7 @@ function openPhotoLightbox(panelIndex, index) {
 
 function updatePhotoLightbox() {
   const p = lbPhotos[lbIndex];
-  document.getElementById('photo-lb-img').src = p.url_photo;
+  document.getElementById('photo-lb-img').src = p.url_media;
   document.getElementById('photo-lb-img').alt = p.nom || '';
   const caption = document.getElementById('photo-lb-caption');
   if (caption) caption.textContent = p.nom || '';
