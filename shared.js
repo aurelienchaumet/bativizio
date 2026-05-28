@@ -14,6 +14,12 @@ const sb = createClient(
 // Pour les vidéos 360° on utilise l'iframe Bunny (le player videojs-vr
 // est disponible dans client/index.html via les balises <script> ajoutées).
 
+function getEmbedUrl(m) {
+  if (m.url_media) return m.url_media;
+  if (m.url_youtube) return `https://player.vimeo.com/video/${m.url_youtube}`;
+  return null;
+}
+
 function buildMediaGrid(medias) {
   if (!medias.length) return '';
   const videos360  = medias.filter(m => m.type === '360');
@@ -24,15 +30,15 @@ function buildMediaGrid(medias) {
   if (videos360.length) {
     html += `<div class="media-section-label">⦿ Visite 360°</div>`;
     videos360.forEach((m, i) => {
+      const embedUrl = getEmbedUrl(m);
+      if (!embedUrl) return;
       const videoId = `vjs360-${i}-${Date.now()}`;
-      // Si l'URL est un embed Bunny (iframe), on l'affiche en iframe normale
-      // Le player 360° interactif nécessite une URL directe HLS ou MP4
-      const isBunnyEmbed = m.url_media && m.url_media.includes('iframe.mediadelivery.net');
-      if (isBunnyEmbed) {
-        // Bunny iframe embed — affichage direct (pas de navigation sphérique)
+      const isBunnyEmbed = embedUrl.includes('iframe.mediadelivery.net');
+      const isVimeo = embedUrl.includes('vimeo.com');
+      if (isBunnyEmbed || isVimeo) {
         html += `
           <div class="media-card solo" style="cursor:default;">
-            <iframe src="${m.url_media}"
+            <iframe src="${embedUrl}"
               style="width:100%;height:100%;border:none;display:block;"
               allow="autoplay;fullscreen;picture-in-picture" allowfullscreen
               title="${(m.nom||'Visite 360°').replace(/"/g,'&quot;')}">
@@ -45,10 +51,9 @@ function buildMediaGrid(medias) {
             <video id="${videoId}" class="video-js vjs-default-skin vjs-big-play-centered"
               controls preload="auto" crossorigin="anonymous" playsinline
               style="width:100%;height:100%;">
-              <source src="${m.url_media}" type="${m.url_media.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4'}">
+              <source src="${embedUrl}" type="${embedUrl.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4'}">
             </video>
           </div>`;
-        // Init différé pour que le DOM soit prêt
         setTimeout(() => {
           if (typeof videojs !== 'undefined' && document.getElementById(videoId)) {
             const p = videojs(videoId, { fluid: false, responsive: true });
@@ -63,21 +68,26 @@ function buildMediaGrid(medias) {
   if (videosDrone.length) {
     html += `<div class="media-section-label" style="margin-top:${videos360.length?'20px':'0'}">🎬 Vidéo drone</div>`;
     const [first, ...rest] = videosDrone;
+    const firstUrl = getEmbedUrl(first);
     const featClass = rest.length === 0 ? 'solo' : 'featured';
-    html += `
-      <div class="media-card ${featClass}" style="cursor:default;">
-        <iframe src="${first.url_media}"
-          style="width:100%;height:100%;border:none;display:block;"
-          allow="autoplay;fullscreen;picture-in-picture" allowfullscreen
-          title="${(first.nom||'Vidéo drone').replace(/"/g,'&quot;')}">
-        </iframe>
-      </div>`;
+    if (firstUrl) {
+      html += `
+        <div class="media-card ${featClass}" style="cursor:default;">
+          <iframe src="${firstUrl}"
+            style="width:100%;height:100%;border:none;display:block;"
+            allow="autoplay;fullscreen;picture-in-picture" allowfullscreen
+            title="${(first.nom||'Vidéo drone').replace(/"/g,'&quot;')}">
+          </iframe>
+        </div>`;
+    }
     if (rest.length) {
       html += `<div class="media-grid" style="margin-top:10px">`;
       rest.forEach(m => {
+        const url = getEmbedUrl(m);
+        if (!url) return;
         const nom = (m.nom||'').replace(/'/g,"\\'");
         html += `
-          <div class="media-card" onclick="openBunny('${m.url_media}','${nom}')">
+          <div class="media-card" onclick="openBunny('${url}','${nom}')">
             <div class="thumb-drone"></div>
             <div class="media-overlay">
               <div class="media-info">
