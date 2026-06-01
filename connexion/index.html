@@ -172,7 +172,7 @@ body{
   transition:background 0.2s;
 }
 .btn-login:hover:not(:disabled){background:var(--wave-light);}
-.btn-login:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-login:disabled{opacity:0.6;cursor:not-allowed;}.privacy-note{margin-top:18px;text-align:center;font-size:0.72rem;color:rgba(122,154,173,0.55);font-family:'DM Mono',monospace;letter-spacing:0.04em;}.privacy-note a{color:rgba(90,170,191,0.7);text-decoration:none;border-bottom:1px solid rgba(90,170,191,0.2);}.privacy-note a:hover{color:#5AAABF;border-color:#5AAABF;}
 
 .forgot-link{
   display:block;text-align:center;margin-top:16px;
@@ -298,6 +298,7 @@ body{
 
     <button class="btn-login" id="btn-login" onclick="doLogin()">Accéder à mon espace →</button>
     <a href="/reset-password/" class="forgot-link">Mot de passe oublié ?</a>
+    <p class="privacy-note">En vous connectant, vous acceptez notre <a href="/politique-confidentialite/">politique de confidentialité</a>.</p>
 
   </div>
 </div>
